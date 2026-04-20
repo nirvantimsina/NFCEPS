@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="NFCEPS_UI\appsettings.Development.json" />
+      <_ContentIncludedByDefault Remove="NFCEPS_UI\appsettings.json" />
+      <_ContentIncludedByDefault Remove="NFCEPS_UI\obj\NFCEPS_UI.csproj.nuget.dgspec.json" />
+      <_ContentIncludedByDefault Remove="NFCEPS_UI\obj\project.assets.json" />
+      <_ContentIncludedByDefault Remove="NFCEPS_UI\obj\project.packagespec.json" />
+      <_ContentIncludedByDefault Remove="NFCEPS_UI\Properties\launchSettings.json" />
+      <_ContentIncludedByDefault Remove="NFCEPS_UI\Components\App.razor" />
+      <_ContentIncludedByDefault Remove="NFCEPS_UI\Components\Layout\MainLayout.razor" />
+      <_ContentIncludedByDefault Remove="NFCEPS_UI\Components\Layout\NavMenu.razor" />
+      <_ContentIncludedByDefault Remove="NFCEPS_UI\Components\Layout\ReconnectModal.razor" />
+      <_ContentIncludedByDefault Remove="NFCEPS_UI\Components\Pages\Counter.razor" />
+      <_ContentIncludedByDefault Remove="NFCEPS_UI\Components\Pages\Error.razor" />
+      <_ContentIncludedByDefault Remove="NFCEPS_UI\Components\Pages\Home.razor" />
+      <_ContentIncludedByDefault Remove="NFCEPS_UI\Components\Pages\NotFound.razor" />
+      <_ContentIncludedByDefault Remove="NFCEPS_UI\Components\Pages\Weather.razor" />
+      <_ContentIncludedByDefault Remove="NFCEPS_UI\Components\Routes.razor" />
+      <_ContentIncludedByDefault Remove="NFCEPS_UI\Components\_Imports.razor" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <UpToDateCheckInput Remove="NFCEPS_UI\Components\App.razor" />
+      <UpToDateCheckInput Remove="NFCEPS_UI\Components\Layout\MainLayout.razor" />
+      <UpToDateCheckInput Remove="NFCEPS_UI\Components\Layout\NavMenu.razor" />
+      <UpToDateCheckInput Remove="NFCEPS_UI\Components\Layout\ReconnectModal.razor" />
+      <UpToDateCheckInput Remove="NFCEPS_UI\Components\Pages\Counter.razor" />
+      <UpToDateCheckInput Remove="NFCEPS_UI\Components\Pages\Error.razor" />
+      <UpToDateCheckInput Remove="NFCEPS_UI\Components\Pages\Home.razor" />
+      <UpToDateCheckInput Remove="NFCEPS_UI\Components\Pages\NotFound.razor" />
+      <UpToDateCheckInput Remove="NFCEPS_UI\Components\Pages\Weather.razor" />
+      <UpToDateCheckInput Remove="NFCEPS_UI\Components\Routes.razor" />
+      <UpToDateCheckInput Remove="NFCEPS_UI\Components\_Imports.razor" />
+    </ItemGroup>
+
+</Project>
