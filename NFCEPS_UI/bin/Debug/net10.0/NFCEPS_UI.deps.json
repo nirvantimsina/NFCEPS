@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v10.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v10.0": {
+      "NFCEPS_UI/1.0.0": {
+        "runtime": {
+          "NFCEPS_UI.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "NFCEPS_UI/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
