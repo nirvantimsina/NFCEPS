@@ -1,0 +1,16 @@
+# Ignore build folders everywhere
+[Bb]in/
+[Oo]bj/
+# Ignore specifically for the UI path
+**/NFCEPS_UI/bin/
+**/NFCEPS_UI/obj/
+**/nfceps_ui/bin/
+**/nfceps_ui/obj/
+
+**/bin/
+**/obj/
+**/debug/
+**/Release/
+*.user
+*.suo
+.idea/
