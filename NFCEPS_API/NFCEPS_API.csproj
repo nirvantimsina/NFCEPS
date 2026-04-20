@@ -24,6 +24,13 @@
       <_ContentIncludedByDefault Remove="NFCEPS_UI\Components\Pages\Weather.razor" />
       <_ContentIncludedByDefault Remove="NFCEPS_UI\Components\Routes.razor" />
       <_ContentIncludedByDefault Remove="NFCEPS_UI\Components\_Imports.razor" />
+      <_ContentIncludedByDefault Remove="Views\Home\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Home\Privacy.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Shared\Error.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Shared\_Layout.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Shared\_ValidationScriptsPartial.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\_ViewImports.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\_ViewStart.cshtml" />
     </ItemGroup>
 
     <ItemGroup>
@@ -41,7 +48,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Scalar.AspNetCore" Version="2.14.1" />
+      <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.7" />
     </ItemGroup>
 
 </Project>
