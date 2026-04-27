@@ -122,7 +122,10 @@
 
     <ItemGroup>
       <Folder Include="Controllers\" />
-      <Folder Include="Models\" />
+      <Folder Include="Helpers\" />
+      <Folder Include="Models\Params\" />
+      <Folder Include="Models\RequestModel\" />
+      <Folder Include="Models\ResponseModel\" />
       <Folder Include="Services\" />
     </ItemGroup>
 
