@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using NFCEPS_API.Services.Permission;
+using NFCEPS_API.Services;
 
 namespace NFCEPS_API.Auth;
 
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
-public class HasPermissionAttribute
+public class HasPermissionAttribute : Attribute, IAuthorizationFilter
 {
     private readonly string _permKey;
 

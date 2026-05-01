@@ -121,11 +121,13 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Controllers\PermissionController.cs\" />
+      <Folder Include="Controllers\" />
       <Folder Include="Helpers\" />
       <Folder Include="Models\Params\" />
-      <Folder Include="Models\RequestModel\" />
-      <Folder Include="Models\ResponseModel\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Include="Models\Response\UserLoginRow.cs" />
     </ItemGroup>
 
 </Project>

@@ -5,6 +5,7 @@ using Microsoft.OpenApi;
 using NFCEPS_API.Auth;
 using NFCEPS_API.Repository;
 using NFCEPS_API.Services.Permission;
+using NFCEPS_API.Repository.Interfaces;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,7 +18,9 @@ var jwtSettings = builder.Configuration
 builder.Services.AddSingleton(jwtSettings);
 builder.Services.AddSingleton<JWTHelper>();
 
+// add the services here below
 builder.Services.AddSingleton<PermissionService>();
+builder.Services.AddScoped<IGenericRepository>();
 
 //Connection String
 var connectionString = builder.Configuration

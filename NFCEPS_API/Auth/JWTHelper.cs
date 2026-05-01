@@ -14,10 +14,11 @@ public class  JWTHelper
         _settings = settings;
     }
 
-    public string GenerateToken(int userId, string userName, string roleId)
+    // Auth/JwtHelper.cs
+    public string GenerateToken(int userId, string userName, int roleId)
     {
         var key = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(_settings.Secret));
+            Encoding.UTF8.GetBytes(_settings.SecretKey));
 
         var credentials = new SigningCredentials(
             key, SecurityAlgorithms.HmacSha256);
@@ -26,7 +27,7 @@ public class  JWTHelper
         {
             new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
             new Claim(ClaimTypes.Name, userName),
-            new Claim("roleId", roleId)
+            new Claim("roleId", roleId.ToString())
         };
 
         var token = new JwtSecurityToken(
@@ -36,7 +37,7 @@ public class  JWTHelper
             expires: DateTime.UtcNow.AddHours(_settings.ExpiryHours),
             signingCredentials: credentials
         );
-        
+
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 }
