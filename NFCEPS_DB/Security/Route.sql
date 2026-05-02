@@ -1,0 +1,4 @@
+CREATE SCHEMA [Route]
+    AUTHORIZATION [dbo];
+GO
+

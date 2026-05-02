@@ -116,7 +116,6 @@
       <PackageReference Include="Dapper" Version="2.1.72" />
       <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.7" />
       <PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.1" />
-      <PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.7" />
       <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.7" />
     </ItemGroup>
 
@@ -124,10 +123,6 @@
       <Folder Include="Controllers\" />
       <Folder Include="Helpers\" />
       <Folder Include="Models\Params\" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Compile Include="Models\Response\UserLoginRow.cs" />
     </ItemGroup>
 
 </Project>

@@ -1,0 +1,4 @@
+CREATE SCHEMA [Branch]
+    AUTHORIZATION [dbo];
+GO
+

@@ -3,6 +3,7 @@ using NFCEPS_API.Models.Request;
 using NFCEPS_API.Models.Response;
 using NFCEPS_API.Repository.Interfaces;
 using NFCEPS_API.Services.Interfaces;
+using NFCEPS_API.Services.Permission;
 
 namespace NFCEPS_API.Services.Implementaions;
 

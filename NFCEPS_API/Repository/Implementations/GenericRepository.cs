@@ -17,7 +17,7 @@ public class GenericRepository : IGenericRepository
     }
     
     //multiple rows, single or multiple tables
-    public async Task<T> GetFromMultipleQueriesAsync<T>(string storedProcedure,
+    public async Task<T?> GetFromMultipleQueriesAsync<T>(string storedProcedure,
         Func<SqlMapper.GridReader, Task<T>> map, object? parameters = null)
     {
         try

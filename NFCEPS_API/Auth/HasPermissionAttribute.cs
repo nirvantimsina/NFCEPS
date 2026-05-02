@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using NFCEPS_API.Services;
+using NFCEPS_API.Services.Permission;
 
 namespace NFCEPS_API.Auth;
 

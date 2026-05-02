@@ -14,3 +14,5 @@
 *.user
 *.suo
 .idea/
+
+.vscode/

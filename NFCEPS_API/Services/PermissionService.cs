@@ -1,6 +1,6 @@
 using NFCEPS_API.Repository.Interfaces;
 
-namespace NFCEPS_API.Services;
+namespace NFCEPS_API.Services.Permission;
 
 public class PermissionService
 {

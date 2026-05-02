@@ -1,0 +1,4 @@
+CREATE SCHEMA [Machine]
+    AUTHORIZATION [dbo];
+GO
+
