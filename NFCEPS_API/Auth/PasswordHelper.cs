@@ -11,6 +11,6 @@ public class PasswordHelper
     public static bool VerifyPassword(string Password, byte[] storedHash)
     {
         string storedHashString = System.Text.Encoding.UTF8.GetString(storedHash);
-        return BCrypt.Net.BCrypt.Verify(storedHashString, Password);
+        return BCrypt.Net.BCrypt.Verify(Password, storedHashString);
     }
 }

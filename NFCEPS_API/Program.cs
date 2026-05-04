@@ -6,7 +6,9 @@ using NFCEPS_API.Auth;
 using NFCEPS_API.Repository;
 using NFCEPS_API.Services.Permission;
 using NFCEPS_API.Repository.Interfaces;
-
+using NFCEPS_API.Repository.Implementations;
+using NFCEPS_API.Services.Implementaions;
+using NFCEPS_API.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,8 +21,9 @@ builder.Services.AddSingleton(jwtSettings);
 builder.Services.AddSingleton<JWTHelper>();
 
 // add the services here below
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddSingleton<PermissionService>();
-builder.Services.AddScoped<IGenericRepository>();
+builder.Services.AddScoped<IGenericRepository, GenericRepository>();
 
 //Connection String
 var connectionString = builder.Configuration
@@ -114,5 +117,8 @@ app.UseAuthorization();
 app.MapStaticAssets();
 
 app.MapControllers();
+
+// var hash = BCrypt.Net.BCrypt.HashPassword("admin123");
+// Console.WriteLine(hash);
 
 app.Run();
