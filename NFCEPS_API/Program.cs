@@ -9,6 +9,7 @@ using NFCEPS_API.Repository.Interfaces;
 using NFCEPS_API.Repository.Implementations;
 using NFCEPS_API.Services.Implementaions;
 using NFCEPS_API.Services.Interfaces;
+using NFCEPS_API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -56,6 +57,8 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 //JWT Auth
+var secretKey = jwtSettings.SecretKey ?? throw new InvalidOperationException("JWT SecretKey is missing in configuration.");
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -84,6 +87,8 @@ builder.Services.AddCors(options =>
 });
     
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 // load permissions at startup
 using (var scope = app.Services.CreateScope())

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using NFCEPS_API.Models.Response;
 using NFCEPS_API.Services.Interfaces;
 using NFCEPS_API.Models.Request;
+using NFCEPS_API.Services.Implementaions;
 
 namespace NFCEPS_API.Controllers
 {
@@ -10,10 +11,12 @@ namespace NFCEPS_API.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
+        private readonly ILogger<AuthController> _logger;
 
-        public AuthController(IAuthService authService)
+        public AuthController(IAuthService authService, ILogger<AuthController> logger)
         {
             _authService = authService;
+            _logger = logger;
         }
 
         [HttpPost("login")]
@@ -28,7 +31,11 @@ namespace NFCEPS_API.Controllers
             if (!result.Success)
                 return Unauthorized(result);
 
-            return Ok(result); 
+            return Ok(result);
+
+            // Inside Login method
+            _logger.LogInformation("Login attempt for user: {UserName}", request.UserName);
+
         }
     }
 }

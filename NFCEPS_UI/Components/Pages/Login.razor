@@ -1,0 +1,40 @@
+﻿@page "/login"
+@inherits LoginBase
+
+<MudContainer MaxWidth="MaxWidth.Small" Class="mt-10">
+    <MudPaper Elevation="3" Class="pa-6">
+
+
+    <MudText Typo="Typo.h5" Class="mb-4">Login</MudText>
+
+    <MudTextField @bind-Value="LoginModel.UserName" Label="Username" Required="true" />
+    <MudTextField @bind-Value="LoginModel.Password" Label="Password" InputType="InputType.Password" Required="true" Class="mt-2" />
+
+    @if (!string.IsNullOrEmpty(_error))
+    {
+        <MudText Color="Color.Error" Class="mt-2">@_error</MudText>
+    }
+
+    <MudButton Variant="Variant.Filled"
+               Color="Color.Primary"
+               Class="mt-4"
+               FullWidth="true"
+               Disabled="_loading"
+               OnClick="Login">
+
+        @if (_loading)
+        {
+            <MudProgressCircular Indeterminate="true" Size="Size.Small" Class="mr-2" />
+            <span>Logging in...</span>
+        }
+        else
+        {
+            <span>Login</span>
+        }
+
+    </MudButton>
+
+</MudPaper>
+
+
+</MudContainer>
