@@ -3,6 +3,7 @@ using NFCEPS_UI.Auth;
 using NFCEPS_UI.Managers;
 using NFCEPS_UI.Services;
 using NFCEPS_UI.Models.RequestModel;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace NFCEPS_UI.Components.Pages
 {
@@ -19,6 +20,14 @@ namespace NFCEPS_UI.Components.Pages
 
         protected string _error;
         protected bool _loading = false;
+
+        protected async Task HandleKeyUp(KeyboardEventArgs e)
+        {
+            if (e.Key == "Enter")
+            {
+                await Login();
+            }
+        }
 
         protected async Task Login()
         {
@@ -49,7 +58,7 @@ namespace NFCEPS_UI.Components.Pages
 
                 CurrentUser.Set(data);
 
-                Navigation.NavigateTo("/", true);
+                Navigation.NavigateTo("/Dashboard", true);
             }
 
             catch

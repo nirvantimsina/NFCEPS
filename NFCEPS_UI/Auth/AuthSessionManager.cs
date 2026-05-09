@@ -20,14 +20,23 @@ public class AuthSessionManager
 
     public async Task InitializeAsync()
     {
-        var token = await _js.InvokeAsync<string?>(Key, "getItem");
-
-        if (!string.IsNullOrWhiteSpace(token))
+        try
         {
-            _cachedToken = token;
-            _auth.SetUser(Parse(token));
+            var token = await _js.InvokeAsync<string?>("localStorage.getItem", Key);
+
+            if (!string.IsNullOrWhiteSpace(token))
+            {
+                _cachedToken = token;
+                _auth.SetUser(Parse(token));
+            }
+        }
+        catch (InvalidOperationException)
+        {
+            // Prerendering: JS is not available yet.
+            // The app will call this again once it's interactive.
         }
     }
+
 
     public async Task LoginAsync(string token)
     {
@@ -41,11 +50,18 @@ public class AuthSessionManager
     public async Task LogoutAsync()
     {
         _cachedToken = null;
-
-        await _js.InvokeVoidAsync("localStorage.removeItem", Key);
-
+        try
+        {
+            await _js.InvokeVoidAsync("localStorage.removeItem", Key);
+        }
+        catch (InvalidOperationException)
+        {
+            // We are likely prerendering. We've cleared the cache, 
+            // the JS call will happen again once interactive.
+        }
         _auth.Logout();
     }
+
 
     public Task<string?> GetTokenAsync()
         => Task.FromResult(_cachedToken);
@@ -55,3 +71,4 @@ public class AuthSessionManager
         var handler = new JwtSecurityTokenHandler();
         return handler.ReadJwtToken(jwt).Claims;
     }
+}

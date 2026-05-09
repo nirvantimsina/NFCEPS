@@ -1,14 +1,16 @@
 ﻿@page "/login"
 @inherits LoginBase
 
+<title>NFCEPS - Login</title>
+
 <MudContainer MaxWidth="MaxWidth.Small" Class="mt-10">
     <MudPaper Elevation="3" Class="pa-6">
 
 
     <MudText Typo="Typo.h5" Class="mb-4">Login</MudText>
 
-    <MudTextField @bind-Value="LoginModel.UserName" Label="Username" Required="true" />
-    <MudTextField @bind-Value="LoginModel.Password" Label="Password" InputType="InputType.Password" Required="true" Class="mt-2" />
+    <MudTextField @bind-Value="LoginModel.UserName" Label="Username" Required="true" onkeyup="@HandleKeyUp"/>
+    <MudTextField @bind-Value="LoginModel.Password" Label="Password" InputType="InputType.Password" Required="true" Class="mt-2" onkeyup="@HandleKeyUp"/>
 
     @if (!string.IsNullOrEmpty(_error))
     {
