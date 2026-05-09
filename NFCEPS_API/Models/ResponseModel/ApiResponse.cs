@@ -1,4 +1,4 @@
-namespace NFCEPS_API.Models.Response;
+namespace NFCEPS_API.Wrapper;
 
 public class ApiResponse
 {

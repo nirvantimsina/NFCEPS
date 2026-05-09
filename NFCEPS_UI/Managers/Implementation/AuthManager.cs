@@ -1,4 +1,4 @@
-using NFCEPS_UI.Endpoints;
+using NFCEPS_UI.Route;
 using NFCEPS_UI.Models.RequestModel;
 using NFCEPS_UI.Models.ResponseModel;
 

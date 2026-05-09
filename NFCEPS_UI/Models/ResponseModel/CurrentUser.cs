@@ -1,10 +1,11 @@
-using System;
 using NFCEPS_UI.Models.ResponseModel;
+using NFCEPS_UI.Auth;
 
 namespace NFCEPS_UI.Services;
 
-public class CurrentUser
+public class CurrentUser()
 {
+    public string? UserName { get; private set; }
     public string? Name { get; private set; }
     public string? RoleName { get; private set; }
     public int RoleId { get; private set; }

@@ -15,6 +15,9 @@ public class PermissionService
     public bool Has(string permKey)
         => _permissions.Contains(permKey);
 
+    public bool HasAny(params string[] permKeys)
+        => permKeys.Any(Has);
+
     public void Clear()
     {
         _permissions.Clear();

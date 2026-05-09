@@ -1,12 +1,274 @@
 ﻿@inherits LayoutComponentBase
+@implements IDisposable
 
-<MudThemeProvider />
-<MudDialogProvider />
+@using Microsoft.AspNetCore.Components.Authorization
+@using NFCEPS_UI.Services
+@using NFCEPS_UI.Auth
+
+@inject PermissionService PermissionService
+@inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthProvider
+@inject AuthSessionManager AuthSessionManager
+
+<MudThemeProvider Theme="_theme" IsDarkMode="true" />
+<MudDialogProvider FullWidth="true" MaxWidth="MaxWidth.Small" />
 <MudSnackbarProvider />
 <MudPopoverProvider />
 
-<MudLayout>
-    <MudMainContent>
-        @Body
+<MudLayout Class="app-shell">
+
+    @* ── Side Rail ──────────────────────────────────────────────────── *@
+    <MudDrawer @bind-Open="_drawerOpen" Variant="DrawerVariant.Responsive" Breakpoint="Breakpoint.Md" Elevation="0"
+               Class="side-rail">
+
+        @* Brand *@
+        <div class="rail-brand">
+            <div class="brand-icon">
+                <MudIcon Icon="@Icons.Material.Filled.DirectionsBus" />
+            </div>
+            <div class="brand-text">
+                <span class="brand-name">TransitOS</span>
+                <span class="brand-tag">FLEET CONTROL</span>
+            </div>
+        </div>
+
+        @* System status pill *@
+        <div class="system-status">
+            <span class="status-dot"></span>
+            <span class="status-label">SYSTEM ONLINE</span>
+        </div>
+
+        @* Nav groups *@
+        <nav class="rail-nav">
+
+            <div class="nav-group">
+                <span class="nav-group-label">OPERATIONS</span>
+
+                <NavLink href="/dashboard" class="rail-link" Match="NavLinkMatch.All">
+                    <MudIcon Icon="@Icons.Material.Filled.Dashboard" Class="link-icon" />
+                    <span>Dashboard</span>
+                </NavLink>
+
+                @if (PermissionService.Has("sessions.view"))
+                {
+                    <NavLink href="/sessions" class="rail-link">
+                        <MudIcon Icon="@Icons.Material.Filled.DirectionsBus" Class="link-icon" />
+                        <span>Sessions</span>
+                    </NavLink>
+                }
+
+                @if (PermissionService.Has("routes.view"))
+                {
+                    <NavLink href="/routes" class="rail-link">
+                        <MudIcon Icon="@Icons.Material.Filled.AltRoute" Class="link-icon" />
+                        <span>Routes</span>
+                    </NavLink>
+                }
+
+                @if (PermissionService.Has("transactions.view"))
+                {
+                    <NavLink href="/transactions" class="rail-link">
+                        <MudIcon Icon="@Icons.Material.Filled.Receipt" Class="link-icon" />
+                        <span>Transactions</span>
+                    </NavLink>
+                }
+            </div>
+
+            @if (PermissionService.HasAny("drivers.view", "cards.view"))
+            {
+                <div class="nav-group">
+                    <span class="nav-group-label">FLEET</span>
+
+                    @if (PermissionService.Has("drivers.view"))
+                    {
+                        <NavLink href="/drivers" class="rail-link">
+                            <MudIcon Icon="@Icons.Material.Filled.Badge" Class="link-icon" />
+                            <span>Drivers</span>
+                        </NavLink>
+                    }
+
+                    @if (PermissionService.Has("cards.view"))
+                    {
+                        <NavLink href="/cards" class="rail-link">
+                            <MudIcon Icon="@Icons.Material.Filled.CreditCard" Class="link-icon" />
+                            <span>Cards</span>
+                        </NavLink>
+                    }
+                </div>
+            }
+
+            @if (PermissionService.HasAny("users.view", "roles.view", "permissions.view"))
+            {
+                <div class="nav-group">
+                    <span class="nav-group-label">ADMINISTRATION</span>
+
+                    @if (PermissionService.Has("users.view"))
+                    {
+                        <NavLink href="/users" class="rail-link">
+                            <MudIcon Icon="@Icons.Material.Filled.People" Class="link-icon" />
+                            <span>Users</span>
+                        </NavLink>
+                    }
+
+                    @if (PermissionService.Has("roles.view"))
+                    {
+                        <NavLink href="/roles" class="rail-link">
+                            <MudIcon Icon="@Icons.Material.Filled.AdminPanelSettings" Class="link-icon" />
+                            <span>Role Setup</span>
+                        </NavLink>
+                    }
+
+                    @if (PermissionService.Has("permissions.view"))
+                    {
+                        <NavLink href="/menu-setup" class="rail-link">
+                            <MudIcon Icon="@Icons.Material.Filled.Tune" Class="link-icon" />
+                            <span>Menu Setup</span>
+                        </NavLink>
+                    }
+                </div>
+            }
+        </nav>
+
+        @* User block pinned to bottom *@
+        <div class="rail-footer">
+            <div class="user-block">
+                <MudAvatar Color="Color.Primary" Size="Size.Small" Class="user-avatar">
+                    @_userInitials
+                </MudAvatar>
+                <div class="user-meta">
+                    <span class="user-name">@_userName</span>
+                    <span class="user-role">@_roleName</span>
+                </div>
+                <MudIconButton Icon="@Icons.Material.Filled.Logout" Size="Size.Small" Color="Color.Error"
+                               Title="Sign out" OnClick="LogoutAsync" Class="logout-btn" />
+            </div>
+        </div>
+    </MudDrawer>
+
+    @* ── Main area ──────────────────────────────────────────────────── *@
+    <MudMainContent Class="main-content">
+
+        @* Top bar *@
+        <header class="topbar">
+            <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start"
+                           OnClick="ToggleDrawer" Class="menu-toggle" />
+
+            <div class="topbar-breadcrumb">
+                @* Current page title injected via CascadingValue in each page if needed *@
+            </div>
+
+            <div class="topbar-right">
+                <span class="topbar-clock">@_clock</span>
+                <MudDivider Vertical="true" FlexItem="true" Class="mx-2" />
+                <MudIcon Icon="@Icons.Material.Filled.Circle" Style="font-size:.6rem; color: #22c55e;" />
+                <span class="topbar-live">LIVE</span>
+            </div>
+        </header>
+
+        @* Page content *@
+        <div class="page-wrapper">
+            @Body
+        </div>
     </MudMainContent>
 </MudLayout>
+
+@code {
+    private bool _drawerOpen = true;
+    private string _userName = string.Empty;
+    private string _userInitials = "?";
+    private string _roleName = string.Empty;
+    private string _clock = string.Empty;
+    private System.Threading.Timer? _timer;
+
+    private readonly MudTheme _theme = new()
+    {
+        PaletteLight = new PaletteLight(),
+        PaletteDark = new PaletteDark()
+        {
+            Black = "#0a0a0f",
+            Background = "#0f1117",
+            BackgroundGray = "#161820",
+            Surface = "#1a1d27",
+            DrawerBackground = "#13151e",
+            DrawerText = "#cbd5e1",
+            DrawerIcon = "#94a3b8",
+            AppbarBackground = "#13151e",
+            AppbarText = "#f1f5f9",
+            TextPrimary = "#f1f5f9",
+            TextSecondary = "#94a3b8",
+            TextDisabled = "#475569",
+            Primary = "#3b82f6",
+            PrimaryContrastText = "#ffffff",
+            Secondary = "#6366f1",
+            Success = "#22c55e",
+            Warning = "#f59e0b",
+            Error = "#ef4444",
+            Info = "#06b6d4",
+            LinesDefault = "#1e2436",
+            LinesInputs = "#2d3348",
+            Divider = "#1e2436",
+        },
+        LayoutProperties = new LayoutProperties()
+        {
+            DrawerWidthLeft = "240px",
+            DefaultBorderRadius = "6px",
+        },
+        Typography = new Typography()
+        {
+            Default = new DefaultTypography()
+            {
+                FontFamily = ["'DM Sans'", "sans-serif"],
+                FontSize = ".875rem",
+            },
+            H6 = new H6Typography()
+            {
+                FontFamily = ["'DM Mono'", "monospace"],
+                FontWeight = "600",
+            }
+        }
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadUserAsync();
+        StartClock();
+    }
+
+    private async Task LoadUserAsync()
+    {
+        var state = await AuthProvider.GetAuthenticationStateAsync();
+        var user = state.User;
+
+        _userName = user.FindFirst("userName")?.Value ?? "User";
+        _roleName = user.FindFirst("roleName")?.Value ?? string.Empty;
+        _userInitials = BuildInitials(_userName);
+    }
+
+    private void StartClock()
+    {
+        _clock = DateTime.Now.ToString("HH:mm:ss");
+        _timer = new System.Threading.Timer(_ =>
+        {
+            _clock = DateTime.Now.ToString("HH:mm:ss");
+            InvokeAsync(StateHasChanged);
+        }, null, 1000, 1000);
+    }
+
+    private void ToggleDrawer() => _drawerOpen = !_drawerOpen;
+
+    private async Task LogoutAsync()
+    {
+        await AuthSessionManager.LogoutAsync(); // or whatever your method is called
+        Navigation.NavigateTo("/login", forceLoad: true);
+    }
+
+    private static string BuildInitials(string name)
+    {
+        var parts = name.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        return parts.Length >= 2
+            ? $"{parts[0][0]}{parts[^1][0]}".ToUpper()
+            : name.Length > 0 ? name[0].ToString().ToUpper() : "?";
+    }
+
+    public void Dispose() => _timer?.Dispose();
+}

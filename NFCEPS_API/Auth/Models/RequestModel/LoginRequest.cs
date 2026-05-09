@@ -1,6 +1,4 @@
-using System.ComponentModel.DataAnnotations;
-
-namespace NFCEPS_API.Models.Request;
+namespace NFCEPS_API.Auth.Models.RequestModel;
 
 public class LoginRequest
 {

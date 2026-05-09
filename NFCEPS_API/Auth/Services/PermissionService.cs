@@ -2,22 +2,12 @@ using NFCEPS_API.Repository.Interfaces;
 
 namespace NFCEPS_API.Services.Permission;
 
-public class PermissionService
+public class PermissionService(IServiceScopeFactory scopeFactory, ILogger<PermissionService> logger)
 {
     private Dictionary<int, HashSet<string>> _cache = new();
-    private readonly IServiceScopeFactory _scopeFactory;
-    private readonly ILogger<PermissionService> _logger;
-
-    public PermissionService(IServiceScopeFactory scopeFactory,
-        ILogger<PermissionService> logger)
-    {
-        _scopeFactory = scopeFactory;
-        _logger = logger;
-    }
-
     public async Task LoadAsync()
     {
-        using var scope = _scopeFactory.CreateScope();
+        using var scope = scopeFactory.CreateScope();
         var repo = scope.ServiceProvider.GetRequiredService<IGenericRepository>();
 
         var rows = await repo.QueryAsync<RolePermissionRow>("Permission.sp_GetAllRolePermissions");
@@ -32,7 +22,7 @@ public class PermissionService
         }
 
         _cache = newCache;
-        _logger.LogInformation("Permission Cache Loaded - {Count} roles", newCache.Count);
+        logger.LogInformation("Permission Cache Loaded - {Count} roles", newCache.Count);
     }
 
     public bool Has(int roleId, string permKey) => _cache.TryGetValue(roleId, out var perms) && perms.Contains(permKey);

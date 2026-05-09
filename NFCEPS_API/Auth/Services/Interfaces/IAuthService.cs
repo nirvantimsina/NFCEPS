@@ -1,5 +1,5 @@
-using NFCEPS_API.Models.Request;
-using NFCEPS_API.Models.Response;
+using NFCEPS_API.Auth.Models.RequestModel;
+using NFCEPS_API.Wrapper;
 
 namespace NFCEPS_API.Services.Interfaces;
 

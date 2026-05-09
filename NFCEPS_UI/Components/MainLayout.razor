@@ -1,9 +1,0 @@
-﻿@using NFCEPS_UI.Auth
-@inject AuthSessionManager Session
-
-@code {
-    protected override async Task OnInitializedAsync()
-    {
-        await Session.InitializeAsync();
-    }
-}

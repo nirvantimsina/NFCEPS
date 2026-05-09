@@ -2,23 +2,22 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using NFCEPS_API.Wrapper;
 
 namespace NFCEPS_API.Auth;
 
-public class  JWTHelper
+public class JWTHelper(JWTSettings settings)
 {
-    private readonly JWTSettings _settings;
-
-    public JWTHelper(JWTSettings settings)
-    {
-        _settings = settings;
-    }
-
     // Auth/JwtHelper.cs
     public string GenerateToken(int userId, string userName, int roleId)
     {
+        if (string.IsNullOrEmpty(settings.SecretKey))
+        {
+            throw new InvalidOperationException("JWT Secret Key is not configured in appsettings.json.");
+        }
+
         var key = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(_settings.SecretKey));
+            Encoding.UTF8.GetBytes(settings.SecretKey));
 
         var credentials = new SigningCredentials(
             key, SecurityAlgorithms.HmacSha256);
@@ -31,10 +30,10 @@ public class  JWTHelper
         };
 
         var token = new JwtSecurityToken(
-            issuer: _settings.Issuer,
-            audience: _settings.Audience,
+            issuer: settings.Issuer,
+            audience: settings.Audience,
             claims: claims,
-            expires: DateTime.UtcNow.AddHours(_settings.ExpiryHours),
+            expires: DateTime.UtcNow.AddHours(settings.ExpiryHours),
             signingCredentials: credentials
         );
 

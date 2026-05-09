@@ -120,7 +120,17 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Auth/Models/Params/" />
       <Folder Include="Controllers\" />
+      <Folder Include="Dashboard/" />
+      <Folder Include="Dashboard/Controllers/" />
+      <Folder Include="Dashboard/Models/" />
+      <Folder Include="Dashboard/Models/Params/" />
+      <Folder Include="Dashboard/Models/RequestModel/" />
+      <Folder Include="Dashboard/Models/ResponseModel/" />
+      <Folder Include="Dashboard/Services/" />
+      <Folder Include="Dashboard/Services/Implementation/" />
+      <Folder Include="Dashboard/Services/Interface/" />
       <Folder Include="Helpers\" />
       <Folder Include="Models\Params\" />
     </ItemGroup>

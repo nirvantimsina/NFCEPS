@@ -1,30 +1,21 @@
 using System.Net;
 using System.Text.Json;
-using NFCEPS_API.Models.Response;
+using NFCEPS_API.Wrapper;
 
 namespace NFCEPS_API.Middleware
 
 {
-    public class ExceptionMiddleware
+    public class ExceptionMiddleware (RequestDelegate next, ILogger<ExceptionMiddleware> logger)
     {
-        private readonly RequestDelegate _next;
-        private readonly ILogger<ExceptionMiddleware> _logger;
-
-        public ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger)
-        {
-            _next = next;
-            _logger = logger;
-        }
-
         public async Task InvokeAsync(HttpContext context)
         {
             try
             {
-                await _next(context);
+                await next(context);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Unhandeled Exception - {Message}", ex.Message);
+                logger.LogError(ex, "Unhandeled Exception - {Message}", ex.Message);
                 await HandleExceptionAsync(context, ex);
             }
         }
