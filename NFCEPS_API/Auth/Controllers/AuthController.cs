@@ -1,19 +1,19 @@
 using Microsoft.AspNetCore.Mvc;
-using NFCEPS_API.Auth.Models.ResponseModel;
 using NFCEPS_API.Services.Interfaces;
 using NFCEPS_API.Auth.Models.RequestModel;
 using NFCEPS_API.Wrapper;
+using Microsoft.AspNetCore.Authorization;
 
 namespace NFCEPS_API.Controllers
 {
-    [Route("api/[controller]")]
+
     [ApiController]
-    public class AuthController(IAuthService authService, ILogger<AuthController> logger) : ControllerBase
+    public class AuthController(IAuthService authService, ILogger<AuthController> logger) : ApiBaseController
     {
-        [HttpPost("login")]
+        [HttpPost("Login")]
+        [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
-
             // Inside Login method
             logger.LogInformation("Login attempt for user: {UserName}", request.UserName);
 
@@ -23,10 +23,7 @@ namespace NFCEPS_API.Controllers
 
             var result = await authService.LoginAsync(request);
 
-            if (!result.Success)
-                return Unauthorized(result);
-
-            return Ok(result);
+            return HandleResponse(result);
         }
     }
 }

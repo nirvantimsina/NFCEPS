@@ -1,4 +1,6 @@
 ﻿@page "/login"
+@using global::NFCEPS_UI.Components.Pages.Auth
+@layout EmptyLayout
 @inherits LoginBase
 
 <PageTitle>NFCEPS - Login</PageTitle>
@@ -9,22 +11,22 @@
 
     <MudText Typo="Typo.h5" Class="mb-4">Login</MudText>
 
-    <MudTextField @bind-Value="LoginModel.UserName" Label="Username" Required="true" onkeyup="@HandleKeyUp"/>
-    <MudTextField @bind-Value="LoginModel.Password" Label="Password" InputType="InputType.Password" Required="true" Class="mt-2" onkeyup="@HandleKeyUp"/>
+    <MudTextField @bind-Value="request.UserName" Label="Username" Required="true" onkeyup="@HandleKeyUp"/>
+    <MudTextField @bind-Value="request.Password" Label="Password" InputType="InputType.Password" Required="true" Class="mt-2" onkeyup="@HandleKeyUp"/>
 
-    @if (!string.IsNullOrEmpty(_error))
+    @if (!string.IsNullOrEmpty(error))
     {
-        <MudText Color="Color.Error" Class="mt-2">@_error</MudText>
+        <MudText Color="Color.Error" Class="mt-2">@error</MudText>
     }
 
     <MudButton Variant="Variant.Filled"
                Color="Color.Primary"
                Class="mt-4"
                FullWidth="true"
-               Disabled="_loading"
-               OnClick="Login">
+               Disabled="IsLoading"
+               OnClick="SignIn">
 
-        @if (_loading)
+        @if (IsLoading)
         {
             <MudProgressCircular Indeterminate="true" Size="Size.Small" Class="mr-2" />
             <span>Logging in...</span>
@@ -40,3 +42,4 @@
 
 
 </MudContainer>
+

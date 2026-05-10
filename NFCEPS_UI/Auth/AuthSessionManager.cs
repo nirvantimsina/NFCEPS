@@ -4,71 +4,64 @@ using System.Security.Claims;
 
 namespace NFCEPS_UI.Auth;
 
-public class AuthSessionManager
+public class AuthSessionManager(IJSRuntime js, TokenStore tokenStore)
 {
-    private readonly IJSRuntime _js;
-    private readonly AuthStateProvider _auth;
-
     private const string Key = "authToken";
-    private string? _cachedToken;
 
-    public AuthSessionManager(IJSRuntime js, AuthStateProvider auth)
+    public async Task<string?> GetTokenAsync()
     {
-        _js = js;
-        _auth = auth;
-    }
+        // Return from memory first
+        if (!string.IsNullOrWhiteSpace(tokenStore.Token))
+            return tokenStore.Token;
 
-    public async Task InitializeAsync()
-    {
+        // Fall back to localStorage (page reload scenario)
         try
         {
-            var token = await _js.InvokeAsync<string?>("localStorage.getItem", Key);
-
+            var token = await js.InvokeAsync<string?>("localStorage.getItem", Key);
             if (!string.IsNullOrWhiteSpace(token))
             {
-                _cachedToken = token;
-                _auth.SetUser(Parse(token));
+                tokenStore.Token = token; // cache in memory for this circuit
+                return token;
             }
         }
-        catch (InvalidOperationException)
-        {
-            // Prerendering: JS is not available yet.
-            // The app will call this again once it's interactive.
-        }
-    }
+        catch (InvalidOperationException) { }
 
+        return null;
+    }
 
     public async Task LoginAsync(string token)
     {
-        _cachedToken = token;
-
-        await _js.InvokeVoidAsync("localStorage.setItem", Key, token);
-
-        _auth.SetUser(Parse(token));
+        tokenStore.Token = token; // set in memory immediately
+        await js.InvokeVoidAsync("localStorage.setItem", Key, token);
     }
 
     public async Task LogoutAsync()
     {
-        _cachedToken = null;
+        tokenStore.Token = null;
         try
         {
-            await _js.InvokeVoidAsync("localStorage.removeItem", Key);
+            await js.InvokeVoidAsync("localStorage.removeItem", Key);
         }
-        catch (InvalidOperationException)
-        {
-            // We are likely prerendering. We've cleared the cache, 
-            // the JS call will happen again once interactive.
-        }
-        _auth.Logout();
+        catch (InvalidOperationException) { }
     }
 
-
-    public Task<string?> GetTokenAsync()
-        => Task.FromResult(_cachedToken);
+    public async Task<IEnumerable<Claim>> GetClaimsAsync()
+    {
+        var token = await GetTokenAsync();
+        if (string.IsNullOrWhiteSpace(token))
+            return Enumerable.Empty<Claim>();
+        return Parse(token);
+    }
 
     private IEnumerable<Claim> Parse(string jwt)
     {
-        var handler = new JwtSecurityTokenHandler();
-        return handler.ReadJwtToken(jwt).Claims;
+        try
+        {
+            return new JwtSecurityTokenHandler().ReadJwtToken(jwt).Claims;
+        }
+        catch
+        {
+            return Enumerable.Empty<Claim>();
+        }
     }
 }

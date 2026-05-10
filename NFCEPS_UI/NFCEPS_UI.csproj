@@ -19,11 +19,9 @@
       <Folder Include="Endpoints\" />
       <Folder Include="Handlers\" />
       <Folder Include="Helpers\" />
-      <Folder Include="Managers/Implementation/" />
       <Folder Include="Managers\" />
-      <Folder Include="Models/Dashboard/" />
+      <Folder Include="Models/Auth/Models/" />
       <Folder Include="Models/Dashboard/RequestModel/" />
-      <Folder Include="Models/Dashboard/ResponseModel/" />
       <Folder Include="Models\RequestModel\" />
       <Folder Include="Models\ResponseModel\" />
       <Folder Include="Services/" />

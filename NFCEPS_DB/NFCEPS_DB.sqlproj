@@ -9,5 +9,11 @@
   </PropertyGroup>
   <Target Name="BeforeBuild">
     <Delete Files="$(BaseIntermediateOutputPath)\project.assets.json" />
-  </Target>
+  </Target>  
+  <ItemGroup>
+  <!-- Remove them from the compilation process -->
+  <Compile Remove="Useful Scripts\**\*.cs" />
+  <!-- (Optional) Keep them visible in Visual Studio as non-code files -->
+  <None Include="Useful Scripts\**" />
+  </ItemGroup>
 </Project>

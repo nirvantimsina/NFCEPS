@@ -1,4 +1,4 @@
-namespace NFCEPS_UI.Models.RequestModel;
+namespace NFCEPS_UI.Models.Auth.RequestModel;
 
 public class LoginRequest
 {

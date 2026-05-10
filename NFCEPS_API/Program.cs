@@ -10,6 +10,8 @@ using NFCEPS_API.Repository.Implementations;
 using NFCEPS_API.Services.Implementaions;
 using NFCEPS_API.Services.Interfaces;
 using NFCEPS_API.Middleware;
+using NFCEPS_API.Dashboard.Services.Interface;
+using NFCEPS_API.Dashboard.Services.Implementation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,21 +25,24 @@ builder.Services.AddSingleton<JWTHelper>();
 
 // add the services here below
 builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddSingleton<PermissionService>();
+builder.Services.AddScoped<PermissionService>();
 builder.Services.AddScoped<IGenericRepository, GenericRepository>();
+builder.Services.AddScoped<IDashboardService, DashboardService>();
 
-//Connection String
+
+//connection string
 var connectionString = builder.Configuration
     .GetConnectionString("NFCEPS_DB")!;
 builder.Services.AddSingleton(new DbConnectionFactory(connectionString));
 
-//Controllers
+//controllers
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
-// Swagger with JWT support
+// swagger with JWT support
 builder.Services.AddSwaggerGen(options =>
 {
+    // security definition as is
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -50,11 +55,14 @@ builder.Services.AddSwaggerGen(options =>
 
     options.AddSecurityRequirement(doc => new OpenApiSecurityRequirement
     {
-        [
-            new OpenApiSecuritySchemeReference("Bearer")
-        ] = new List<string>()
+        {
+           new OpenApiSecuritySchemeReference("Bearer", doc), 
+            new List<string>() 
+        }
     });
 });
+
+
 
 //JWT Auth
 var secretKey = jwtSettings.SecretKey ?? throw new InvalidOperationException("JWT SecretKey is missing in configuration.");
@@ -74,6 +82,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 Encoding.UTF8.GetBytes(jwtSettings.SecretKey))
         };
     });
+
+
+builder.Services.AddAuthorization(); 
 
 // CORS
 builder.Services.AddCors(options =>
@@ -113,7 +124,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection(); // maybe later uncomment this i think i might have to test with the https too
 app.UseRouting();
 app.UseCors("BlazorClient");
 app.UseAuthentication();
@@ -123,7 +134,9 @@ app.MapStaticAssets();
 
 app.MapControllers();
 
+app.Run()
+
+// this is for creating password
 // var hash = BCrypt.Net.BCrypt.HashPassword("admin123");
 // Console.WriteLine(hash);
 
-app.Run();

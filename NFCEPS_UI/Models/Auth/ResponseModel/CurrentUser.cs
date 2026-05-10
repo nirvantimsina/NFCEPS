@@ -1,7 +1,6 @@
 using NFCEPS_UI.Models.ResponseModel;
-using NFCEPS_UI.Auth;
 
-namespace NFCEPS_UI.Services;
+namespace NFCEPS_UI.Models.Auth.ResponseModel;
 
 public class CurrentUser()
 {

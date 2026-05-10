@@ -2,16 +2,25 @@ using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor.Services;
 using NFCEPS_UI.Auth;
 using NFCEPS_UI.Components;
-using NFCEPS_UI.Managers;
+using NFCEPS_UI.Auth.Managers;
 using NFCEPS_UI.Services;
+using NFCEPS_UI.Models.Auth.ResponseModel;
+using NFCEPS_UI.Managers.Dashboard.Interface;
+using NFCEPS_UI.Managers.Dashboard.Implementation;
 
 var builder = WebApplication.CreateBuilder(args);
 
 //
 // ===================== AUTH CORE =====================
 //
-
-builder.Services.AddAuthorizationCore();
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = "NoOp";
+    options.DefaultChallengeScheme = "NoOp";
+})
+.AddScheme<Microsoft.AspNetCore.Authentication.AuthenticationSchemeOptions, NoOpAuthHandler>(
+    "NoOp", _ => { });
+// builder.Services.AddAuthorization();
 
 builder.Services.AddScoped<AuthStateProvider>();
 builder.Services.AddScoped<AuthSessionManager>();
@@ -25,16 +34,12 @@ builder.Services.AddCascadingAuthenticationState();
 // ===================== HTTP + JWT HANDLER =====================
 //
 
-builder.Services.AddScoped<AuthorizationMessageHandler>();
-
 builder.Services.AddHttpClient("API", client =>
 {
     client.BaseAddress = new Uri("http://localhost:5043/");
-})
-.AddHttpMessageHandler<AuthorizationMessageHandler>();
+});
 
-builder.Services.AddScoped(sp =>
-    sp.GetRequiredService<IHttpClientFactory>().CreateClient("API"));
+builder.Services.AddScoped<TokenStore>();
 
 //
 // ===================== APP SERVICES =====================
@@ -43,6 +48,7 @@ builder.Services.AddScoped(sp =>
 builder.Services.AddScoped<CurrentUser>();
 builder.Services.AddScoped<IAuthManager, AuthManager>();
 builder.Services.AddScoped<PermissionService>();
+builder.Services.AddScoped<IDashboardManager, DashboardManager>();
 
 //
 // ===================== UI SERVICES =====================
@@ -69,11 +75,12 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection(); // later uncomment this
 
 app.UseStaticFiles();
 app.UseAntiforgery();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();

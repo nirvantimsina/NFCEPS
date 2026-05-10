@@ -10,8 +10,8 @@ namespace NFCEPS_API.Services.Implementaions;
 
 public class AuthService(IGenericRepository repo,
                         JWTHelper jwt,
-                        PermissionService permissions) : IAuthService
-    {
+                        PermissionService permissionService) : IAuthService
+{
     public async Task<ApiResponse> LoginAsync(LoginRequest request)
     {
         //fetch user by username only
@@ -29,22 +29,21 @@ public class AuthService(IGenericRepository repo,
 
         //userName is null
         if (request.Password is null)
-        return ApiResponse.Fail("Password is null!");
+            return ApiResponse.Fail("Password is null!");
 
         //verify password against stored BCrypt hash
         if (!PasswordHelper.VerifyPassword(request.Password, user.Password))
             return ApiResponse.Fail("Invaild username or password");
 
         //get permission for this role from cache
-        var permission = permissions.GetAll(user.RoleId).ToList();
+        var permissions = permissionService.GetAll(user.RoleId).ToList();
 
         //userName is null
         if (user.UserName is null)
-        return ApiResponse.Fail("UserName is null!");
+            return ApiResponse.Fail("UserName is null!");
 
         //generate jwt
-        var token = jwt.GenerateToken(user.UserId, user.UserName, user.RoleId);
-        
+        var token = jwt.GenerateToken(user.UserId, user.UserName, user.RoleId, permissions);
         return ApiResponse.Ok(new LoginResponse
         {
             Token = token,
@@ -52,7 +51,7 @@ public class AuthService(IGenericRepository repo,
             Name = user.Name,
             RoleName = user.RoleName,
             RoleId = user.RoleId,
-            Permissions = permission
+            Permissions = permissions
         });
     }
 }

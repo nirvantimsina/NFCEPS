@@ -5,24 +5,15 @@ using NFCEPS_API.Repository.Interfaces;
 
 namespace NFCEPS_API.Repository.Implementations;
 
-public class GenericRepository : IGenericRepository
+public class GenericRepository (DbConnectionFactory factory, ILogger<GenericRepository> logger) : IGenericRepository
 {
-    private readonly DbConnectionFactory _factory;
-    private readonly ILogger<GenericRepository> _logger;
-
-    public GenericRepository(DbConnectionFactory factory, ILogger<GenericRepository> logger)
-    {
-        _factory = factory;
-        _logger = logger;
-    }
-    
     //multiple rows, single or multiple tables
     public async Task<T?> GetFromMultipleQueriesAsync<T>(string storedProcedure,
         Func<SqlMapper.GridReader, Task<T>> map, object? parameters = null)
     {
         try
         {
-            using IDbConnection db = _factory.CreateConnection();
+            using IDbConnection db = factory.CreateConnection();
             using var multi = await db.QueryMultipleAsync(
                 storedProcedure,
                 parameters,
@@ -32,7 +23,7 @@ public class GenericRepository : IGenericRepository
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error in GetFromMultipleQueriesAsync - SP {SP}", storedProcedure);
+            logger.LogError(ex, "Error in GetFromMultipleQueriesAsync - SP {SP}", storedProcedure);
             throw;
         }
     }
@@ -42,7 +33,7 @@ public class GenericRepository : IGenericRepository
     {
         try
         {
-            using IDbConnection db = _factory.CreateConnection();
+            using IDbConnection db = factory.CreateConnection();
             return await db.QueryAsync<T>(
                 storedProcedure,
                 parameters,
@@ -50,7 +41,7 @@ public class GenericRepository : IGenericRepository
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error in QueryAsync - SP {sp}", storedProcedure);
+            logger.LogError(ex, "Error in QueryAsync - SP {sp}", storedProcedure);
             throw;
         }
     }
@@ -60,7 +51,7 @@ public class GenericRepository : IGenericRepository
     {
         try
         {
-            using IDbConnection db = _factory.CreateConnection();
+            using IDbConnection db = factory.CreateConnection();
             return await db.QueryFirstOrDefaultAsync<T>(
                 storedProcedure,
                 parameters,
@@ -68,7 +59,7 @@ public class GenericRepository : IGenericRepository
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error in QueryFirstOrDefaultAsync - SP {SP}", storedProcedure);
+            logger.LogError(ex, "Error in QueryFirstOrDefaultAsync - SP {SP}", storedProcedure);
             throw;
         }
     }
@@ -78,7 +69,7 @@ public class GenericRepository : IGenericRepository
     {
         try
         {
-            using IDbConnection db = _factory.CreateConnection();
+            using IDbConnection db = factory.CreateConnection();
             await db.ExecuteAsync(
                 storedProcedure,
                 parameters,
@@ -86,7 +77,7 @@ public class GenericRepository : IGenericRepository
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error in ExeuteAsync - SP {SP}", storedProcedure);
+            logger.LogError(ex, "Error in ExeuteAsync - SP {SP}", storedProcedure);
             throw;
         }
     }
@@ -96,7 +87,7 @@ public class GenericRepository : IGenericRepository
     {
         try
         {
-            using IDbConnection db = _factory.CreateConnection();
+            using IDbConnection db = factory.CreateConnection();
             return await db.ExecuteScalarAsync<T>(
                 storedProcedure,
                 parameters,
@@ -104,7 +95,7 @@ public class GenericRepository : IGenericRepository
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error in ExecuteScalarAsync sp - {SP}", storedProcedure);
+            logger.LogError(ex, "Error in ExecuteScalarAsync sp - {SP}", storedProcedure);
             throw;
         }
     }

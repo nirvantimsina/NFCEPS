@@ -1,6 +1,4 @@
-using System;
-
-namespace NFCEPS_UI.Models.ResponseModel;
+namespace NFCEPS_UI.Models.Auth.ResponseModel;
 
 public class LoginResponse
 {

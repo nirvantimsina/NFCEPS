@@ -9,25 +9,24 @@ namespace NFCEPS_API.Auth;
 public class JWTHelper(JWTSettings settings)
 {
     // Auth/JwtHelper.cs
-    public string GenerateToken(int userId, string userName, int roleId)
+    public string GenerateToken(int userId, string userName, int roleId, IEnumerable<string> permissions)
     {
         if (string.IsNullOrEmpty(settings.SecretKey))
-        {
             throw new InvalidOperationException("JWT Secret Key is not configured in appsettings.json.");
-        }
 
-        var key = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(settings.SecretKey));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(settings.SecretKey));
+        var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-        var credentials = new SigningCredentials(
-            key, SecurityAlgorithms.HmacSha256);
+        var claims = new List<Claim>
+    {
+        new(ClaimTypes.NameIdentifier, userId.ToString()),
+        new(ClaimTypes.Name, userName),
+        new("roleId", roleId.ToString())
+    };
 
-        var claims = new[]
-        {
-            new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
-            new Claim(ClaimTypes.Name, userName),
-            new Claim("roleId", roleId.ToString())
-        };
+        // Add each permission as its own claim
+        foreach (var permission in permissions)
+            claims.Add(new Claim("permission", permission));
 
         var token = new JwtSecurityToken(
             issuer: settings.Issuer,
