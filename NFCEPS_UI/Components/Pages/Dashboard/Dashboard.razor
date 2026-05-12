@@ -1,0 +1,124 @@
+﻿@page "/Dashboard"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+<PageTitle>NFCEPS - Dashboard</PageTitle>
+
+@if (IsLoading)
+{
+    <div class="dash-loading">
+        <MudProgressCircular Indeterminate="true" Color="Color.Primary" />
+        <span>Loading...</span>
+    </div>
+}
+else
+{
+    <div class="dash-topbar">
+        <div>
+            <h1 class="dash-title">Welcome back, @response?.Name</h1>
+            <p style="color:white">Name: @response?.Name | Role: @response?.UserRole</p>
+            <span class="dash-date">@DateTime.Now.ToString("dddd, dd MMMM yyyy")</span>
+        </div>
+        <MudChip T="string" Icon="@Icons.Material.Filled.Circle"
+                 Color="Color.Success" Size="Size.Small">
+            System Online
+        </MudChip>
+    </div>
+
+    <div class="stats-grid">
+        @if (permissionService.Has("sessions.view"))
+        {
+            <div class="stat-card stat-primary">
+                <div class="stat-icon">
+                    <MudIcon Icon="@Icons.Material.Filled.DirectionsBus" />
+                </div>
+                <div class="stat-body">
+                    <span class="stat-value">—</span>
+                    <span class="stat-label">Active Sessions</span>
+                </div>
+            </div>
+        }
+        @if (permissionService.Has("transactions.view"))
+        {
+            <div class="stat-card stat-success">
+                <div class="stat-icon">
+                    <MudIcon Icon="@Icons.Material.Filled.Payments" />
+                </div>
+                <div class="stat-body">
+                    <span class="stat-value">—</span>
+                    <span class="stat-label">Today's Revenue</span>
+                </div>
+            </div>
+        }
+        @if (permissionService.Has("cards.view"))
+        {
+            <div class="stat-card stat-warning">
+                <div class="stat-icon">
+                    <MudIcon Icon="@Icons.Material.Filled.CreditCard" />
+                </div>
+                <div class="stat-body">
+                    <span class="stat-value">—</span>
+                    <span class="stat-label">Active Cards</span>
+                </div>
+            </div>
+        }
+        @if (permissionService.Has("drivers.view"))
+        {
+            <div class="stat-card stat-info">
+                <div class="stat-icon">
+                    <MudIcon Icon="@Icons.Material.Filled.Badge" />
+                </div>
+                <div class="stat-body">
+                    <span class="stat-value">—</span>
+                    <span class="stat-label">Active Drivers</span>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="lower-grid">
+        <div class="mud-paper mud-elevation-1 pa-5 rounded-lg">
+            <h3 class="section-title mb-4">Quick Actions</h3>
+
+            @if (permissionService.Has("sessions.create"))
+            {
+                <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                           StartIcon="@Icons.Material.Filled.AddCircle"
+                           Href="/sessions/new" FullWidth="true" Class="mb-2">
+                    New Session
+                </MudButton>
+            }
+            @if (permissionService.Has("cards.create"))
+            {
+                <MudButton Variant="Variant.Outlined" Color="Color.Secondary"
+                           StartIcon="@Icons.Material.Filled.CreditCard"
+                           Href="/cards/issue" FullWidth="true" Class="mb-2">
+                    Issue Card
+                </MudButton>
+            }
+            @if (permissionService.Has("drivers.create"))
+            {
+                <MudButton Variant="Variant.Outlined" Color="Color.Tertiary"
+                           StartIcon="@Icons.Material.Filled.PersonAdd"
+                           Href="/drivers/new" FullWidth="true" Class="mb-2">
+                    Add Driver
+                </MudButton>
+            }
+            @if (!permissionService.HasAny("sessions.create", "cards.create", "drivers.create"))
+            {
+                <p class="no-actions">No actions available.</p>
+            }
+        </div>
+
+        @if (permissionService.Has("transactions.view"))
+        {
+            <div class="mud-paper mud-elevation-1 pa-5 rounded-lg">
+                <h3 class="section-title mb-4">Recent Transactions</h3>
+                <div class="dash-empty">
+                    <MudIcon Icon="@Icons.Material.Filled.ReceiptLong"
+                             Style="font-size:2.5rem; opacity:.25" />
+                    <span>No transactions today</span>
+                </div>
+            </div>
+        }
+    </div>
+}

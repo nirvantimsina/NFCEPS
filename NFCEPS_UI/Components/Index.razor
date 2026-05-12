@@ -1,0 +1,40 @@
+﻿@page "/"
+@page "/{*path}" 
+@using Microsoft.AspNetCore.Components.Authorization
+@inject NavigationManager Nav
+
+<AuthorizeView>
+    <Authorized>
+        @if (string.IsNullOrEmpty(path))
+        {
+            Nav.NavigateTo("dashboard");
+        }
+        else
+        {
+                <div class="d-flex flex-column align-center justify-center vh-100">
+                    <MudAlert Severity="Severity.Error" Variant="Variant.Filled" Class="ma-4">
+                        404 - Page "@path" does not exist!
+                    </MudAlert>
+                    <MudButton Href="dashboard" Variant="Variant.Filled" Color="Color.Primary" Class="ms-4">
+                        Back to Dashboard
+                    </MudButton>
+                </div>
+        }
+    </Authorized>
+    
+    <NotAuthorized>
+        @if (string.IsNullOrEmpty(path))
+        {
+            Nav.NavigateTo("login");
+        }
+        else if (path.ToLower() != "login") 
+        {
+            Nav.NavigateTo("login");
+        }
+
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    [Parameter] public string? path { get; set; }
+}

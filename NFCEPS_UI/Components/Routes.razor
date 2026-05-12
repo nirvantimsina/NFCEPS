@@ -1,26 +1,13 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization
-@using NFCEPS_UI.Components.Pages
-@using NFCEPS_UI.Components.Pages.Auth
 @using NFCEPS_UI.Components
-
 <CascadingAuthenticationState>
-    <Router AppAssembly="@typeof(App).Assembly">
-
-        <Found Context="routeData">
-            <AuthorizeRouteView RouteData="@routeData"
-                                DefaultLayout="@typeof(Layout.MainLayout)">
-                <NotAuthorized>
-                    <RedirectToLogin />
-                </NotAuthorized>
-            </AuthorizeRouteView>
-        </Found>
-
-        <NotFound>
-            <PageTitle>Not found</PageTitle>
-            <LayoutView Layout="@typeof(Layout.MainLayout)">
-                <p>Sorry, this page does not exist.</p>
-            </LayoutView>
-        </NotFound>
-
-    </Router>
+<Router AppAssembly="@typeof(App).Assembly">
+    <Found Context="routeData">
+        <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(Layout.MainLayout)">
+            <NotAuthorized>
+                <RedirectToLogin />
+            </NotAuthorized>
+        </AuthorizeRouteView>
+    </Found>
+</Router>
 </CascadingAuthenticationState>

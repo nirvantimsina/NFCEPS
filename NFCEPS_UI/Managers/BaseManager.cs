@@ -25,7 +25,7 @@ public abstract class BaseManager(AuthSessionManager sessionManager)
             return await response.Content.ReadFromJsonAsync<ApiResponse<T>>(options)
                 ?? new ApiResponse<T> { Success = false, Message = "Empty response from server" };
         }
-        catch (Exception ex)
+        catch
         {
             return new ApiResponse<T> { Success = false, Message = "Server Communication Error" };
         }

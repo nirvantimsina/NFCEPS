@@ -134,7 +134,7 @@ app.MapStaticAssets();
 
 app.MapControllers();
 
-app.Run()
+app.Run();
 
 // this is for creating password
 // var hash = BCrypt.Net.BCrypt.HashPassword("admin123");

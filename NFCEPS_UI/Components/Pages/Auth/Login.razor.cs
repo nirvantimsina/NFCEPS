@@ -6,13 +6,15 @@ using NFCEPS_UI.Models.Auth.RequestModel;
 using Microsoft.AspNetCore.Components.Web;
 using NFCEPS_UI.Models.Auth.ResponseModel;
 using Microsoft.AspNetCore.Authorization;
-using NFCEPS_UI.Models.ResponseModel;
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace NFCEPS_UI.Components.Pages.Auth
 {
     [AllowAnonymous]
     public partial class LoginBase : ComponentBase
     {
+            [CascadingParameter]
+    private Task<AuthenticationState> AuthStateTask { get; set; }
         [Inject] protected IAuthManager AuthManager { get; set; } = default!;
         [Inject] protected NavigationManager Navigation { get; set; } = default!;
         [Inject] protected AuthStateProvider AuthStateProvider { get; set; } = default!;
@@ -25,6 +27,16 @@ namespace NFCEPS_UI.Components.Pages.Auth
         protected string? error;
         protected bool IsLoading = false;
 
+            protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateTask;
+        
+        // If the user is already logged in, "bounce" them to the dashboard
+        if (authState.User.Identity is { IsAuthenticated: true })
+        {
+            Navigation.NavigateTo("dashboard");
+        }
+    }
         protected async Task HandleKeyUp(KeyboardEventArgs e)
         {
             if (e.Key == "Enter")

@@ -24,7 +24,10 @@ public class AuthSessionManager(IJSRuntime js, TokenStore tokenStore)
                 return token;
             }
         }
-        catch (InvalidOperationException) { }
+        catch (Exception)
+        {
+            return null;
+        }
 
         return null;
     }
