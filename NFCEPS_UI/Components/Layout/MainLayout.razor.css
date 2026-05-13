@@ -121,6 +121,58 @@
     color: var(--mud-palette-text-secondary);
     font-size: .82rem;
 }
+/* 1. Target the component container and break through MudBlazor's dynamic inner layout wrapper */
+.side-rail ::deep .mud-drawer-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* 2. Force the nav list container to stack structural blocks vertically */
+.side-rail ::deep .rail-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* 3. Force the labels and links to stack downwards instead of inline rows */
+.side-rail ::deep .nav-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* 4. Force the label text to occupy its own block row boundary */
+.side-rail ::deep .nav-group-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--mud-palette-text-secondary);
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+}
+
+/* 5. Style individual nav links to keep icons and text horizontally side-by-side */
+.side-rail ::deep .rail-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    color: var(--mud-palette-text-primary);
+    transition: background-color 0.2s;
+}
+
+/* 6. Highlight active menu links */
+.side-rail ::deep .rail-link.active {
+    background-color: var(--mud-palette-action-default-hover);
+    color: var(--mud-palette-primary);
+    font-weight: 500;
+}
+
+
+
 
 @media (max-width: 900px) {
     .lower-grid { grid-template-columns: 1fr; }
