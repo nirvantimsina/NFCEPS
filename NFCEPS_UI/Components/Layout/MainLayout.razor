@@ -33,7 +33,7 @@
                     <span>Dashboard</span>
                 </NavLink>
 
-                @if (PermissionService.Has("sessions.view"))
+                @if (PermissionService.Has("USR.C"))
                 {
                     <NavLink href="/sessions" class="rail-link d-flex align-center gap-2">
                         <MudIcon Icon="@Icons.Material.Filled.DirectionsBus" Class="link-icon" />

@@ -13,7 +13,17 @@ public class PermissionService
     }
 
     public bool Has(string permKey)
-        => _permissions.Contains(permKey);
+    {
+        try
+        {
+            return
+            _permissions.Contains(permKey);
+        }
+        catch
+        {
+            return false;
+        }
+    }
 
     public bool HasAny(params string[] permKeys)
         => permKeys.Any(Has);
