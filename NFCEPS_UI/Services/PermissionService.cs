@@ -12,18 +12,8 @@ public class PermissionService
         NotifyStateChanged();
     }
 
-    public bool Has(string permKey)
-    {
-        try
-        {
-            return
-            _permissions.Contains(permKey);
-        }
-        catch
-        {
-            return false;
-        }
-    }
+    public bool Has(string permKey) 
+        => !string.IsNullOrEmpty(permKey) && _permissions.Contains(permKey);
 
     public bool HasAny(params string[] permKeys)
         => permKeys.Any(Has);

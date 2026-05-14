@@ -25,7 +25,7 @@ builder.Services.AddSingleton<JWTHelper>();
 
 // add the services here below
 builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<PermissionService>();
+builder.Services.AddSingleton<PermissionService>();
 builder.Services.AddScoped<IGenericRepository, GenericRepository>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 
@@ -106,6 +106,13 @@ using (var scope = app.Services.CreateScope())
 {
     var permService = scope.ServiceProvider
         .GetRequiredService<PermissionService>();
+    await permService.LoadAsync();
+}
+
+// Hydrate cache on application startup
+using (var startupScope = app.Services.CreateScope())
+{
+    var permService = startupScope.ServiceProvider.GetRequiredService<PermissionService>();
     await permService.LoadAsync();
 }
 

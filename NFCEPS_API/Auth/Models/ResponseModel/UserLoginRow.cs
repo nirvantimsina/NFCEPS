@@ -9,4 +9,5 @@ public class UserLoginRow
     public bool IsActive { get; set; }
     public int RoleId { get; set; }
     public string? RoleName { get; set; }
+    public string? CompressedPermissions { get; set; }
 }
