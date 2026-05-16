@@ -11,7 +11,6 @@ namespace NFCEPS_API.Dashboard.Controllers
         [HttpGet("DashboardData")]
         public async Task<IActionResult> GetDashboardData([FromQuery] DashboardRequestModel request)
         {
-            Console.WriteLine($"CurrentUserId: {CurrentUserId}");
             request.UserId = CurrentUserId;
             var result = await dashboardService.GetDashboardDataAsync(request);
             

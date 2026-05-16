@@ -1,45 +1,45 @@
 ﻿@page "/login"
-@using global::NFCEPS_UI.Components.Pages.Auth
 @layout EmptyLayout
 @inherits LoginBase
 
 <PageTitle>NFCEPS - Login</PageTitle>
 
 <MudContainer MaxWidth="MaxWidth.Small" Class="mt-10">
-    <MudPaper Elevation="3" Class="pa-6">
+    <EditForm Model="@request" OnValidSubmit="SignIn">
+        <DataAnnotationsValidator />
+        <MudPaper Elevation="3" Class="pa-6">
 
+            <MudText Typo="Typo.h5" Class="mb-4">Login</MudText>
 
-    <MudText Typo="Typo.h5" Class="mb-4">Login</MudText>
+            <MudTextField @bind-Value="request.UserName" Label="Username" Required="true" onkeyup="@HandleKeyUp" />
+            <MudTextField @bind-Value="request.Password" Label="Password" InputType="InputType.Password" Required="true"
+                          Class="mt-2" onkeyup="@HandleKeyUp" />
 
-    <MudTextField @bind-Value="request.UserName" Label="Username" Required="true" onkeyup="@HandleKeyUp"/>
-    <MudTextField @bind-Value="request.Password" Label="Password" InputType="InputType.Password" Required="true" Class="mt-2" onkeyup="@HandleKeyUp"/>
+            @if (!string.IsNullOrEmpty(error))
+            {
+                <MudText Color="Color.Error" Class="mt-2">@error</MudText>
+            }
 
-    @if (!string.IsNullOrEmpty(error))
-    {
-        <MudText Color="Color.Error" Class="mt-2">@error</MudText>
-    }
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-4" FullWidth="true" Disabled="IsLoading"
+                       OnClick="SignIn">
 
-    <MudButton Variant="Variant.Filled"
-               Color="Color.Primary"
-               Class="mt-4"
-               FullWidth="true"
-               Disabled="IsLoading"
-               OnClick="SignIn">
+                @if (IsLoading)
+                {
+                    <MudProgressCircular Indeterminate="true" Size="Size.Small" Class="mr-2" />
+                    <span>Logging in...</span>
+                }
+                else
+                {
+                    <span>Login</span>
+                }
 
-        @if (IsLoading)
-        {
-            <MudProgressCircular Indeterminate="true" Size="Size.Small" Class="mr-2" />
-            <span>Logging in...</span>
-        }
-        else
-        {
-            <span>Login</span>
-        }
+            </MudButton>
 
-    </MudButton>
+            <MudText Align="Align.Center" Class="mt-4" Typo="Typo.body2">
+                New to NFCEPS?
+                <MudLink href="/signup" Color="Color.Primary" Underline="Underline.Hover">Sign Up</MudLink>
+            </MudText>
 
-</MudPaper>
-
-
+        </MudPaper>
+    </EditForm>
 </MudContainer>
-

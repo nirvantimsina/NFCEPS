@@ -18,10 +18,21 @@ namespace NFCEPS_API.Controllers
                 return int.TryParse(claimValue, out var id) ? id : 0;
             }
         }
+
+        protected string? CurrentUserName
+        {
+            get
+            {
+                var claimValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                return claimValue ?? string.Empty;
+            }
+        }
         protected IActionResult HandleResponse(ApiResponse result)
         {
             if (result == null)
-                return StatusCode(500, ApiResponse.Fail("An unexpected error occured!"));
+            {
+                return StatusCode(500, ApiResponse.Fail("An unexpected error occurred!"));
+            }
 
             return result.Success ? Ok(result) : BadRequest(result);
         }

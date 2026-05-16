@@ -6,6 +6,11 @@ namespace NFCEPS_UI.Managers;
 
 public abstract class BaseManager(AuthSessionManager sessionManager)
 {
+        private readonly System.Text.Json.JsonSerializerOptions _jsonOptions = new()
+    {
+        PropertyNameCaseInsensitive = true
+    };
+
     protected async Task SetAuthHeaderAsync(HttpClient http)
     {
         var token = await sessionManager.GetTokenAsync();
@@ -28,6 +33,25 @@ public abstract class BaseManager(AuthSessionManager sessionManager)
         catch
         {
             return new ApiResponse<T> { Success = false, Message = "Server Communication Error" };
+        }
+    }
+
+        protected async Task<ApiResponse> HandleResponse(HttpResponseMessage response)
+    {
+        try
+        {
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorResult = await response.Content.ReadFromJsonAsync<ApiResponse>(_jsonOptions);
+                return errorResult ?? new ApiResponse { Success = false, Message = $"Server error ({response.StatusCode})" };
+            }
+
+            return await response.Content.ReadFromJsonAsync<ApiResponse>(_jsonOptions)
+                ?? new ApiResponse { Success = true, Message = "Operation completed successfully" };
+        }
+        catch
+        {
+            return new ApiResponse { Success = false, Message = "Server Communication Error" };
         }
     }
 }

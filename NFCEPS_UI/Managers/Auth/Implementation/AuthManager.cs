@@ -12,8 +12,15 @@ public class AuthManager(IHttpClientFactory factory, AuthSessionManager sessionM
     public async Task<ApiResponse<LoginResponse>> LoginAsync(LoginRequest request)
     {
         var http = factory.CreateClient("API");
-        // No SetAuthHeaderAsync — login is public
         var response = await http.PostAsJsonAsync(AuthRoute.Login, request);
         return await HandleResponse<LoginResponse>(response);
+    }
+
+    public async Task<ApiResponse> SignUpAsync(SignUpRequest request)
+    {
+        var http = factory.CreateClient("API");
+
+        var response = await http.PostAsJsonAsync(AuthRoute.SignUp, request);
+        return await HandleResponse(response);
     }
 }

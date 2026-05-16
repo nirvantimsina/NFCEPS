@@ -7,6 +7,7 @@ using NFCEPS_UI.Services;
 using NFCEPS_UI.Models.Auth.ResponseModel;
 using NFCEPS_UI.Managers.Dashboard.Interface;
 using NFCEPS_UI.Managers.Dashboard.Implementation;
+using MudBlazor;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -54,7 +55,22 @@ builder.Services.AddScoped<IDashboardManager, DashboardManager>();
 // ===================== UI SERVICES =====================
 //
 
-builder.Services.AddMudServices();
+builder.Services.AddMudServices(config =>
+{
+    // Sets how long the toast stays visible on screen (3 seconds)
+    config.SnackbarConfiguration.VisibleStateDuration = 3000;
+    config.SnackbarConfiguration.ShowTransitionDuration = 150;
+    config.SnackbarConfiguration.HideTransitionDuration = 150;
+
+    // 1. MANDATORY: Enables the timer progress bar tracker line
+    config.SnackbarConfiguration.ShowCloseIcon = true;
+
+    // 2. OPTIONAL: Automatically pauses the countdown timer bar if the user hovers their mouse cursor over the toast
+    config.SnackbarConfiguration.RequireInteraction = false; 
+
+    config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.TopRight;
+    config.SnackbarConfiguration.PreventDuplicates = true;
+});
 
 //
 // ===================== RAZOR / BLAZOR =====================

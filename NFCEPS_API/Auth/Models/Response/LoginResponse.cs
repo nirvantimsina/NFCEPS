@@ -1,4 +1,4 @@
-namespace NFCEPS_API.Auth.Models.ResponseModel;
+namespace NFCEPS_API.Auth.Models.Response;
 
 public class LoginResponse
 {
