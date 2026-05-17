@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace NFCEPS_API.Controllers
 {
-    [ApiController]
     public class AuthController(IAuthService authService, ILogger<AuthController> logger) : ApiBaseController
     {
         [HttpPost("Login")]

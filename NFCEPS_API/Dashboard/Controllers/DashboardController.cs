@@ -5,7 +5,6 @@ using NFCEPS_API.Dashboard.Services.Interface;
 
 namespace NFCEPS_API.Dashboard.Controllers
 {
-    [ApiController]
     public class DashboardController(IDashboardService dashboardService) : ApiBaseController
     {
         [HttpGet("DashboardData")]

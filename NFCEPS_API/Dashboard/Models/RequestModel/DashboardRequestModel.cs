@@ -2,5 +2,5 @@ namespace NFCEPS_API.Dashboard.Models.RequestModel;
 
 public class DashboardRequestModel
 {
-    public int UserId;
+    public int UserId { get; set; }
 }

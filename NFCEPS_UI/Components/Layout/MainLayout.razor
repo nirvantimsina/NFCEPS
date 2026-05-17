@@ -33,7 +33,7 @@
                     <span>Dashboard</span>
                 </NavLink>
 
-                @if (PermissionService.Has("USR.C"))
+                @if (PermissionService.HasPermission("USR.C"))
                 {
                     <NavLink href="/sessions" class="rail-link d-flex align-center gap-2">
                         <MudIcon Icon="@Icons.Material.Filled.DirectionsBus" Class="link-icon" />
@@ -41,7 +41,7 @@
                     </NavLink>
                 }
 
-                @if (PermissionService.Has("routes.view"))
+                @if (PermissionService.HasPermission("routes.view"))
                 {
                     <NavLink href="/routes" class="rail-link d-flex align-center gap-2">
                         <MudIcon Icon="@Icons.Material.Filled.AltRoute" Class="link-icon" />
@@ -49,7 +49,7 @@
                     </NavLink>
                 }
 
-                @if (PermissionService.Has("transactions.view"))
+                @if (PermissionService.HasPermission("transactions.view"))
                 {
                     <NavLink href="/transactions" class="rail-link d-flex align-center gap-2">
                         <MudIcon Icon="@Icons.Material.Filled.Receipt" Class="link-icon" />
@@ -58,12 +58,12 @@
                 }
             </div>
 
-            @if (PermissionService.HasAny("drivers.view", "cards.view"))
+            @if (PermissionService.HasAnyPermission("drivers.view", "cards.view"))
             {
                 <div class="nav-group d-flex align-center gap-6">
                     <span class="nav-group-label">FLEET</span>
 
-                    @if (PermissionService.Has("drivers.view"))
+                    @if (PermissionService.HasPermission("drivers.view"))
                     {
                         <NavLink href="/drivers" class="rail-link d-flex align-center gap-2">
                             <MudIcon Icon="@Icons.Material.Filled.Badge" Class="link-icon" />
@@ -71,7 +71,7 @@
                         </NavLink>
                     }
 
-                    @if (PermissionService.Has("cards.view"))
+                    @if (PermissionService.HasPermission("cards.view"))
                     {
                         <NavLink href="/cards" class="rail-link d-flex align-center gap-2">
                             <MudIcon Icon="@Icons.Material.Filled.CreditCard" Class="link-icon" />
@@ -81,12 +81,12 @@
                 </div>
             }
 
-            @if (PermissionService.HasAny("users.view", "roles.view", "permissions.view"))
+            @if (PermissionService.HasAnyPermission("users.view", "roles.view", "permissions.view"))
             {
                 <div class="nav-group d-flex align-center gap-2">
                     <span class="nav-group-label">ADMINISTRATION</span>
 
-                    @if (PermissionService.Has("users.view"))
+                    @if (PermissionService.HasPermission("users.view"))
                     {
                         <NavLink href="/users" class="rail-link d-flex align-center gap-2">
                             <MudIcon Icon="@Icons.Material.Filled.People" Class="link-icon" />
@@ -94,7 +94,7 @@
                         </NavLink>
                     }
 
-                    @if (PermissionService.Has("roles.view"))
+                    @if (PermissionService.HasPermission("roles.view"))
                     {
                         <NavLink href="/roles" class="rail-link d-flex align-center gap-2">
                             <MudIcon Icon="@Icons.Material.Filled.AdminPanelSettings" Class="link-icon" />
@@ -102,7 +102,7 @@
                         </NavLink>
                     }
 
-                    @if (PermissionService.Has("permissions.view"))
+                    @if (PermissionService.HasPermission("permissions.view"))
                     {
                         <NavLink href="/menu-setup" class="rail-link d-flex align-center gap-2">
                             <MudIcon Icon="@Icons.Material.Filled.Tune" Class="link-icon" />

@@ -6,48 +6,53 @@ namespace NFCEPS_UI.Auth;
 
 public class AuthSessionManager(IJSRuntime js, TokenStore tokenStore)
 {
+    public event Action? OnLogout;
     private const string Key = "authToken";
 
     public async Task<string?> GetTokenAsync()
     {
-        // Return from memory first
         if (!string.IsNullOrWhiteSpace(tokenStore.Token))
             return tokenStore.Token;
 
-        // Fall back to localStorage (page reload scenario)
-        try
+        if (js is not IJSInProcessRuntime)
         {
-            var token = await js.InvokeAsync<string?>("localStorage.getItem", Key);
-            if (!string.IsNullOrWhiteSpace(token))
-            {
-                tokenStore.Token = token; // cache in memory for this circuit
-                return token;
-            }
-        }
-        catch (Exception)
-        {
+            // JS not ready yet → do NOT block auth pipeline
             return null;
         }
 
-        return null;
+        try
+        {
+            var token = await js.InvokeAsync<string?>("localStorage.getItem", Key);
+
+            if (!string.IsNullOrWhiteSpace(token))
+                tokenStore.Set(token);
+
+            return token;
+        }
+        catch
+        {
+            return null;
+        }
     }
 
     public async Task LoginAsync(string token)
     {
-        tokenStore.Token = token; // set in memory immediately
+        tokenStore.Set(token);// set in memory immediately
         await js.InvokeVoidAsync("localStorage.setItem", Key, token);
     }
 
     public async Task LogoutAsync()
     {
-        tokenStore.Token = null;
+        tokenStore.Clear();
+
         try
         {
             await js.InvokeVoidAsync("localStorage.removeItem", Key);
         }
         catch (InvalidOperationException) { }
-    }
 
+        OnLogout?.Invoke();
+    }
     public async Task<IEnumerable<Claim>> GetClaimsAsync()
     {
         var token = await GetTokenAsync();
@@ -60,7 +65,12 @@ public class AuthSessionManager(IJSRuntime js, TokenStore tokenStore)
     {
         try
         {
-            return new JwtSecurityTokenHandler().ReadJwtToken(jwt).Claims;
+            var handler = new JwtSecurityTokenHandler();
+
+            if (!handler.CanReadToken(jwt))
+                return Enumerable.Empty<Claim>();
+
+            return handler.ReadJwtToken(jwt).Claims;
         }
         catch
         {
