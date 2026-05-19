@@ -17,11 +17,11 @@ public class JWTHelper(JWTSettings settings)
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var claims = new List<Claim>
-    {
-        new(ClaimTypes.NameIdentifier, userId.ToString()),
-        new(ClaimTypes.Name, userName),
-        new("roleId", roleId.ToString())
-    };
+        {
+            new(ClaimTypes.NameIdentifier, userId.ToString()),
+            new(ClaimTypes.Name, userName),
+            new("roleId", roleId.ToString())
+        };
 
         // Add each permission as its own claim
         foreach (var permission in permissions)

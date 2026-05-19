@@ -1,5 +1,7 @@
-﻿@page "/signup"
+﻿@using Microsoft.AspNetCore.Authorization
+@page "/signup"
 @layout EmptyLayout
+@attribute [AllowAnonymous]
 
 <PageTitle>NFCEPS -Sign Up</PageTitle>
 <MudContainer MaxWidth="MaxWidth.Small" Class="mt-10">

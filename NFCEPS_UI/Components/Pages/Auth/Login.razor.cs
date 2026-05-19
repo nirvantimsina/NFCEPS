@@ -4,13 +4,11 @@ using NFCEPS_UI.Auth.Managers;
 using NFCEPS_UI.Models.Auth.RequestModel;
 using Microsoft.AspNetCore.Components.Web;
 using NFCEPS_UI.Models.Auth.ResponseModel;
-using Microsoft.AspNetCore.Authorization;
 using MudBlazor;
 using System.Security.Claims;
 
 namespace NFCEPS_UI.Components.Pages.Auth
 {
-    [AllowAnonymous]
     public partial class LoginBase : ComponentBase
     {
         [Inject] protected IAuthManager AuthManager { get; set; } = default!;
@@ -60,6 +58,8 @@ namespace NFCEPS_UI.Components.Pages.Auth
             var user = new ClaimsPrincipal(new ClaimsIdentity(claims, "jwt"));
 
             AuthStateProvider.SetAuthenticated(user);
+
+            await Task.Delay(50);
 
             await PermissionService.LoadFromTokenAsync(Session);
 

@@ -166,3 +166,20 @@
     </MudMainContent>
 </MudLayout>
 
+
+@using NFCEPS_UI.Auth
+@inject AuthSessionManager Session
+@inject NavigationManager Nav
+
+@code {
+    protected override void OnInitialized()
+    {
+        Session.OnSessionExpired += Redirect;
+        Session.OnSessionChanged += StateHasChanged;
+    }
+
+    private void Redirect()
+    {
+        Nav.NavigateTo("/login", forceLoad: true);
+    }
+}

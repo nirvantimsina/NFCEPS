@@ -14,7 +14,7 @@ public class AuthService
         _permissions = ps;
     }
 
-        public async Task InitializeAsync()
+    public async Task InitializeAsync()
     {
         var claims = await _session.GetClaimsAsync();
 

@@ -25,7 +25,7 @@ else
     </div>
 
     <div class="stats-grid">
-        @if (permissionService.HasPermission("sessions.view"))
+        @if (PermissionService.HasPermission("sessions.view"))
         {
             <div class="stat-card stat-primary">
                 <div class="stat-icon">
@@ -37,7 +37,7 @@ else
                 </div>
             </div>
         }
-        @if (permissionService.HasPermission("transactions.view"))
+        @if (PermissionService.HasPermission("transactions.view"))
         {
             <div class="stat-card stat-success">
                 <div class="stat-icon">
@@ -49,7 +49,7 @@ else
                 </div>
             </div>
         }
-        @if (permissionService.HasPermission("cards.view"))
+        @if (PermissionService.HasPermission("cards.view"))
         {
             <div class="stat-card stat-warning">
                 <div class="stat-icon">
@@ -61,7 +61,7 @@ else
                 </div>
             </div>
         }
-        @if (permissionService.HasPermission("drivers.view"))
+        @if (PermissionService.HasPermission("drivers.view"))
         {
             <div class="stat-card stat-info">
                 <div class="stat-icon">
@@ -79,7 +79,7 @@ else
         <div class="mud-paper mud-elevation-1 pa-5 rounded-lg">
             <h3 class="section-title mb-4">Quick Actions</h3>
 
-            @if (permissionService.HasPermission("sessions.create"))
+            @if (PermissionService.HasPermission("sessions.create"))
             {
                 <MudButton Variant="Variant.Filled" Color="Color.Primary"
                            StartIcon="@Icons.Material.Filled.AddCircle"
@@ -87,7 +87,7 @@ else
                     New Session
                 </MudButton>
             }
-            @if (permissionService.HasPermission("cards.create"))
+            @if (PermissionService.HasPermission("cards.create"))
             {
                 <MudButton Variant="Variant.Outlined" Color="Color.Secondary"
                            StartIcon="@Icons.Material.Filled.CreditCard"
@@ -95,7 +95,7 @@ else
                     Issue Card
                 </MudButton>
             }
-            @if (permissionService.HasPermission("drivers.create"))
+            @if (PermissionService.HasPermission("drivers.create"))
             {
                 <MudButton Variant="Variant.Outlined" Color="Color.Tertiary"
                            StartIcon="@Icons.Material.Filled.PersonAdd"
@@ -103,13 +103,13 @@ else
                     Add Driver
                 </MudButton>
             }
-            @if (!permissionService.HasAnyPermission("sessions.create", "cards.create", "drivers.create"))
+            @if (!PermissionService.HasAnyPermission("sessions.create", "cards.create", "drivers.create"))
             {
                 <p class="no-actions">No actions available.</p>
             }
         </div>
 
-        @if (permissionService.HasPermission("transactions.view"))
+        @if (PermissionService.HasPermission("transactions.view"))
         {
             <div class="mud-paper mud-elevation-1 pa-5 rounded-lg">
                 <h3 class="section-title mb-4">Recent Transactions</h3>

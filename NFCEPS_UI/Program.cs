@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor.Services;
 using NFCEPS_UI.Auth;
-using NFCEPS_UI.Components;
 using NFCEPS_UI.Auth.Managers;
 using NFCEPS_UI.Models.Auth.ResponseModel;
 using NFCEPS_UI.Managers.Dashboard.Interface;
@@ -9,6 +8,8 @@ using NFCEPS_UI.Managers.Dashboard.Implementation;
 using MudBlazor;
 using NFCEPS_UI.Managers.Card.Interface;
 using NFCEPS_UI.Managers.Card.Implementation;
+using NFCEPS_UI.Components;
+using Microsoft.AspNetCore.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,11 +17,21 @@ var builder = WebApplication.CreateBuilder(args);
 // ===================== AUTH CORE =====================
 //
 
-builder.Services.AddAuthorizationCore();
+builder.Services
+    .AddAuthentication("noop")
+    .AddScheme<AuthenticationSchemeOptions, NoOpAuthHandler>("noop", _ => { });
 
-builder.Services.AddScoped<AuthStateProvider>();
+builder.Services.AddAuthorization();
+
 builder.Services.AddScoped<AuthSessionManager>();
 
+builder.Services.AddScoped<AuthStateProvider>();
+
+builder.Services.AddTransient<AuthRedirectHandler>();
+
+builder.Services.AddHttpClient("API")
+    .AddHttpMessageHandler<AuthRedirectHandler>();
+    
 builder.Services.AddScoped<AuthenticationStateProvider>(sp =>
     sp.GetRequiredService<AuthStateProvider>());
 
@@ -30,6 +41,7 @@ builder.Services.AddScoped<PermissionService>();
 
 builder.Services.AddHttpContextAccessor();
 
+builder.Services.AddScoped<AuthService>();
 //
 // ===================== HTTP + JWT HANDLER =====================
 //
@@ -47,7 +59,6 @@ builder.Services.AddScoped<TokenStore>();
 
 builder.Services.AddScoped<CurrentUser>();
 builder.Services.AddScoped<IAuthManager, AuthManager>();
-builder.Services.AddScoped<PermissionService>();
 builder.Services.AddScoped<IDashboardManager, DashboardManager>();
 builder.Services.AddScoped<ICardManager, CardManager>();
 
@@ -99,8 +110,8 @@ if (!app.Environment.IsDevelopment())
 app.UseStaticFiles();
 app.UseAntiforgery();
 
-app.UseAuthentication();
-app.UseAuthorization();
+// app.UseAuthentication();
+// app.UseAuthorization();
 
 app.MapStaticAssets();
 
