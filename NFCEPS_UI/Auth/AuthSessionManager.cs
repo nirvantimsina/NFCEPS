@@ -6,8 +6,7 @@ namespace NFCEPS_UI.Auth;
 
 public class AuthSessionManager(IJSRuntime js, TokenStore tokenStore)
 {
-    public event Action? OnSessionChanged;
-public event Action? OnSessionExpired;
+    public event Action? OnLogout;
     private const string Key = "authToken";
 
     public async Task<string?> GetTokenAsync()
@@ -42,18 +41,18 @@ public event Action? OnSessionExpired;
         await js.InvokeVoidAsync("localStorage.setItem", Key, token);
     }
 
-public async Task LogoutAsync()
-{
-    tokenStore.Clear();
-
-    try
+    public async Task LogoutAsync()
     {
-        await js.InvokeVoidAsync("localStorage.removeItem", Key);
-    }
-    catch { }
+        tokenStore.Clear();
 
-    OnSessionChanged?.Invoke();
-}
+        try
+        {
+            await js.InvokeVoidAsync("localStorage.removeItem", Key);
+        }
+        catch (InvalidOperationException) { }
+
+        OnLogout?.Invoke();
+    }
     public async Task<IEnumerable<Claim>> GetClaimsAsync()
     {
         var token = await GetTokenAsync();
@@ -78,9 +77,4 @@ public async Task LogoutAsync()
             return Enumerable.Empty<Claim>();
         }
     }
-    public void MarkSessionExpired()
-{
-    tokenStore.Clear();
-    OnSessionExpired?.Invoke();
-}
 }

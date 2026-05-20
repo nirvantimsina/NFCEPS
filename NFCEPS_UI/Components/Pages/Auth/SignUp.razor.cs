@@ -7,6 +7,7 @@ using NFCEPS_UI.Models.Auth.RequestModel;
 
 namespace NFCEPS_UI.Components.Pages.Auth
 {
+    [AllowAnonymous]
     public partial class SignUp(
         NavigationManager Navigation,
         IAuthManager AuthManager,

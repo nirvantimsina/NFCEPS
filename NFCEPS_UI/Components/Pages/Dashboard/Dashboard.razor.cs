@@ -3,16 +3,25 @@ using NFCEPS_UI.Managers.Dashboard.Interface;
 using NFCEPS_UI.Models.Dashboard.ResponseModel;
 
 namespace NFCEPS_UI.Components.Pages.Dashboard;
-
 public partial class Dashboard(
-    IDashboardManager dashboardManager) : ComponentBase
+    IDashboardManager dashboardManager,
+    AuthGuard authGuard,
+    NavigationManager navigation,
+    AuthService authService)
 {
-    [Inject] private PermissionService PermissionService { get; set; } = default!;
+    [Inject] private PermissionService permissionService { get; set; } = default!;
     public DashboardResponseModel? response;
     public bool IsLoading { get; private set; } = true;
 
     protected override async Task OnInitializedAsync()
     {
+        if (!await authGuard.IsAuthenticatedAsync())
+        {
+            navigation.NavigateTo("/login");
+            return;
+        }
+
+        await authService.InitializeAsync();
         await LoadDataAsync();
     }
 
@@ -24,7 +33,8 @@ public partial class Dashboard(
         {
             var result = await dashboardManager.DashboardDataAsync();
 
-            response = result?.Success == true ? result.Data : null;
+            if (result?.Success == true)
+                response = result.Data;
         }
         catch (Exception ex)
         {

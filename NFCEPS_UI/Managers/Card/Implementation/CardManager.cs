@@ -1,3 +1,4 @@
+using Microsoft.Net.Http.Headers;
 using NFCEPS_UI.Auth;
 using NFCEPS_UI.Managers.Card.Interface;
 using NFCEPS_UI.Managers.Card.Route;

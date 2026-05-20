@@ -30,16 +30,11 @@ namespace NFCEPS_API.Controllers
         protected IActionResult HandleResponse(ApiResponse result)
         {
             if (result == null)
-                return StatusCode(500, ApiResponse.Fail("Unexpected error", 500));
-
-            var statusCode = result.StatusCode;
-
-            if (statusCode == 0)
             {
-                statusCode = result.Success ? 200 : 400;
+                return StatusCode(500, ApiResponse.Fail("An unexpected error occurred!"));
             }
 
-            return StatusCode(statusCode, result);
+            return result.Success ? Ok(result) : BadRequest(result);
         }
     }
 }
