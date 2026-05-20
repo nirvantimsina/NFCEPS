@@ -8,6 +8,8 @@ using NFCEPS_UI.Models.Auth.ResponseModel;
 using NFCEPS_UI.Managers.Dashboard.Interface;
 using NFCEPS_UI.Managers.Dashboard.Implementation;
 using MudBlazor;
+using NFCEPS_UI.Managers.Card.Interface;
+using NFCEPS_UI.Managers.Card.Implementation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,6 +52,7 @@ builder.Services.AddScoped<CurrentUser>();
 builder.Services.AddScoped<IAuthManager, AuthManager>();
 builder.Services.AddScoped<PermissionService>();
 builder.Services.AddScoped<IDashboardManager, DashboardManager>();
+builder.Services.AddScoped<ICardManager, CardManager>();
 
 //
 // ===================== UI SERVICES =====================
@@ -77,7 +80,10 @@ builder.Services.AddMudServices(config =>
 //
 
 builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
+    .AddInteractiveServerComponents(options =>
+    {
+        options.DetailedErrors = true;
+    });
 
 var app = builder.Build();
 

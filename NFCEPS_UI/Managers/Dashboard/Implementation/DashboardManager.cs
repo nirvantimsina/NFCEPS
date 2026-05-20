@@ -13,6 +13,7 @@ public class DashboardManager(IHttpClientFactory factory, AuthSessionManager ses
     {
         var http = factory.CreateClient("API");
         await SetAuthHeaderAsync(http);
+        
         var response = await http.GetAsync(DashboardRoute.DashboardData);
         return await HandleResponse<DashboardResponseModel>(response);
     }

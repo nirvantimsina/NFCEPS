@@ -1,0 +1,69 @@
+﻿@page "/AssignCard"
+
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+<PageTitle>Assign Card - NFCEPS</PageTitle>
+
+<div class="dash-topbar">
+
+    <div>
+
+        <h1 class="dash-title">Assign Card</h1>
+
+    </div>
+
+</div>
+
+<EditForm Model="@request" OnValidSubmit="HandleAssignCard">
+
+    <DataAnnotationsValidator />
+
+    <MudPaper Elevation="3" Class="pa-6">
+
+        <MudText Typo="Typo.h5" Class="mb-4">Assign Card</MudText>
+
+        <MudTextField @bind-Value="request.CardId" For="@(() => request.CardId)" Label="Card Physical Id"
+                      Variant="Variant.Filled" Required Class="mt-2" />
+
+        <MudTextField @bind-Value="request.UserId" For="@(() => request.UserId)" Label="User Id" Variant="Variant.Text"
+                      Required Class="mt-2" />
+
+        <MudTextField @bind-Value="request.AvailableAmount" For="@(() => request.AvailableAmount)"
+                      Label="Recharge Amount" Variant="Variant.Text" Required class="mt-2" />
+
+        <MudTextField @bind-Value="request.CheckSum" For="@(() => request.CheckSum)" Label="Check Sum"
+                      Variant="Variant.Outlined" Required Class="mt-2" onkeyup="HandleKeyUp" />
+
+        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true"
+                   Disabled="IsLoading" class="mt-6">
+
+            @if (IsLoading)
+
+            {
+
+                <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+
+                <MudText class="ms-2">Processing...</MudText>
+
+            }
+
+            else
+
+            {
+
+                <MudText>Assign Card</MudText>
+
+            }
+
+        </MudButton>
+
+        <MudText Align="(Align.Center)" Class="mt-4" Typo="Typo.body2">
+
+            Verify if the user already has a card assigned.
+
+        </MudText>
+
+    </MudPaper>
+
+</EditForm>
+

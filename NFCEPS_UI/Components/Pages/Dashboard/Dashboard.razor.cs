@@ -28,11 +28,7 @@ public partial class Dashboard(
         return; // ← make sure you return here and don't call LoadDataAsync
     }
 
-    var claims = await authSessionManager.GetClaimsAsync();
-    var permissions = claims
-        .Where(c => c.Type == "permission")
-        .Select(c => c.Value);
-    permissionService.SetPermissions(permissions);
+
 
     await LoadDataAsync();
     StateHasChanged();
