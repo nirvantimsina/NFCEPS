@@ -1,3 +1,4 @@
+using System.Data;
 using NFCEPS_API.Dashboard.Models.RequestModel;
 using NFCEPS_API.Dashboard.Models.ResponseModel;
 using NFCEPS_API.Dashboard.Services.Interface;
@@ -9,18 +10,18 @@ namespace NFCEPS_API.Dashboard.Services.Implementation;
 public class DashboardService(
     IGenericRepository repo) : IDashboardService
 {
-    public async Task<ApiResponse> GetDashboardDataAsync(DashboardRequestModel request)
+public async Task<ApiResponse> GetDashboardDataAsync(DashboardRequestModel request)
+{
+    var Params = new
     {
-        var Params = new
-        {
-            Flag = "G",
-            UserId = request.UserId
-        };
+        Flag = "G",
+        UserId = request.UserId
+    };
+    
+    var result = await repo.QueryFirstOrDefaultAsync<DashboardResponseModel>("dbo.sp_Dashboard", Params);
 
-        var result = await repo.QueryFirstOrDefaultAsync<DashboardResponseModel>("dbo.sp_Dashboard", Params);
-
-        return result != null
-            ? ApiResponse.Ok(result)
-            : ApiResponse.Fail("Dashboard data not found");
-    }
+    return result != null
+        ? ApiResponse.Ok(result)
+        : ApiResponse.Fail("Dashboard data not found");
+}
 }

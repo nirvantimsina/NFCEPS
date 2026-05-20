@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using MudBlazor;
 using NFCEPS_UI.Auth.Managers;
@@ -13,9 +14,19 @@ namespace NFCEPS_UI.Components.Pages.Auth
         IAuthManager AuthManager,
         ISnackbar Snackbar) : ComponentBase
     {
+        [CascadingParameter] protected Task<AuthenticationState> AuthStateTask { get; set; } = default!;
         protected SignUpRequest request = new();
         protected string? error;
         protected bool IsLoading = false;
+        protected override async Task OnInitializedAsync()
+        {
+            var authState = await AuthStateTask;
+
+            if (authState.User.Identity is {IsAuthenticated: true })
+            {
+                Navigation.NavigateTo("dashboard");
+            }
+        }
         protected async Task HandleSignUp()
         {
             error = null;
@@ -25,15 +36,15 @@ namespace NFCEPS_UI.Components.Pages.Auth
             {
                 var result = await AuthManager.SignUpAsync(request);
 
-                if (result?.Success != true)
+                if ( result == null || !result.Success)
                 {
-                    error = result?.Message ?? "Signup Failed!";                    
+                    error = result?.Message ?? "Signup Failed!";
+                    
                     Snackbar.Add(error, Severity.Error); 
                     return;
                 }
 
                 Snackbar.Add("Account created successfully!", Severity.Success);
-                
                 Navigation.NavigateTo("/login");
             }
             catch

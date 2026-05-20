@@ -3,20 +3,25 @@ using MudBlazor.Services;
 using NFCEPS_UI.Auth;
 using NFCEPS_UI.Components;
 using NFCEPS_UI.Auth.Managers;
+using NFCEPS_UI.Services;
 using NFCEPS_UI.Models.Auth.ResponseModel;
 using NFCEPS_UI.Managers.Dashboard.Interface;
 using NFCEPS_UI.Managers.Dashboard.Implementation;
 using MudBlazor;
-using NFCEPS_UI.Managers.Card.Interface;
-using NFCEPS_UI.Managers.Card.Implementation;
 
 var builder = WebApplication.CreateBuilder(args);
 
 //
 // ===================== AUTH CORE =====================
 //
-
-builder.Services.AddAuthorizationCore();
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = "NoOp";
+    options.DefaultChallengeScheme = "NoOp";
+})
+.AddScheme<Microsoft.AspNetCore.Authentication.AuthenticationSchemeOptions, NoOpAuthHandler>(
+    "NoOp", _ => { });
+// builder.Services.AddAuthorization();
 
 builder.Services.AddScoped<AuthStateProvider>();
 builder.Services.AddScoped<AuthSessionManager>();
@@ -25,10 +30,6 @@ builder.Services.AddScoped<AuthenticationStateProvider>(sp =>
     sp.GetRequiredService<AuthStateProvider>());
 
 builder.Services.AddCascadingAuthenticationState();
-
-builder.Services.AddScoped<PermissionService>();
-
-builder.Services.AddHttpContextAccessor();
 
 //
 // ===================== HTTP + JWT HANDLER =====================
@@ -49,7 +50,6 @@ builder.Services.AddScoped<CurrentUser>();
 builder.Services.AddScoped<IAuthManager, AuthManager>();
 builder.Services.AddScoped<PermissionService>();
 builder.Services.AddScoped<IDashboardManager, DashboardManager>();
-builder.Services.AddScoped<ICardManager, CardManager>();
 
 //
 // ===================== UI SERVICES =====================
@@ -77,11 +77,8 @@ builder.Services.AddMudServices(config =>
 //
 
 builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents(options =>
-    {
-        options.DetailedErrors = true;
-    });
-    
+    .AddInteractiveServerComponents();
+
 var app = builder.Build();
 
 //

@@ -2,19 +2,11 @@ namespace NFCEPS_UI.Auth;
 
 public class TokenStore
 {
-    public string? Token { get; private set; }
+    private string? _token;
 
-    public event Action? OnTokenChanged;
-
-    public void Set(string token)
+    public string? Token
     {
-        Token = token;
-        OnTokenChanged?.Invoke();
-    }
-
-    public void Clear()
-    {
-        Token = null;
-        OnTokenChanged?.Invoke();
+        get => _token;
+        set => _token = value;
     }
 }

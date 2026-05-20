@@ -18,16 +18,9 @@
       <Folder Include="Endpoints/" />
       <Folder Include="Endpoints\" />
       <Folder Include="Handlers\" />
-      <Folder Include="Helpers/" />
       <Folder Include="Helpers\" />
-      <Folder Include="Managers/Card/" />
-      <Folder Include="Managers/Card/Implementation/" />
-      <Folder Include="Managers/Card/Interface/" />
-      <Folder Include="Managers/Card/Route/" />
       <Folder Include="Managers\" />
-      <Folder Include="Models/Card/" />
-      <Folder Include="Models/Card/RequestModel/" />
-      <Folder Include="Models/Card/ResponseModel/" />
+      <Folder Include="Models/Auth/Models/" />
       <Folder Include="Models/Dashboard/RequestModel/" />
       <Folder Include="Models\RequestModel\" />
       <Folder Include="Models\ResponseModel\" />

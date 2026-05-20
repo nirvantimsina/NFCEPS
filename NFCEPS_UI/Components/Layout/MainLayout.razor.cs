@@ -2,13 +2,13 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor;
 using NFCEPS_UI.Auth;
+using NFCEPS_UI.Services;
 
 namespace NFCEPS_UI.Components.Layout
 {
-    public partial class MainLayout(NavigationManager Navigation,
+    public partial class MainLayout(PermissionService PermissionService, NavigationManager Navigation,
     AuthenticationStateProvider AuthProvider, AuthSessionManager AuthSessionManager) : IDisposable
     {
-        [Inject] public PermissionService PermissionService { get; set; } = default!;
         private bool _drawerOpen = true;
         private string _userName = string.Empty;
         private string _userInitials = "?";
@@ -66,46 +66,8 @@ namespace NFCEPS_UI.Components.Layout
 
         protected override async Task OnInitializedAsync()
         {
-            AuthProvider.AuthenticationStateChanged += HandleAuthStateChanged;
-
-            await RefreshUserAsync();
+            await LoadUserAsync();
             StartClock();
-        }
-
-        private async Task RefreshUserAsync()
-        {
-            var state = await AuthProvider.GetAuthenticationStateAsync();
-
-            await ApplyUserState(state);
-        }
-
-        private async void HandleAuthStateChanged(Task<AuthenticationState> task)
-        {
-            var state = await task;
-
-            await ApplyUserState(state);
-        }
-
-        private Task ApplyUserState(AuthenticationState state)
-        {
-            _userName = state.User.FindFirst("userName")?.Value ?? "User";
-            _roleName = state.User.FindFirst("roleName")?.Value ?? "";
-
-            _userInitials = BuildInitials(_userName);
-
-            return InvokeAsync(StateHasChanged);
-        }
-
-        private async Task OnAuthStateChanged(Task<AuthenticationState> task)
-        {
-            var state = await task.ConfigureAwait(false);
-
-            _userName = state.User.FindFirst("userName")?.Value ?? "User";
-            _roleName = state.User.FindFirst("roleName")?.Value ?? "";
-
-            _userInitials = BuildInitials(_userName);
-
-            await InvokeAsync(StateHasChanged);
         }
 
         private async Task LoadUserAsync()
@@ -133,7 +95,7 @@ namespace NFCEPS_UI.Components.Layout
         private async Task LogoutAsync()
         {
             await AuthSessionManager.LogoutAsync(); // or whatever your method is called
-            Navigation.NavigateTo("/login");
+            Navigation.NavigateTo("/login", forceLoad: true);
         }
 
         private static string BuildInitials(string name)
@@ -144,12 +106,6 @@ namespace NFCEPS_UI.Components.Layout
                 : name.Length > 0 ? name[0].ToString().ToUpper() : "?";
         }
 
-        public void Dispose()
-        {
-            AuthProvider.AuthenticationStateChanged -= HandleAuthStateChanged;
-
-            _timer?.Change(Timeout.Infinite, 0);
-            _timer?.Dispose();
-        }
+        public void Dispose() => _timer?.Dispose();
     }
 }
