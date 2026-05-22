@@ -1,6 +1,9 @@
 ﻿@page "/AssignCard"
-
+@inherits PermissionAwareBase
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+@if (PermissionService.Has("USR.C"))
+{
 
 <PageTitle>Assign Card - NFCEPS</PageTitle>
 
@@ -67,3 +70,7 @@
 
 </EditForm>
 
+}
+else{
+    <h2>hello world</h2>
+}

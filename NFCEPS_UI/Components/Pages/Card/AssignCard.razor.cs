@@ -1,17 +1,14 @@
-using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using NFCEPS_UI.Models.Card.RequestModel;
 using Microsoft.AspNetCore.Components.Web;
-using NFCEPS_UI.Services;
-using NFCEPS_UI.Managers.Card.Interface; // Add this line
+using NFCEPS_UI.Managers.Card.Interface;
 
 namespace NFCEPS_UI.Components.Pages.Card
 {
     public partial class AssignCard(
     ICardManager cardManager,
-    ISnackbar snackbar) : ComponentBase
+    ISnackbar snackbar) : PermissionAwareBase
     {
-        [Inject] private PermissionService permissionService { get; set; } = default!;
         protected AssignCardRequestModel request = new();
         protected string? error;
         protected bool IsLoading = false;

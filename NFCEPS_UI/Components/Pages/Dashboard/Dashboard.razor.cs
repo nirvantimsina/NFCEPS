@@ -1,39 +1,16 @@
-using Microsoft.AspNetCore.Components;
-using NFCEPS_UI.Auth;
 using NFCEPS_UI.Managers.Dashboard.Interface;
 using NFCEPS_UI.Models.Dashboard.ResponseModel;
-using NFCEPS_UI.Services;
 
 namespace NFCEPS_UI.Components.Pages.Dashboard;
 
-public partial class Dashboard(
-    PermissionService permissionService,
-    IDashboardManager dashboardManager,
-    AuthSessionManager authSessionManager,
-    NavigationManager navigation)
+public partial class Dashboard(IDashboardManager dashboardManager) : PermissionAwareBase
 {
     public DashboardResponseModel? response;
     public bool IsLoading { get; private set; } = true;
-
- protected override async Task OnAfterRenderAsync(bool firstRender)
-{
-    if (!firstRender) return;
-
-    var token = await authSessionManager.GetTokenAsync();
-    Console.WriteLine($"Token in dashboard OnAfterRender: {(string.IsNullOrEmpty(token) ? "NULL" : "found")}");
-
-    if (string.IsNullOrWhiteSpace(token))
+    protected override async Task OnPermissionsReadyAsync()
     {
-        navigation.NavigateTo("/login", forceLoad: true);
-        return; // ← make sure you return here and don't call LoadDataAsync
+        await LoadDataAsync();
     }
-
-
-
-    await LoadDataAsync();
-    StateHasChanged();
-}
-
     private async Task LoadDataAsync()
     {
         IsLoading = true;
