@@ -64,11 +64,25 @@ namespace NFCEPS_UI.Components.Layout
             }
         };
 
-        protected override async Task OnInitializedAsync()
+        protected override async Task OnAfterRenderAsync(bool firstRender)
         {
+            if (!firstRender) return;
+
+            var token = await AuthSessionManager.GetTokenAsync();
+
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                Navigation.NavigateTo("/login", forceLoad: true);
+                return;
+            }
+
             await LoadUserAsync();
+            await PermissionService.LoadFromTokenAsync(AuthSessionManager);
             StartClock();
+            StateHasChanged();
         }
+
+        // Remove OnInitializedAsync entirely
 
         private async Task LoadUserAsync()
         {
