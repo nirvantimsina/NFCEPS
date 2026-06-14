@@ -2,100 +2,99 @@ using System.Data;
 using Dapper;
 using NFCEPS_API.Repository.Interfaces;
 
-
 namespace NFCEPS_API.Repository.Implementations;
 
 public class GenericRepository (DbConnectionFactory factory, ILogger<GenericRepository> logger) : IGenericRepository
 {
-    //multiple rows, single or multiple tables
-    public async Task<T?> GetFromMultipleQueriesAsync<T>(string storedProcedure,
-        Func<SqlMapper.GridReader, Task<T>> map, object? parameters = null)
+    // Multiple rows, single or multiple tables
+    public async Task<T?> GetFromMultipleQueriesAsync<T>(string sql,
+        Func<SqlMapper.GridReader, Task<T>> map, object? parameters = null, CommandType commandType = CommandType.StoredProcedure)
     {
         try
         {
             using IDbConnection db = factory.CreateConnection();
             using var multi = await db.QueryMultipleAsync(
-                storedProcedure,
+                sql,
                 parameters,
-                commandType: CommandType.StoredProcedure);
+                commandType: commandType);
 
             return await map(multi);
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error in GetFromMultipleQueriesAsync - SP {SP}", storedProcedure);
+            logger.LogError(ex, "Error in GetFromMultipleQueriesAsync - SQL {SQL}", sql);
             throw;
         }
     }
     
-    //multiple rows, single table
-    public async Task<IEnumerable<T>> QueryAsync<T>(string storedProcedure, object? parameters = null)
+    // Multiple rows, single table
+    public async Task<IEnumerable<T>> QueryAsync<T>(string sql, object? parameters = null, CommandType commandType = CommandType.StoredProcedure)
     {
         try
         {
             using IDbConnection db = factory.CreateConnection();
             return await db.QueryAsync<T>(
-                storedProcedure,
+                sql,
                 parameters,
-                commandType: CommandType.StoredProcedure);
+                commandType: commandType); // Changed to dynamic commandType
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error in QueryAsync - SP {sp}", storedProcedure);
+            logger.LogError(ex, "Error in QueryAsync - SQL {sql}", sql);
             throw;
         }
     }
     
-    //single row, null if not found
-    public async Task<T?> QueryFirstOrDefaultAsync<T>(string storedProcedure, object? parameters = null)
+    // Single row, null if not found
+    public async Task<T?> QueryFirstOrDefaultAsync<T>(string sql, object? parameters = null, CommandType commandType = CommandType.StoredProcedure)
     {
         try
         {
             using IDbConnection db = factory.CreateConnection();
             return await db.QueryFirstOrDefaultAsync<T>(
-                storedProcedure,
+                sql,
                 parameters,
-                commandType: CommandType.StoredProcedure);
+                commandType: commandType); // Changed to dynamic commandType
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error in QueryFirstOrDefaultAsync - SP {SP}", storedProcedure);
+            logger.LogError(ex, "Error in QueryFirstOrDefaultAsync - SQL {SQL}", sql);
             throw;
         }
     }
     
-    //no return, for executions like insert, update and delete
-    public async Task ExecuteAsync(string storedProcedure, object? parameters = null)
+    // No return, for executions like insert, update and delete
+    public async Task ExecuteAsync(string sql, object? parameters = null, CommandType commandType = CommandType.StoredProcedure)
     {
         try
         {
             using IDbConnection db = factory.CreateConnection();
             await db.ExecuteAsync(
-                storedProcedure,
+                sql,
                 parameters,
-                commandType: CommandType.StoredProcedure);
+                commandType: commandType); // Changed to dynamic commandType
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error in ExeuteAsync - SP {SP}", storedProcedure);
+            logger.LogError(ex, "Error in ExecuteAsync - SQL {SQL}", sql);
             throw;
         }
     }
     
-    //single scalar value
-    public async Task<T?> ExecuteScalarAsync<T>(string storedProcedure, object? parameters = null)
+    // Single scalar value
+    public async Task<T?> ExecuteScalarAsync<T>(string sql, object? parameters = null, CommandType commandType = CommandType.StoredProcedure)
     {
         try
         {
             using IDbConnection db = factory.CreateConnection();
             return await db.ExecuteScalarAsync<T>(
-                storedProcedure,
+                sql,
                 parameters,
-                commandType: CommandType.StoredProcedure);
+                commandType: commandType); // Changed to dynamic commandType
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error in ExecuteScalarAsync sp - {SP}", storedProcedure);
+            logger.LogError(ex, "Error in ExecuteScalarAsync SQL - {SQL}", sql);
             throw;
         }
     }

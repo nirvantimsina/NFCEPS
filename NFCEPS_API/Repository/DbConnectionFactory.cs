@@ -1,5 +1,5 @@
 using System.Data;
-using Microsoft.Data.SqlClient;
+using Npgsql;
 
 namespace NFCEPS_API.Repository;
 
@@ -12,6 +12,5 @@ public class DbConnectionFactory
         _connectionString = connectionString;
     }
 
-    public IDbConnection CreateConnection()
-        => new SqlConnection(_connectionString);
+    public IDbConnection CreateConnection() => new NpgsqlConnection(_connectionString);
 }

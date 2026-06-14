@@ -10,7 +10,7 @@ public class PermissionService(IServiceScopeFactory scopeFactory, ILogger<Permis
         using var scope = scopeFactory.CreateScope();
         var repo = scope.ServiceProvider.GetRequiredService<IGenericRepository>();
 
-        var rows = await repo.QueryAsync<RolePermissionRow>("Permission.sp_GetAllRolePermissions");
+        var rows = await repo.QueryAsync<RolePermissionRow>("permission.sp_getallrolepermissions");
 
         var newCache = new Dictionary<int, HashSet<string>>();
 
