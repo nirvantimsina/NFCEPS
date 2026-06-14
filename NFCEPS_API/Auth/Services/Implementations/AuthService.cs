@@ -4,27 +4,34 @@ using NFCEPS_API.Auth.Models.Response;
 using NFCEPS_API.Wrapper;
 using NFCEPS_API.Repository.Interfaces;
 using NFCEPS_API.Services.Interfaces;
-using NFCEPS_API.Auth.Models.Params;
 using System.Data.Common;
+using System.Data;
 
 namespace NFCEPS_API.Services.Implementaions;
 
-public class AuthService(IGenericRepository repo,
-                        JWTHelper jwt) : IAuthService
+public class AuthService(IGenericRepository repo, JWTHelper jwt) : IAuthService
 {
     public async Task<ApiResponse> LoginAsync(LoginRequest request)
     {
-        //fetch user by username only
+        if (request.Password is null)
+            return ApiResponse.Fail("Password cannot be empty!");
+
+        // CHANGE 1: Use lowercase parameter names to match the Postgres function arguments
+        var loginParams = new { p_flag = "B", p_username = request.UserName };
+
+        // 2. Explicitly pass CommandType.Text to bypass the StoredProcedure engine parser
         var user = await repo.QueryFirstOrDefaultAsync<UserLoginRow>(
-            "Permission.sp_Auth",
-            new {Flag = "Login", request.UserName });
+            "SELECT * FROM permission.fn_auth(@p_flag, @p_username);",
+            loginParams,
+            commandType: CommandType.Text);
+
 
         //user not found
         if (user is null)
             return ApiResponse.Fail("Invalid username or password");
 
         //account inactive
-        if (!user.IsActive)
+        if (!user.isactive)
             return ApiResponse.Fail("Account is inActive");
 
         //userName is null
@@ -32,25 +39,25 @@ public class AuthService(IGenericRepository repo,
             return ApiResponse.Fail("Password cannot be empty!");
 
         //verify password against stored BCrypt hash
-        if (!PasswordHelper.VerifyPassword(request.Password, user.Password))
-            return ApiResponse.Fail("Invaild username or password");
+        if (!PasswordHelper.VerifyPassword(request.Password, user.password))
+            return ApiResponse.Fail("Invalid username or password");
 
         //userName is null
-        if (user.UserName is null)
+        if (user.username is null)
             return ApiResponse.Fail("User identity profile is corrupt!");
 
-        var listPermissions = !string.IsNullOrWhiteSpace(user.CompressedPermissions) ?
-        user.CompressedPermissions.Split(',').Select(p => p.Trim()).ToList() : new List<string>();
+        var listPermissions = !string.IsNullOrWhiteSpace(user.compressedpermissions) ?
+        user.compressedpermissions.Split(',').Select(p => p.Trim()).ToList() : new List<string>();
 
-        var token = jwt.GenerateToken(user.UserId, user.UserName, user.RoleId, listPermissions);
+        var token = jwt.GenerateToken(user.userid, user.username, user.roleid, listPermissions);
 
         return ApiResponse.Ok(new LoginResponse
         {
             Token = token,
-            UserName = user.UserName ?? string.Empty,
-            Name = user.Name ?? string.Empty,
-            RoleName = user.RoleName ?? string.Empty,
-            RoleId = user.RoleId,
+            UserName = user.username ?? string.Empty,
+            Name = user.name ?? string.Empty,
+            RoleName = user.rolename ?? string.Empty,
+            RoleId = user.roleid,
             Permissions = listPermissions
         });
     }
@@ -59,31 +66,36 @@ public class AuthService(IGenericRepository repo,
     {
         try
         {
-        var hashedPassword = PasswordHelper.HashPassword(request.Password);
-        var signUpParams = new SignUpParam
-        {
-            Flag = "SignUp",
-            UserName = request.UserName,
-            Name = request.Name,
-            Address = request.Address,
-            Phone = request.Phone,
-            Password = hashedPassword
-        };
-        await repo.ExecuteAsync("Permission.sp_Auth", signUpParams);
-        return ApiResponse.Ok();
+            var hashedPassword = PasswordHelper.HashPassword(request.Password);
+            var signUpParams = new
+            {
+                p_flag = "A",
+                p_username = request.UserName,
+                p_name = request.Name,
+                p_address = request.Address,
+                p_phone = request.Phone,
+                p_password = hashedPassword
+            };
+
+            await repo.ExecuteAsync(
+                "SELECT permission.fn_auth(@p_flag, @p_username, @p_name, @p_address, @p_phone, @p_password)",
+                signUpParams,
+                commandType: CommandType.Text);
+
+            return ApiResponse.Ok();
         }
         catch (DbException ex)
         {
-            if (ex.Message.Contains("UNIQUE KEY"))
+            if (ex.Message.Contains("violates unique constraint", StringComparison.OrdinalIgnoreCase) || ex.SqlState == "23505")
             {
                 return ApiResponse.Fail("Username or Phone Number already exists.");
             }
 
-            return ApiResponse.Fail("A database error ocured during registration!");
+            return ApiResponse.Fail("A database error occurred during registration!");
         }
         catch
         {
-            return ApiResponse.Fail("An unexpected error occured!");
+            return ApiResponse.Fail("An unexpected error occurred!");
         }
     }
 }

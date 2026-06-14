@@ -2,15 +2,13 @@ namespace NFCEPS_API.Auth;
 
 public class PasswordHelper
 {
-    public static byte[] HashPassword(string Password)
+    public static string HashPassword(string password)
     {
-        string hashed = BCrypt.Net.BCrypt.HashPassword(Password);
-        return System.Text.Encoding.UTF8.GetBytes(hashed);
+        return BCrypt.Net.BCrypt.HashPassword(password);
     }
 
-    public static bool VerifyPassword(string Password, byte[] storedHash)
+    public static bool VerifyPassword(string Password, string storedHash)
     {
-        string storedHashString = System.Text.Encoding.UTF8.GetString(storedHash);
-        return BCrypt.Net.BCrypt.Verify(Password, storedHashString);
+        return BCrypt.Net.BCrypt.Verify(Password, storedHash);
     }
 }

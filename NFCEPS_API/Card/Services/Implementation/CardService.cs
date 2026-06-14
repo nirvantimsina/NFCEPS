@@ -12,26 +12,25 @@ namespace NFCEPS_API.Card.Services.Implementation
         {
             try
             {
-            var Params = new
-            {
-                Flag = "G",
-                UserId = request.UserId,
-                CardId = request.CardId,
-                AvailableAmount = request.AvailableAmount,
-                CheckSum = request.CheckSum
-            };
+                var Params = new
+                {
+                    p_flag = "G",
+                    p_userid = request.UserId,
+                    p_cardid = request.CardId,
+                    p_availableamount = request.AvailableAmount,
+                    p_checksum = request.CheckSum
+                };
 
-            await repo.ExecuteAsync("Card.sp_AssignCard", Params);
-            return ApiResponse.Ok();
+                await repo.ExecuteAsync("card.sp_assigncard", Params);
+                return ApiResponse.Ok();
             }
-            
+
             catch (DbException ex)
             {
                 if (ex.Message == "UNIQUE")
                 {
                     return ApiResponse.Fail("The card already exists in the database!");
                 }
-
                 return ApiResponse.Fail("A database error has occured!");
             }
             catch
