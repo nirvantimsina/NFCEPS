@@ -18,7 +18,7 @@ Admin settles collected fares → entity owners paid via branch
 
 ```
 NFCEPS/
-├── NFCEPS_API/        ASP.NET Core 10 Web API
+├── NFCEPS_API/        ASP.NET Core 9 Web API
 └── NFCEPS_UI/         Blazor Server 10 + MudBlazor
 ```
 
@@ -29,9 +29,9 @@ NFCEPS/
 - LittleFS for offline transaction storage
 
 **Database**
-- Microsoft SQL Server
+- PostgreSQL (migrated from MSSQL)
 - 19 tables across 8 schemas
-- All business logic in stored procedures
+- All business logic in stored procedures and functions
 - Dapper for data access
 
 ---
@@ -125,25 +125,25 @@ Permissions are loaded into a singleton `Dictionary<int, HashSet<string>>` cache
 
 ### Prerequisites
 
-- .NET 10 SDK
-- Microsoft SQL Server
-- Visual Studio Code with C# Dev Kit or Visual Studio (for code)
-- Arduino IDE or PlatformIO (for firmware)
-- SSMS or Datagrip (for database management)
+- .NET 9 SDK
+- Visual Studio Code with C# Dev Kit or Visual Studio
+- PostgreSQL
+- pgAdmin
+- Arduino IDE or PlatformIO
 
 ### 1 — Database Setup
 
 Run the scripts in order:
 
 ```
-database/
-├── 001_initial_schema.sql    — creates all schemas and tables
-├── 002_seed_data.sql         — roles, permissions, admin user
-└── 003_foreign_keys.sql      — add after testing is complete
-(I will add these files later)
+database/usefulscripts
+├── create_table.sql    — creates all schemas and tables
+└── foreign_keys.sql      — add after testing is complete
+(more folders such as 'Stored Procedure' and 'Functions' will be added as the project grows)
 ```
 
 ```bash
+# OUT OF SUPPORT
 # connect to your SQL Server instance and run:
 sqlcmd -S localhost -i database/001_initial_schema.sql
 sqlcmd -S localhost -i database/002_seed_data.sql
@@ -155,7 +155,7 @@ sqlcmd -S localhost -i database/002_seed_data.sql
 cd NFCEPS_API
 ```
 
-Set your user secrets (never commit the real key):
+Set your user secrets:
 
 ```bash
 dotnet user-secrets init
@@ -180,14 +180,13 @@ dotnet run
 
 UI available at `https://localhost:7183`
 
-### 4 — Default Admin Login
+### 4 — Via the signup page create your credentials for login
 
 ```
+# Example Login Credentials
 Username: admin
-Password: Admin@123
+Password: admin123
 ```
-
-Change this immediately after first login.
 
 ---
 
