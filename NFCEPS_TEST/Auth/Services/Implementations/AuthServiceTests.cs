@@ -112,5 +112,41 @@ public class AuthServiceTests
         Assert.Equal(expectedPermissions, loginResponse.Permissions);
         Assert.NotNull(loginResponse.Token);
     }
+    [Fact]
+    public async Task LoginAsync_InActiveAccount_ReturnsAccountInactive()
+    {
+        // Arrange
+        string plainPassword = "nirvana";
+
+        string validPassword = PasswordHelper.HashPassword(plainPassword);
+
+        var request = new LoginRequest { UserName = "admin", Password = plainPassword };
+
+        var fakeUserDatabaseRow = new UserLoginRow
+        {
+            UserId = 1,
+            Name = "Standard User",
+            UserName = "admin",
+            Password = validPassword,
+            IsActive = false,
+            RoleId = 2,
+            RoleName = "standard",
+            CompressedPermissions = "CRD.C, CRD.R, CRD.U, CRD.D"
+        };
+
+        _mockRepo.Setup(r => r.QueryFirstOrDefaultAsync<UserLoginRow>(
+            It.IsAny<string>(),
+            It.IsAny<object>(),
+            It.IsAny<CommandType>()
+        )).ReturnsAsync(fakeUserDatabaseRow);
+
+        // Act
+        var result = await _authService.LoginAsync(request);
+
+        // Assert
+        Assert.False(result.Success);
+        Assert.Null(result.Data);
+        Assert.Equal("Account is inActive", result.Message);
+    }
     #endregion
 }
