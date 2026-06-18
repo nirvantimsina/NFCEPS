@@ -1,12 +1,10 @@
 using System.Data;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Moq;
 using NFCEPS_API.Auth;
 using NFCEPS_API.Auth.Models.Request;
 using NFCEPS_API.Auth.Models.Response;
 using NFCEPS_API.Repository.Interfaces;
 using NFCEPS_API.Services.Implementaions;
-using NFCEPS_API.Wrapper;
 
 namespace NFCEPS_TEST.Auth.Services.Implementations;
 
