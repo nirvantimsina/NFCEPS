@@ -16,10 +16,11 @@ public class AuthService(IGenericRepository repo, JWTHelper jwt) : IAuthService
         if (request.Password is null)
             return ApiResponse.Fail("Password cannot be empty!");
 
-        // CHANGE 1: Use lowercase parameter names to match the Postgres function arguments
+        // Use lowercase parameter names to match the Postgres function arguments
         var loginParams = new { p_flag = "B", p_username = request.UserName };
 
-        // 2. Explicitly pass CommandType.Text to bypass the StoredProcedure engine parser
+        // Explicitly pass CommandType.Text to bypass the StoredProcedure engine parser
+        // This is the service for validating the user login
         var user = await repo.QueryFirstOrDefaultAsync<UserLoginRow>(
             "SELECT * FROM permission.fn_auth(@p_flag, @p_username);",
             loginParams,

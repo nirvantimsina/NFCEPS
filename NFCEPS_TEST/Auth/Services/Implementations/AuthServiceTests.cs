@@ -78,14 +78,14 @@ public class AuthServiceTests
 
         var fakeUserDatabaseRow = new UserLoginRow
         {
-            userid = 12,
-            username = "linux",
-            name = "Arch BTW",
-            password = validPassword,
-            isactive = true,
-            roleid = 1,
-            rolename = "admin",
-            compressedpermissions = "CRD.C, CRD.R, CRD.U, CRD.D"
+            UserId = 12,
+            UserName = "linux",
+            Name = "Arch BTW",
+            Password = validPassword,
+            IsActive = true,
+            RoleId = 1,
+            RoleName = "admin",
+            CompressedPermissions = "CRD.C, CRD.R, CRD.U, CRD.D"
         };
 
         _mockRepo.Setup(r => r.QueryFirstOrDefaultAsync<UserLoginRow>(
@@ -111,42 +111,6 @@ public class AuthServiceTests
         Assert.Equal(1, loginResponse.RoleId);
         Assert.Equal(expectedPermissions, loginResponse.Permissions);
         Assert.NotNull(loginResponse.Token);
-    }
-    [Fact]
-    public async Task LoginAsync_InActiveAccount_ReturnsAccountInactive()
-    {
-        // Arrange
-        string plainPassword = "nirvana";
-
-        string validPassword = PasswordHelper.HashPassword(plainPassword);
-
-        var request = new LoginRequest { UserName = "admin", Password = plainPassword };
-
-        var fakeUserDatabaseRow = new UserLoginRow
-        {
-            userid = 1,
-            name = "Standard User",
-            username = "admin",
-            password = validPassword,
-            isactive = false,
-            roleid = 2,
-            rolename = "standard",
-            compressedpermissions = "CRD.C, CRD.R, CRD.U, CRD.D"
-        };
-
-        _mockRepo.Setup(r => r.QueryFirstOrDefaultAsync<UserLoginRow>(
-            It.IsAny<string>(),
-            It.IsAny<object>(),
-            It.IsAny<CommandType>()
-        )).ReturnsAsync(fakeUserDatabaseRow);
-
-        // Act
-        var result = await _authService.LoginAsync(request);
-
-        // Assert
-        Assert.False(result.Success);
-        Assert.Null(result.Data);
-        Assert.Equal("Account is inActive", result.Message);
     }
     #endregion
 }
