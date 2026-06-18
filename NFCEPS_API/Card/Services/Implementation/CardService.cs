@@ -3,6 +3,7 @@ using NFCEPS_API.Card.Models.Request;
 using NFCEPS_API.Card.Services.Interface;
 using NFCEPS_API.Repository.Interfaces;
 using NFCEPS_API.Wrapper;
+using Npgsql;
 
 namespace NFCEPS_API.Card.Services.Implementation
 {
@@ -14,28 +15,26 @@ namespace NFCEPS_API.Card.Services.Implementation
             {
                 var Params = new
                 {
-                    p_flag = "G",
-                    p_userid = request.UserId,
-                    p_cardid = request.CardId,
-                    p_availableamount = request.AvailableAmount,
-                    p_checksum = request.CheckSum
+                    p_flag = request.Flag = "A",
+                    p_userid = request.UserId
                 };
 
-                await repo.ExecuteAsync("card.sp_assigncard", Params);
+                var cardid = await repo.QueryFirstOrDefaultAsync<int>("SELECT * FROM card.fn_assign_card(@p_flag, @p_userid)", Params);
                 return ApiResponse.Ok();
             }
 
-            catch (DbException ex)
+            catch (NpgsqlException ex)
             {
-                if (ex.Message == "UNIQUE")
+                return ex.SqlState switch
                 {
-                    return ApiResponse.Fail("The card already exists in the database!");
-                }
-                return ApiResponse.Fail("A database error has occured!");
+                    "P0001" => ApiResponse.Fail("Card has already been assigned to this user!"),
+                    "P0002" => ApiResponse.Fail("Card assign failed, the user doesnot exist!"),
+                    _ => ApiResponse.Fail($"Database error: {ex.Message}")
+                };
             }
-            catch
+            catch (Exception ex)
             {
-                return ApiResponse.Fail("An unexpected error occurred!");
+                return ApiResponse.Fail($"An unexpected error occurred: {ex.Message}");
             }
         }
     }

@@ -25,13 +25,12 @@ public class AuthService(IGenericRepository repo, JWTHelper jwt) : IAuthService
             loginParams,
             commandType: CommandType.Text);
 
-
         //user not found
         if (user is null)
             return ApiResponse.Fail("Invalid username or password");
 
         //account inactive
-        if (!user.isactive)
+        if (!user.IsActive)
             return ApiResponse.Fail("Account is inActive");
 
         //userName is null
@@ -39,25 +38,25 @@ public class AuthService(IGenericRepository repo, JWTHelper jwt) : IAuthService
             return ApiResponse.Fail("Password cannot be empty!");
 
         //verify password against stored BCrypt hash
-        if (!PasswordHelper.VerifyPassword(request.Password, user.password))
+        if (!PasswordHelper.VerifyPassword(request.Password, user.Password))
             return ApiResponse.Fail("Invalid username or password");
 
         //userName is null
-        if (user.username is null)
+        if (user.UserName is null)
             return ApiResponse.Fail("User identity profile is corrupt!");
 
-        var listPermissions = !string.IsNullOrWhiteSpace(user.compressedpermissions) ?
-        user.compressedpermissions.Split(',').Select(p => p.Trim()).ToList() : new List<string>();
+        var listPermissions = !string.IsNullOrWhiteSpace(user.CompressedPermissions) ?
+        user.CompressedPermissions.Split(',').Select(p => p.Trim()).ToList() : new List<string>();
 
-        var token = jwt.GenerateToken(user.userid, user.username, user.roleid, listPermissions);
+        var token = jwt.GenerateToken(user.UserId, user.UserName, user.RoleId, listPermissions);
 
         return ApiResponse.Ok(new LoginResponse
         {
             Token = token,
-            UserName = user.username ?? string.Empty,
-            Name = user.name ?? string.Empty,
-            RoleName = user.rolename ?? string.Empty,
-            RoleId = user.roleid,
+            UserName = user.UserName ?? string.Empty,
+            Name = user.Name ?? string.Empty,
+            RoleName = user.RoleName ?? string.Empty,
+            RoleId = user.RoleId,
             Permissions = listPermissions
         });
     }

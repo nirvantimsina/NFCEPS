@@ -2,12 +2,12 @@ namespace NFCEPS_API.Auth.Models.Response;
 
 public class UserLoginRow
 {
-    public int userid { get; set; }
-    public string? username { get; set; }
-    public string? name { get; set; }
-    public string password { get; set; } = string.Empty;
-    public bool isactive { get; set; }
-    public int roleid { get; set; }
-    public string? rolename { get; set; }
-    public string? compressedpermissions { get; set; }
+    public string? UserName { get; set; }
+    public string? Name { get; set; }
+    public int UserId { get; set; }
+    public string Password { get; set; } = string.Empty;
+    public bool IsActive { get; set; }
+    public string? RoleName { get; set; }
+    public int RoleId  { get; set; }
+    public string? CompressedPermissions { get; set; }
 }
