@@ -11,7 +11,7 @@ namespace NFCEPS_API.Card.Controllers
         public async Task<IActionResult> AssignCard([FromBody] AssignCardRequestModel request)
         {
             var result = await cardService.AssignCardAsync(request);
-            return HandleResponse(result);            
+            return HandleResponse(result);
         }
     }
 }

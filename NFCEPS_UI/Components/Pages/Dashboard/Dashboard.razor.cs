@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using NFCEPS_UI.Managers.Dashboard.Interface;
 using NFCEPS_UI.Models.Dashboard.ResponseModel;
 
@@ -7,6 +8,10 @@ public partial class Dashboard(IDashboardManager dashboardManager) : PermissionA
 {
     public DashboardResponseModel? response;
     public bool IsLoading { get; private set; } = true;
+    protected override async Task OnInitializedAsync()
+    {
+        await OnPermissionsReadyAsync();
+    }
     protected override async Task OnPermissionsReadyAsync()
     {
         await LoadDataAsync();

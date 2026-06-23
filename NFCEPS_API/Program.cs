@@ -12,6 +12,8 @@ using NFCEPS_API.Services.Interfaces;
 using NFCEPS_API.Middleware;
 using NFCEPS_API.Dashboard.Services.Interface;
 using NFCEPS_API.Dashboard.Services.Implementation;
+using NFCEPS_API.Card.Services.Interface;
+using NFCEPS_API.Card.Services.Implementation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,7 +30,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddSingleton<PermissionService>();
 builder.Services.AddScoped<IGenericRepository, GenericRepository>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
-
+builder.Services.AddScoped<ICardService, CardService>();
 
 //connection string
 var connectionString = builder.Configuration

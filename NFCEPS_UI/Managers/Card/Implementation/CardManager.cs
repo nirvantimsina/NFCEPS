@@ -1,4 +1,3 @@
-using Microsoft.Net.Http.Headers;
 using NFCEPS_UI.Auth;
 using NFCEPS_UI.Managers.Card.Interface;
 using NFCEPS_UI.Managers.Card.Route;
@@ -15,7 +14,7 @@ public class CardManager(
     {
         var http = factory.CreateClient("API");
         await SetAuthHeaderAsync(http);
-        
+
         var response = await http.PostAsJsonAsync(CardRoute.AssignCard, request);
         return await HandleResponse(response);
     }

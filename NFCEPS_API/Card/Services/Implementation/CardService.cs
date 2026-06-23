@@ -1,5 +1,6 @@
-using System.Data.Common;
+using System.Data;
 using NFCEPS_API.Card.Models.Request;
+using NFCEPS_API.Card.Models.Response;
 using NFCEPS_API.Card.Services.Interface;
 using NFCEPS_API.Repository.Interfaces;
 using NFCEPS_API.Wrapper;
@@ -15,11 +16,11 @@ namespace NFCEPS_API.Card.Services.Implementation
             {
                 var Params = new
                 {
-                    p_flag = request.Flag = "A",
+                    p_flag = "A",
                     p_userid = request.UserId
                 };
 
-                var cardid = await repo.QueryFirstOrDefaultAsync<int>("SELECT * FROM card.fn_assign_card(@p_flag, @p_userid)", Params);
+                var cardid = await repo.QueryFirstOrDefaultAsync<AssignCardResponseModel>("SELECT card.fn_assign_card(@p_flag, @p_userid)", Params, CommandType.Text);
                 return ApiResponse.Ok();
             }
 
