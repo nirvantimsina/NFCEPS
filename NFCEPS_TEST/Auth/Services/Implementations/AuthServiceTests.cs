@@ -31,6 +31,7 @@ public class AuthServiceTests
     }
 
     #region LoginAsync Tests
+
     [Fact]
     public async Task LoginAsync_PasswordIsNull_ReturnsFailResponse()
     {
@@ -64,6 +65,7 @@ public class AuthServiceTests
         Assert.False(result.Success);
         Assert.Equal("Invalid username or password", result.Message);
     }
+
     [Fact]
     public async Task LoginAsync_LoginSuccess_ReturnsSuccessLogin()
     {
@@ -110,6 +112,7 @@ public class AuthServiceTests
         Assert.Equal(expectedPermissions, loginResponse.Permissions);
         Assert.NotNull(loginResponse.Token);
     }
+    
     [Fact]
     public async Task LoginAsync_InActiveAccount_ReturnsAccountInactive()
     {
