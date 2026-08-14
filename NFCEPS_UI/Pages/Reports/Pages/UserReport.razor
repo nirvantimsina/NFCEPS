@@ -1,0 +1,21 @@
+﻿@page "/UserReport"
+@inherits PermissionAwareBase
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+<PageTitle> NFCEPS - User Report</PageTitle>
+
+@if (IsLoading)
+{
+	<div class="dash-loading">
+		<MudProgressCircular Indeterminate="true" Color="Color.Primary" />
+		<span>Loading...</span>
+	</div>
+}
+else
+{
+	<div class="dash-topbar">
+		<div>
+			<h1 class="dash-title">Hello</h1>
+		</div>
+	</div>
+}

@@ -2,18 +2,18 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
-using NFCEPS_API.Auth;
-using NFCEPS_API.Repository;
-using NFCEPS_API.Services.Permission;
-using NFCEPS_API.Repository.Interfaces;
-using NFCEPS_API.Repository.Implementations;
-using NFCEPS_API.Services.Implementaions;
-using NFCEPS_API.Services.Interfaces;
+using NFCEPS_API.API.Auth.Helpers;
+using NFCEPS_API.API.Auth.Services;
+using NFCEPS_API.API.Auth.Services.Implementations;
+using NFCEPS_API.API.Auth.Services.Interfaces;
+using NFCEPS_API.API.Card.Services.Implementation;
+using NFCEPS_API.API.Card.Services.Interface;
+using NFCEPS_API.API.Dashboard.Services.Implementation;
+using NFCEPS_API.API.Dashboard.Services.Interface;
 using NFCEPS_API.Middleware;
-using NFCEPS_API.Dashboard.Services.Interface;
-using NFCEPS_API.Dashboard.Services.Implementation;
-using NFCEPS_API.Card.Services.Interface;
-using NFCEPS_API.Card.Services.Implementation;
+using NFCEPS_API.Repository;
+using NFCEPS_API.Repository.Implementations;
+using NFCEPS_API.Repository.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -58,8 +58,8 @@ builder.Services.AddSwaggerGen(options =>
     options.AddSecurityRequirement(doc => new OpenApiSecurityRequirement
     {
         {
-           new OpenApiSecuritySchemeReference("Bearer", doc), 
-            new List<string>() 
+           new OpenApiSecuritySchemeReference("Bearer", doc),
+            new List<string>()
         }
     });
 });
@@ -86,7 +86,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 
-builder.Services.AddAuthorization(); 
+builder.Services.AddAuthorization();
 
 // CORS
 builder.Services.AddCors(options =>
@@ -98,7 +98,7 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod();
     });
 });
-    
+
 var app = builder.Build();
 
 app.UseMiddleware<ExceptionMiddleware>();

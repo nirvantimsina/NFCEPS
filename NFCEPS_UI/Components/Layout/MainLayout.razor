@@ -1,157 +1,26 @@
-﻿@inherits LayoutComponentBase
+@inherits LayoutComponentBase
+@using NFCEPS_UI.Components.Layout
 
 <MudThemeProvider Theme="_theme" IsDarkMode="true" />
 <MudDialogProvider FullWidth="true" MaxWidth="MaxWidth.Small" />
 <MudSnackbarProvider />
 <MudPopoverProvider />
 
-<MudLayout Class="app-shell">
+<div class="app-wrapper @(_drawerOpen ? "sidebar-pinned" : "sidebar-collapsed")">
+    
+    <!-- Sidebar Container -->
+    <aside class="sidebar-container">
+        <NavMenu IsPinned="_drawerOpen" OnTogglePin="ToggleDrawer" />
+    </aside>
 
-    @* ── Side Rail ──────────────────────────────────────────────────── *@
-<MudDrawer @bind-Open="_drawerOpen" Variant="DrawerVariant.Responsive" Breakpoint="Breakpoint.Md" Elevation="0"
-           Class="side-rail d-flex align-center justify-between h-100">
-
-    <!-- Wrap upper sections so they scroll together if content overflows -->
-    <div class="overflow-y-auto">
-        @* Brand *@
-        <div class="rail-brand">
-            <div class="brand-icon">
-                <div class="brand-text align-center">
-                <MudIcon Icon="@Icons.Material.Filled.DirectionsBus" />
-                    <span class="brand-name">NFCEPS</span>
-                    <span class="brand-tag">International</span>
-                </div>
-            </div>
-        </div>
-
-        @* Nav groups *@
-        <nav class="rail-nav">
-            <div class="nav-group">
-
-                <NavLink href="/dashboard" class="rail-link d-flex align-center gap-2" Match="NavLinkMatch.All">
-                    <MudIcon Icon="@Icons.Material.Filled.Dashboard" Class="link-icon" />
-                    <span>Dashboard</span>
-                </NavLink>
-
-                @if (PermissionService.Has("USR.C"))
-                {
-                    <NavLink href="/assigncard" class="rail-link d-flex align-center gap-2">
-                        <MudIcon Icon="@Icons.Material.Filled.DirectionsBus" Class="link-icon" />
-                        <span>Assign Card</span>
-                    </NavLink>
-                }
-
-                @if (PermissionService.Has("routes.view"))
-                {
-                    <NavLink href="/routes" class="rail-link d-flex align-center gap-2">
-                        <MudIcon Icon="@Icons.Material.Filled.AltRoute" Class="link-icon" />
-                        <span>Routes</span>
-                    </NavLink>
-                }
-
-                @if (PermissionService.Has("transactions.view"))
-                {
-                    <NavLink href="/transactions" class="rail-link d-flex align-center gap-2">
-                        <MudIcon Icon="@Icons.Material.Filled.Receipt" Class="link-icon" />
-                        <span>Transactions</span>
-                    </NavLink>
-                }
-            </div>
-
-            @if (PermissionService.HasAny("drivers.view", "cards.view"))
-            {
-                <div class="nav-group d-flex align-center gap-6">
-                    <span class="nav-group-label">FLEET</span>
-
-                    @if (PermissionService.Has("drivers.view"))
-                    {
-                        <NavLink href="/drivers" class="rail-link d-flex align-center gap-2">
-                            <MudIcon Icon="@Icons.Material.Filled.Badge" Class="link-icon" />
-                            <span>Drivers</span>
-                        </NavLink>
-                    }
-
-                    @if (PermissionService.Has("cards.view"))
-                    {
-                        <NavLink href="/cards" class="rail-link d-flex align-center gap-2">
-                            <MudIcon Icon="@Icons.Material.Filled.CreditCard" Class="link-icon" />
-                            <span>Cards</span>
-                        </NavLink>
-                    }
-                </div>
-            }
-
-            @if (PermissionService.HasAny("users.view", "roles.view", "permissions.view"))
-            {
-                <div class="nav-group d-flex align-center gap-2">
-                    <span class="nav-group-label">ADMINISTRATION</span>
-
-                    @if (PermissionService.Has("users.view"))
-                    {
-                        <NavLink href="/users" class="rail-link d-flex align-center gap-2">
-                            <MudIcon Icon="@Icons.Material.Filled.People" Class="link-icon" />
-                            <span>Users</span>
-                        </NavLink>
-                    }
-
-                    @if (PermissionService.Has("roles.view"))
-                    {
-                        <NavLink href="/roles" class="rail-link d-flex align-center gap-2">
-                            <MudIcon Icon="@Icons.Material.Filled.AdminPanelSettings" Class="link-icon" />
-                            <span>Role Setup</span>
-                        </NavLink>
-                    }
-
-                    @if (PermissionService.Has("permissions.view"))
-                    {
-                        <NavLink href="/menu-setup" class="rail-link d-flex align-center gap-2">
-                            <MudIcon Icon="@Icons.Material.Filled.Tune" Class="link-icon" />
-                            <span>Menu Setup</span>
-                        </NavLink>
-                    }
-                </div>
-            }
-        </nav>
-    </div>
-
-    @* User block pinned cleanly to bottom *@
-    <div class="rail-footer mt-auto pa-4 border-t">
-        <div class="user-block d-flex align-center justify-between w-100 gap-3">
-            <div class="d-flex align-center gap-2">
-                <MudAvatar Color="Color.Primary" Size="Size.Small" Class="user-avatar">
-                    @_userInitials
-                </MudAvatar>
-                <div class="user-meta d-flex flex-column">
-                    <span class="user-name">@_userName</span>
-                    <span class="user-role">@_roleName</span>
-                </div>
-            </div>
-            <MudSpacer />
-            <MudIconButton Icon="@Icons.Material.Filled.Logout" Size="Size.Small" Color="Color.Error"
-                           OnClick="LogoutAsync" Class="logout-btn" />
-        </div>
-    </div>
-</MudDrawer>
-
-
-    @* ── Main area ──────────────────────────────────────────────────── *@
-    <MudMainContent Class="main-content pt-0">
-
-        @* Top bar *@
-        <header class="topbar d-flex align-center w-100">
-            <!-- 1. Left Item: Menu Toggle Button -->
-            <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start"
-                           OnClick="ToggleDrawer" Class="menu-toggle ml-2" />
-
-            <!-- 2. Middle Item: Dynamic Breadcrumb -->
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <header class="topbar d-flex align-center w-100 px-4" style="height: 64px; border-bottom: 1px solid var(--mud-palette-divider);">
+            <!-- Topbar content from previous layout -->
             <div class="topbar-breadcrumb ml-2">
-                @* Current page title injected via CascadingValue in each page if needed *@
+                @* Current page title *@
             </div>
-
-            <!-- 3. Dynamic Gap: Expands to fill all empty space in the middle -->
             <MudSpacer />
-
-            <!-- 4. Right Item: Pushed completely to the edge -->
             <div class="topbar-right mr-4 d-flex align-center">
                 <span class="topbar-clock">@_clock</span>
                 <MudDivider Vertical="true" FlexItem="true" Class="mx-2" />
@@ -159,10 +28,11 @@
                 <span class="topbar-live ml-1">LIVE</span>
             </div>
         </header>
-        @* Page content *@
-        <div class="page-wrapper ml-5">
+        
+        <article class="content px-4 py-4" style="flex-grow: 1; overflow-y: auto;">
             @Body
-        </div>
-    </MudMainContent>
-</MudLayout>
+        </article>
+    </main>
+</div>
+
 

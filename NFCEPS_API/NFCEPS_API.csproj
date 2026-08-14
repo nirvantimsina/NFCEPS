@@ -7,6 +7,13 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Compile Remove="Models\Params\**" />
+      <Content Remove="Models\Params\**" />
+      <EmbeddedResource Remove="Models\Params\**" />
+      <None Remove="Models\Params\**" />
+    </ItemGroup>
+
+    <ItemGroup>
       <_ContentIncludedByDefault Remove="NFCEPS_UI\appsettings.Development.json" />
       <_ContentIncludedByDefault Remove="NFCEPS_UI\appsettings.json" />
       <_ContentIncludedByDefault Remove="NFCEPS_UI\obj\NFCEPS_UI.csproj.nuget.dgspec.json" />
@@ -122,19 +129,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Auth/Models/Params/" />
+      <Folder Include="API\Reports\Models\Params\" />
       <Folder Include="Controllers\" />
-      <Folder Include="Dashboard/" />
-      <Folder Include="Dashboard/Controllers/" />
-      <Folder Include="Dashboard/Models/" />
-      <Folder Include="Dashboard/Models/Params/" />
-      <Folder Include="Dashboard/Models/RequestModel/" />
-      <Folder Include="Dashboard/Models/ResponseModel/" />
-      <Folder Include="Dashboard/Services/" />
-      <Folder Include="Dashboard/Services/Implementation/" />
-      <Folder Include="Dashboard/Services/Interface/" />
-      <Folder Include="Helpers\" />
-      <Folder Include="Models\Params\" />
+      <Folder Include="API\Dashboard\" />
     </ItemGroup>
 
 </Project>

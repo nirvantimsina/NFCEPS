@@ -8,22 +8,20 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Compile Remove="Models\RequestModel\**" />
+      <Content Remove="Models\RequestModel\**" />
+      <EmbeddedResource Remove="Models\RequestModel\**" />
+      <None Remove="Models\RequestModel\**" />
+    </ItemGroup>
+
+    <ItemGroup>
       <PackageReference Include="MudBlazor" Version="9.4.0" />
       <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.18.0" />
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Components/Pages/Card/" />
       <Folder Include="Components\Layout\" />
-      <Folder Include="Components\Pages\" />
-      <Folder Include="Endpoints/" />
-      <Folder Include="Endpoints\" />
-      <Folder Include="Handlers\" />
-      <Folder Include="Helpers\" />
-      <Folder Include="Managers\" />
-      <Folder Include="Models/Auth/Models/" />
-      <Folder Include="Models/Dashboard/RequestModel/" />
-      <Folder Include="Models\RequestModel\" />
+      <Folder Include="Pages\Dashboard\Models\RequestModel\" />
       <Folder Include="Models\ResponseModel\" />
       <Folder Include="Services/" />
     </ItemGroup>

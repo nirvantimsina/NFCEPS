@@ -1,10 +1,10 @@
 using System.Data;
 using Moq;
-using NFCEPS_API.Auth;
+using NFCEPS_API.API.Auth.Helpers;
+using NFCEPS_API.API.Auth.Models.Response;
+using NFCEPS_API.API.Auth.Services.Implementations;
 using NFCEPS_API.Auth.Models.Request;
-using NFCEPS_API.Auth.Models.Response;
 using NFCEPS_API.Repository.Interfaces;
-using NFCEPS_API.Services.Implementaions;
 
 namespace NFCEPS_TEST.Auth.Services.Implementations;
 

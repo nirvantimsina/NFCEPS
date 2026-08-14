@@ -1,8 +1,8 @@
 using System.Data;
 using Moq;
+using NFCEPS_API.API.Card.Models.Response;
+using NFCEPS_API.API.Card.Services.Implementation;
 using NFCEPS_API.Card.Models.Request;
-using NFCEPS_API.Card.Models.Response;
-using NFCEPS_API.Card.Services.Implementation;
 using NFCEPS_API.Repository.Interfaces;
 using Npgsql;
 
@@ -42,7 +42,7 @@ public class CardServiceTests
             It.IsAny<string>(),
             It.IsAny<object>(),
             It.IsAny<CommandType>()
-        )).ThrowsAsync((exception));
+        )).ThrowsAsync(exception);
 
         // Act
         var result = await _cardService.AssignCardAsync(request);
@@ -80,7 +80,6 @@ public class CardServiceTests
         // Arrange
         var request = new AssignCardRequestModel { Flag = "A", UserId = 11 };
 
-        var fakeResponseData = 
     }
     #endregion
 }
