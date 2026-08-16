@@ -17,12 +17,13 @@ namespace NFCEPS_UI.Pages.Card.Pages
         protected string? error;
         protected bool IsLoading = false;
 
-        protected override void OnInitialized()
+        protected override async Task OnPermissionsReadyAsync()
         {
             if (!PermissionService.Has("USR.C"))
             {
                 nav.NavigateTo("unauthorized-page");
             }
+            await Task.CompletedTask;
         }
         protected async Task HandleAssignCard()
         {
