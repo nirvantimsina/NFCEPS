@@ -19,3 +19,6 @@
 NFCEPS_API/NFCEPS_API.csproj.lscache
 NFCEPS_UI/NFCEPS_UI.csproj.lscache
 /NFCEPS_API/.vs
+
+# VS Code C# Dev Tools - Auto-generated runners
+.vscodecsdt/Runners/

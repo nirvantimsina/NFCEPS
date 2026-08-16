@@ -1,3 +1,5 @@
+using NFCEPS_UI.Models;
+
 namespace NFCEPS_UI.Auth;
 
 public class TokenStore
@@ -9,4 +11,5 @@ public class TokenStore
         get => _token;
         set => _token = value;
     }
+    public List<MenuListModel> MenuList { get; set; } = new();
 }

@@ -1,12 +1,10 @@
 using System.Data;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Moq;
-using NFCEPS_API.Auth;
+using NFCEPS_API.API.Auth.Helpers;
+using NFCEPS_API.API.Auth.Models.Response;
+using NFCEPS_API.API.Auth.Services.Implementations;
 using NFCEPS_API.Auth.Models.Request;
-using NFCEPS_API.Auth.Models.Response;
 using NFCEPS_API.Repository.Interfaces;
-using NFCEPS_API.Services.Implementaions;
-using NFCEPS_API.Wrapper;
 
 namespace NFCEPS_TEST.Auth.Services.Implementations;
 
@@ -33,6 +31,7 @@ public class AuthServiceTests
     }
 
     #region LoginAsync Tests
+
     [Fact]
     public async Task LoginAsync_PasswordIsNull_ReturnsFailResponse()
     {
@@ -66,6 +65,7 @@ public class AuthServiceTests
         Assert.False(result.Success);
         Assert.Equal("Invalid username or password", result.Message);
     }
+
     [Fact]
     public async Task LoginAsync_LoginSuccess_ReturnsSuccessLogin()
     {
@@ -78,14 +78,14 @@ public class AuthServiceTests
 
         var fakeUserDatabaseRow = new UserLoginRow
         {
-            userid = 12,
-            username = "linux",
-            name = "Arch BTW",
-            password = validPassword,
-            isactive = true,
-            roleid = 1,
-            rolename = "admin",
-            compressedpermissions = "CRD.C, CRD.R, CRD.U, CRD.D"
+            UserId = 12,
+            UserName = "linux",
+            Name = "Arch BTW",
+            Password = validPassword,
+            IsActive = true,
+            RoleId = 1,
+            RoleName = "admin",
+            CompressedPermissions = "CRD.C, CRD.R, CRD.U, CRD.D"
         };
 
         _mockRepo.Setup(r => r.QueryFirstOrDefaultAsync<UserLoginRow>(
@@ -111,6 +111,43 @@ public class AuthServiceTests
         Assert.Equal(1, loginResponse.RoleId);
         Assert.Equal(expectedPermissions, loginResponse.Permissions);
         Assert.NotNull(loginResponse.Token);
+    }
+    
+    [Fact]
+    public async Task LoginAsync_InActiveAccount_ReturnsAccountInactive()
+    {
+        // Arrange
+        string plainPassword = "nirvana";
+
+        string validPassword = PasswordHelper.HashPassword(plainPassword);
+
+        var request = new LoginRequest { UserName = "admin", Password = plainPassword };
+
+        var fakeUserDatabaseRow = new UserLoginRow
+        {
+            UserId = 1,
+            Name = "Standard User",
+            UserName = "admin",
+            Password = validPassword,
+            IsActive = false,
+            RoleId = 2,
+            RoleName = "standard",
+            CompressedPermissions = "CRD.C, CRD.R, CRD.U, CRD.D"
+        };
+
+        _mockRepo.Setup(r => r.QueryFirstOrDefaultAsync<UserLoginRow>(
+            It.IsAny<string>(),
+            It.IsAny<object>(),
+            It.IsAny<CommandType>()
+        )).ReturnsAsync(fakeUserDatabaseRow);
+
+        // Act
+        var result = await _authService.LoginAsync(request);
+
+        // Assert
+        Assert.False(result.Success);
+        Assert.Null(result.Data);
+        Assert.Equal("Account is inActive", result.Message);
     }
     #endregion
 }
