@@ -1,10 +1,8 @@
-﻿@page "/AssignCard"
+@page "/AssignCard"
 @inherits PermissionAwareBase
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 
-@if (PermissionService.Has("USP.C"))
-{
-    <PageTitle>Assign Card - NFCEPS</PageTitle>
+<PageTitle>Assign Card - NFCEPS</PageTitle>
 
     <div class="dash-topbar">
 
@@ -43,9 +41,4 @@
                 Verify if the user already has a card assigned.
             </MudText>
         </MudPaper>
-    </EditForm>
-
-}
-else{
-    nav.NavigateTo("unauthorized-page");
-}
+</EditForm>

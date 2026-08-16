@@ -11,9 +11,19 @@ namespace NFCEPS_UI.Pages.Card.Pages
     ICardManager cardManager,
     ISnackbar snackbar) : PermissionAwareBase
     {
+        [Inject]
+        protected NavigationManager nav { get; set; } = default!;
         protected AssignCardRequestModel request = new();
         protected string? error;
         protected bool IsLoading = false;
+
+        protected override void OnInitialized()
+        {
+            if (!PermissionService.Has("USP.C"))
+            {
+                nav.NavigateTo("unauthorized-page");
+            }
+        }
         protected async Task HandleAssignCard()
         {
             error = null;
