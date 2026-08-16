@@ -19,7 +19,7 @@ namespace NFCEPS_UI.Pages.Card.Pages
 
         protected override void OnInitialized()
         {
-            if (!PermissionService.Has("USP.C"))
+            if (!PermissionService.Has("USR.C"))
             {
                 nav.NavigateTo("unauthorized-page");
             }
