@@ -6,7 +6,6 @@ using NFCEPS_API.API.Auth.Helpers;
 using NFCEPS_API.API.Auth.Models.Request;
 using NFCEPS_API.API.Auth.Models.Response;
 using NFCEPS_API.API.Auth.Services.Interfaces;
-using Microsoft.AspNetCore.Mvc;
 
 namespace NFCEPS_API.API.Auth.Services.Implementations;
 
@@ -50,7 +49,12 @@ public class AuthService(IGenericRepository repo, JWTHelper jwt) : IAuthService
         var listPermissions = !string.IsNullOrWhiteSpace(user.CompressedPermissions) ?
         user.CompressedPermissions.Split(',').Select(p => p.Trim()).ToList() : new List<string>();
 
-        var token = jwt.GenerateToken(user.UserId, user.UserName, user.RoleId, listPermissions);
+        var menuResponse = await MenuListAsync(user.RoleId);
+        var menuList = menuResponse.Success && menuResponse.Data is IEnumerable<MenuListResponseModel> menus
+            ? menus.ToList()
+            : new List<MenuListResponseModel>();
+
+        var token = jwt.GenerateToken(user.UserId, user.UserName, user.RoleId, listPermissions, Enumerable.Empty<string>());
 
         return ApiResponse.Ok(new LoginResponse
         {
@@ -59,7 +63,8 @@ public class AuthService(IGenericRepository repo, JWTHelper jwt) : IAuthService
             Name = user.Name ?? string.Empty,
             RoleName = user.RoleName ?? string.Empty,
             RoleId = user.RoleId,
-            Permissions = listPermissions
+            Permissions = listPermissions,
+            MenuList = menuList
         });
     }
 
@@ -100,14 +105,14 @@ public class AuthService(IGenericRepository repo, JWTHelper jwt) : IAuthService
         }
     }
 
-    public async Task<ApiResponse> MenuListAsync(MenuListRequestModel request)
+    public async Task<ApiResponse> MenuListAsync(int roleId)
     {
         try
         {
             var MenuListParams = new
             {
-                p_flag = "C",
-                p_role = request.RoleId
+                p_flag = "A",
+                p_role = roleId
             };
 
             var result = await repo.QueryAsync<MenuListResponseModel>(

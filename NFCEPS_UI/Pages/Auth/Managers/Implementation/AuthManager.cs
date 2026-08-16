@@ -1,6 +1,5 @@
 using NFCEPS_UI.Auth;
 using NFCEPS_UI.Managers;
-using NFCEPS_UI.Models;
 using NFCEPS_UI.Models.ResponseModel;
 using NFCEPS_UI.Pages.Auth.Managers.Interface;
 using NFCEPS_UI.Pages.Auth.Managers.Route;
@@ -25,13 +24,5 @@ public class AuthManager(IHttpClientFactory factory, AuthSessionManager sessionM
 
         var response = await http.PostAsJsonAsync(AuthRoute.SignUp, request);
         return await HandleResponse(response);
-    }
-
-    public async Task<ApiResponse<List<MenuListModel>>> MenuListAsync()
-    {
-        var http = factory.CreateClient("API");
-
-        var response = await http.GetAsync(AuthRoute.MenuList);
-        return await HandleResponse<List<MenuListModel>> (response);
     }
 }

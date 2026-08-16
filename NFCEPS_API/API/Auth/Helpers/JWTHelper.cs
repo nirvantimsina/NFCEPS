@@ -8,7 +8,7 @@ namespace NFCEPS_API.API.Auth.Helpers;
 public class JWTHelper(JWTSettings settings)
 {
     // Auth/JwtHelper.cs
-    public string GenerateToken(int userId, string userName, int roleId, IEnumerable<string> permissions)
+    public string GenerateToken(int userId, string userName, int roleId, IEnumerable<string> permissions, IEnumerable<string> menuList)
     {
         if (string.IsNullOrEmpty(settings.SecretKey))
             throw new InvalidOperationException("JWT Secret Key is not configured in appsettings.json.");

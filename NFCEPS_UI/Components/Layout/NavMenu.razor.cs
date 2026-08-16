@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using NFCEPS_UI.Models;
-using NFCEPS_UI.Models.ResponseModel;
-using NFCEPS_UI.Pages.Auth.Managers.Implementation;
+using NFCEPS_UI.Pages.Auth.Managers.Interface;
+using NFCEPS_UI.Auth;
 
 namespace NFCEPS_UI.Components.Layout
 {
@@ -9,7 +9,10 @@ namespace NFCEPS_UI.Components.Layout
     {
         [Inject]
         private NavigationManager NavigationManager { get; set; } = default!;
-        private AuthManager AuthManager { get; set; } = default!;
+        [Inject]
+        private IAuthManager authManager { get; set; } = default!;
+        [Inject]
+        private AuthSessionManager authSessionManager { get; set; } = default!;
 
         [Parameter]
         public bool IsPinned { get; set; }
@@ -21,12 +24,12 @@ namespace NFCEPS_UI.Components.Layout
         private int expandedMenuId = 0;
         private List<MenuListModel> menuListModel = new();
 
-        protected override async void OnInitialized()
+        protected override async Task OnInitializedAsync()
         {
-            var response = await AuthManager.MenuListAsync();
-            if (response != null && response.Success)
+            var userMenu = await authSessionManager.GetMenuListAsync();
+            if (userMenu != null)
             {
-                menuListModel = response.Data;
+                menuListModel = userMenu;
             }
         }
 
@@ -80,6 +83,12 @@ namespace NFCEPS_UI.Components.Layout
                     menuListModel.Any(parent => parent.MenuId == m.ParentId && parent.MenuName != null && parent.MenuName.ToLower().Contains(lowerSearch))
                 ).ToList();
             }
+        }
+
+        private async Task HandleLogout()
+        {
+            await authSessionManager.LogoutAsync();
+            NavigationManager.NavigateTo("/", true);
         }
     }
 }

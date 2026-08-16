@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using NFCEPS_API.Controllers;
 using NFCEPS_API.API.Auth.Models.Request;
 using NFCEPS_API.API.Auth.Services.Interfaces;
+using NFCEPS_API.Wrapper;
 
 namespace NFCEPS_API.API.Auth.Controllers
 {
@@ -28,10 +29,16 @@ namespace NFCEPS_API.API.Auth.Controllers
             return HandleResponse(result);
         }
 
-        [HttpPost("MenuList")]
-        public async Task<IActionResult> MenuList([FromQuery] MenuListRequestModel request)
+        [HttpGet("MenuList")]
+        [Authorize]
+        public async Task<IActionResult> MenuList()
         {
-            var result = await authService.MenuListAsync(request);
+            if (CurrentRoleId == 0)
+            {
+                return Unauthorized(ApiResponse.Fail("Invalid or missing Role ID in token."));
+            }
+
+            var result = await authService.MenuListAsync(CurrentRoleId);
             return HandleResponse(result);
         }
     }

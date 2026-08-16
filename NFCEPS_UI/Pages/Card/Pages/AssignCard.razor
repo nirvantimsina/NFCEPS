@@ -2,51 +2,50 @@
 @inherits PermissionAwareBase
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 
-@if (PermissionService.Has("USR.C"))
+@if (PermissionService.Has("USP.C"))
 {
+    <PageTitle>Assign Card - NFCEPS</PageTitle>
 
-<PageTitle>Assign Card - NFCEPS</PageTitle>
+    <div class="dash-topbar">
 
-<div class="dash-topbar">
+        <div>
 
-    <div>
+            <h1 class="dash-title">Assign Card</h1>
 
-        <h1 class="dash-title">Assign Card</h1>
+        </div>
 
     </div>
 
-</div>
+    <EditForm Model="@request" OnValidSubmit="HandleAssignCard">
 
-<EditForm Model="@request" OnValidSubmit="HandleAssignCard">
+        <DataAnnotationsValidator />
 
-    <DataAnnotationsValidator />
+        <MudPaper Elevation="3" Class="pa-6">
+            <MudTextField @bind-Value="request.UserId" For="@(() => request.UserId)" Label="User Id" Variant="Variant.Text"
+            Required Class="mt-2" />
 
-    <MudPaper Elevation="3" Class="pa-6">
-        <MudTextField @bind-Value="request.UserId" For="@(() => request.UserId)" Label="User Id" Variant="Variant.Text"
-                      Required Class="mt-2" />
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true"
+            Disabled="IsLoading" class="mt-6">
 
-        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true"
-                   Disabled="IsLoading" class="mt-6">
+                @if (IsLoading)
+                {
+                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                    <MudText class="ms-2">Processing...</MudText>
+                }
 
-            @if (IsLoading)
-            {
-                <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-                <MudText class="ms-2">Processing...</MudText>
-            }
+                else
+                {
+                    <MudText>Assign Card</MudText>
+                }
 
-            else
-            {
-                <MudText>Assign Card</MudText>
-            }
-
-        </MudButton>
-        <MudText Align="(Align.Center)" Class="mt-4" Typo="Typo.body2">
-            Verify if the user already has a card assigned.
-        </MudText>
-    </MudPaper>
-</EditForm>
+            </MudButton>
+            <MudText Align="(Align.Center)" Class="mt-4" Typo="Typo.body2">
+                Verify if the user already has a card assigned.
+            </MudText>
+        </MudPaper>
+    </EditForm>
 
 }
 else{
-    <h2>hello world</h2>
+    nav.NavigateTo("unauthorized-page");
 }

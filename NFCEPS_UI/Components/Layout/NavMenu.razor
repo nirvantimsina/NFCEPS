@@ -9,9 +9,12 @@
         <span class="material-icons-outlined search-icon">search</span>
         <input type="text" class="menu-search-input" placeholder="Search menu..." @bind="SearchTerm" @bind:event="oninput" />
     </div>
-    @if (FilteredMenuList != null)
-    {
-        @foreach (var parentMenu in FilteredMenuList.Where(s => s.ParentId == 0).OrderBy(u => u.MenuOrder).ToList())
+
+    <!-- Scrollable Menu Items -->
+    <div class="sidebar-menu-scroll">
+        @if (FilteredMenuList != null)
+        {
+            @foreach (var parentMenu in FilteredMenuList.Where(s => s.ParentId == 0).OrderBy(u => u.MenuOrder).ToList())
         {
             var children = FilteredMenuList.Where(c => c.ParentId == parentMenu.MenuId).OrderBy(u => u.MenuOrder).ToList();
             bool hasChildren = children.Any();
@@ -46,6 +49,17 @@
                     }
                 </div>
             }
+            }
         }
-    }
+    </div>
+
+    <!-- Pinned Logout Footer -->
+    <div class="sidebar-footer">
+        <div class="newSideMenu logout-menu" @onclick="HandleLogout">
+            <div class="menu-item-content">
+                <span class="material-icons-outlined">logout</span>
+                <span>Logout</span>
+            </div>
+        </div>
+    </div>
 </div>

@@ -10,4 +10,5 @@ public class UserLoginRow
     public string? RoleName { get; set; }
     public int RoleId { get; set; }
     public string? CompressedPermissions { get; set; }
+    public string? CompressedMenuList { get; set; }
 }

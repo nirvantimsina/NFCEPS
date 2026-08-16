@@ -1,4 +1,4 @@
-﻿@page "/"
+﻿@* @page "/"
 @page "/{*path}" 
 @using Microsoft.AspNetCore.Components.Authorization
 @inject NavigationManager Nav
@@ -14,7 +14,7 @@
                         <LayoutView Layout="@typeof(Layout.EmptyLayout)">
                 <div class="d-flex flex-column align-center justify-center vh-100">
                     <MudAlert Severity="Severity.Error" Variant="Variant.Filled" Class="ma-4">
-                        404 - Page "@path" does not exist!
+                        404 error or Unauthorized - Either the Page "@path" does not exist or you do not have the required permissions to view it!
                     </MudAlert>
                     <MudButton Href="dashboard" Variant="Variant.Filled" Color="Color.Primary" Class="ms-4">
                         Back to Dashboard
@@ -40,3 +40,4 @@
 @code {
     [Parameter] public string? path { get; set; }
 }
+ *@

@@ -1,12 +1,15 @@
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.JSInterop;
 using System.Security.Claims;
+using NFCEPS_UI.Models;
+using System.Text.Json;
 
 namespace NFCEPS_UI.Auth;
 
 public class AuthSessionManager(IJSRuntime js, TokenStore tokenStore)
 {
     private const string Key = "authToken";
+    private const string MenuKey = "menuList";
 
     public async Task<string?> GetTokenAsync()
     {
@@ -45,6 +48,33 @@ public class AuthSessionManager(IJSRuntime js, TokenStore tokenStore)
         return null;
     }
 
+    public async Task<List<MenuListModel>> GetMenuListAsync()
+    {
+        if (tokenStore.MenuList != null && tokenStore.MenuList.Any())
+        {
+            return tokenStore.MenuList;
+        }
+
+        try
+        {
+            var json = await js.InvokeAsync<string?>("localStorage.getItem", MenuKey);
+            if (!string.IsNullOrWhiteSpace(json))
+            {
+                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                var list = JsonSerializer.Deserialize<List<MenuListModel>>(json, options);
+
+                if (list != null)
+                {
+                    tokenStore.MenuList = list;
+                    return list;
+                }
+            }
+        }
+        catch { }
+
+        return new List<MenuListModel>();
+    }
+
     private bool IsTokenExpired(string jwt)
     {
         try
@@ -59,18 +89,26 @@ public class AuthSessionManager(IJSRuntime js, TokenStore tokenStore)
         }
     }
 
-    public async Task LoginAsync(string token)
+    public async Task LoginAsync(string token, List<MenuListModel> menuList)
     {
-        tokenStore.Token = token; // set in memory immediately
+        // set in memory immediately
+        tokenStore.Token = token;
+        tokenStore.MenuList = menuList;
+
         await js.InvokeVoidAsync("localStorage.setItem", Key, token);
+
+        var json = JsonSerializer.Serialize(tokenStore.MenuList);
+        await js.InvokeVoidAsync("localStorage.setItem", MenuKey, json);
     }
 
     public async Task LogoutAsync()
     {
         tokenStore.Token = null;
+        tokenStore.MenuList = null;
         try
         {
             await js.InvokeVoidAsync("localStorage.removeItem", Key);
+            await js.InvokeVoidAsync("localStorage.removeItem", MenuKey);
         }
         catch (InvalidOperationException) { }
     }

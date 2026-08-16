@@ -27,6 +27,14 @@ namespace NFCEPS_API.Controllers
                 return claimValue ?? string.Empty;
             }
         }
+        protected int CurrentRoleId
+        {
+            get
+            {
+                var claimValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                return int.TryParse(claimValue, out var roleid) ? roleid : 0;
+            }
+        }
         protected IActionResult HandleResponse(ApiResponse result)
         {
             if (result == null)

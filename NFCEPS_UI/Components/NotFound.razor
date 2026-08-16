@@ -1,16 +1,39 @@
 ﻿@page "/404"
 @page "/{*path:nonfile}"
-@layout Layout.EmptyLayout
+@using Microsoft.AspNetCore.Components.Authorization
+@inject NavigationManager Nav
 
-<div class="d-flex flex-column align-center justify-center vh-100">
-    <MudIcon Icon="@Icons.Material.Filled.SearchOff" Color="Color.Error" Style="font-size: 5rem;" />
-    <MudText Typo="Typo.h3" Class="mt-4">Page Not Found</MudText>
-    <MudText Typo="Typo.body1" Class="mb-6">The URL "@path" doesn't exist.</MudText>
-    <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/dashboard">
-        Back to Dashboard
-    </MudButton>
-</div>
+@if (string.IsNullOrEmpty(path))
+{
+    Nav.NavigateTo("dashboard");
+}
+else
+{
+        <div class="d-flex flex-column align-center justify-center vh-100">
+            <MudCard Severity="Severity.Error" Variant="Variant.Filled" Class="ma-4">
+                404 error or Unauthorized - Either the Page "@path" does not exist or you do not have the required permissions to view it!
+            </MudCard>
+            <MudButton Href="dashboard" Variant="Variant.Filled" Color="Color.Primary" Class="ms-4">
+                Back to Dashboard
+            </MudButton>
+        </div>
+}
+<AuthorizeView>
+
+    <NotAuthorized>
+        @if (string.IsNullOrEmpty(path))
+        {
+            Nav.NavigateTo("login");
+        }
+        else if (path.ToLower() != "login")
+        {
+            Nav.NavigateTo("login");
+        }
+
+    </NotAuthorized>
+</AuthorizeView>
+
 
 @code {
-    [Parameter] public string? path { get; set; }
+	[Parameter] public string? path { get; set; }
 }

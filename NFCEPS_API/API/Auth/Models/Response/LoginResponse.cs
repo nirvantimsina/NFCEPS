@@ -8,4 +8,5 @@ public class LoginResponse
     public string? RoleName { get; set; }
     public int RoleId { get; set; }
     public List<string> Permissions { get; set; } = [];
+    public List<MenuListResponseModel> MenuList { get; set; } = [];
 }

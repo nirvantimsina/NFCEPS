@@ -71,7 +71,7 @@ namespace NFCEPS_UI.Pages.Auth.Pages
                 }
 
                 // Only call LoginAsync ONCE
-                await Session.LoginAsync(data.Token);
+                await Session.LoginAsync(data.Token, data.MenuList);
 
                 if (data.Permissions != null)
                     PermissionService.SetPermissions(data.Permissions);

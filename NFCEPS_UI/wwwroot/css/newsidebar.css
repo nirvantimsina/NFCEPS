@@ -61,8 +61,17 @@
     display: flex;
     flex-direction: column;
     overflow-x: hidden;
-    overflow-y: auto;
+    overflow-y: hidden;
     transition: width var(--sidebar-transition);
+}
+
+/* Scrollable Menu Wrapper */
+.sidebar-menu-scroll {
+    flex-grow: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Collapsed state behavior */
@@ -77,10 +86,10 @@
 }
 
 /* Hide scrollbar for a cleaner look */
-.sidebar::-webkit-scrollbar {
+.sidebar-menu-scroll::-webkit-scrollbar {
     width: 4px;
 }
-.sidebar::-webkit-scrollbar-thumb {
+.sidebar-menu-scroll::-webkit-scrollbar-thumb {
     background: var(--mud-palette-divider);
     border-radius: 4px;
 }
@@ -244,4 +253,22 @@
     /* Shift child icons slightly for visual hierarchy */
     margin-left: 26px; 
     font-size: 20px;
+}
+
+/* =========================================
+   Footer (Logout)
+   ========================================= */
+.sidebar-footer {
+    border-top: 1px solid var(--mud-palette-divider);
+    flex-shrink: 0;
+    margin-top: auto; /* Push it to the very bottom */
+}
+
+.logout-menu .material-icons-outlined,
+.logout-menu span {
+    color: var(--mud-palette-error) !important;
+}
+
+.logout-menu:hover {
+    background-color: rgba(244, 67, 54, 0.08); /* Soft red hover */
 }

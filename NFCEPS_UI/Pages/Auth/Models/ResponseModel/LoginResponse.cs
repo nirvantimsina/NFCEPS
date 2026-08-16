@@ -1,3 +1,5 @@
+using NFCEPS_UI.Models;
+
 namespace NFCEPS_UI.Pages.Auth.Models.ResponseModel;
 
 public class LoginResponse
@@ -8,4 +10,5 @@ public class LoginResponse
     public string? RoleName { get; set; }
     public int RoleId { get; set; }
     public List<string> Permissions { get; set; } = [];
+    public List<MenuListModel> MenuList { get; set; } = [];
 }
