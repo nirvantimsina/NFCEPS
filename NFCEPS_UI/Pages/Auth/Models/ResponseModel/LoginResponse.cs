@@ -12,3 +12,5 @@ public class LoginResponse
     public List<string> Permissions { get; set; } = [];
     public List<MenuListModel> MenuList { get; set; } = [];
 }
+
+

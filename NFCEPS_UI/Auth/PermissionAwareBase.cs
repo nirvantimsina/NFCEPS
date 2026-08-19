@@ -30,3 +30,4 @@ public abstract class PermissionAwareBase : ComponentBase, IDisposable
         PermissionService.OnChange -= OnPermissionsLoaded;
     }
 }
+

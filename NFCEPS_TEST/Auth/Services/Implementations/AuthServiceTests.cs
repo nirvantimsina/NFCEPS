@@ -1,10 +1,9 @@
 using System.Data;
 using Moq;
-using NFCEPS_API.API.Auth.Helpers;
-using NFCEPS_API.API.Auth.Models.Response;
-using NFCEPS_API.API.Auth.Services.Implementations;
-using NFCEPS_API.Auth.Models.Request;
-using NFCEPS_API.Repository.Interfaces;
+using NFCEPS.Application.Helpers;
+using NFCEPS.Application.Models.Auth.Response;
+using NFCEPS.Application.Features.Auth.Commands.Login;
+using NFCEPS.Application.Interfaces;
 
 namespace NFCEPS_TEST.Auth.Services.Implementations;
 
@@ -12,7 +11,7 @@ public class AuthServiceTests
 {
     private readonly Mock<IGenericRepository> _mockRepo;
     private readonly JWTHelper _jwtHelper;
-    private readonly AuthService _authService;
+    private readonly LoginCommandHandler _handler;
 
     public AuthServiceTests()
     {
@@ -24,24 +23,17 @@ public class AuthServiceTests
             Issuer = "test-issuer",
             Audience = "test-audience",
             ExpiryHours = 1
-    };
+        };
         _jwtHelper = new JWTHelper(testSettings);
 
-        _authService = new AuthService(_mockRepo.Object, _jwtHelper);
+        _handler = new LoginCommandHandler(_mockRepo.Object, _jwtHelper, new Mock<MediatR.IMediator>().Object);
     }
-
-    #region LoginAsync Tests
 
     [Fact]
     public async Task LoginAsync_PasswordIsNull_ReturnsFailResponse()
     {
-        // Arrange
-        var request = new LoginRequest { UserName = "testuser", Password = null };
-
-        // Act
-        var result = await _authService.LoginAsync(request);
-
-        // Assert
+        var command = new LoginCommand { UserName = "testuser", Password = null };
+        var result = await _handler.Handle(command, default);
         Assert.False(result.Success);
         Assert.Equal("Password cannot be empty!", result.Message);
     }
@@ -49,19 +41,13 @@ public class AuthServiceTests
     [Fact]
     public async Task LoginAsync_UserNotFoundInDatabase_ReturnsInvalidCredentials()
     {
-        // Arrange
-        var request = new LoginRequest { UserName = "ghost", Password = "Nothing@123"};
+        var command = new LoginCommand { UserName = "ghost", Password = "Nothing@123" };
 
         _mockRepo.Setup(r => r.QueryFirstOrDefaultAsync<UserLoginRow>(
-            It.IsAny<string>(),
-            It.IsAny<object>(),
-            It.IsAny<CommandType>()
+            It.IsAny<string>(), It.IsAny<object>(), It.IsAny<CommandType>()
         )).ReturnsAsync((UserLoginRow)null);
 
-        // Act
-        var result = await _authService.LoginAsync(request);
-
-        // Assert
+        var result = await _handler.Handle(command, default);
         Assert.False(result.Success);
         Assert.Equal("Invalid username or password", result.Message);
     }
@@ -69,12 +55,10 @@ public class AuthServiceTests
     [Fact]
     public async Task LoginAsync_LoginSuccess_ReturnsSuccessLogin()
     {
-        // Arrange
         string plainPassword = "archlinux";
-
         string validPassword = PasswordHelper.HashPassword(plainPassword);
         
-        var request = new LoginRequest {UserName = "linux", Password = plainPassword};
+        var command = new LoginCommand { UserName = "linux", Password = plainPassword };
 
         var fakeUserDatabaseRow = new UserLoginRow
         {
@@ -89,17 +73,13 @@ public class AuthServiceTests
         };
 
         _mockRepo.Setup(r => r.QueryFirstOrDefaultAsync<UserLoginRow>(
-            It.IsAny<string>(),
-            It.IsAny<object>(),
-            It.IsAny<CommandType>()
-        )).ReturnsAsync((fakeUserDatabaseRow));
+            It.IsAny<string>(), It.IsAny<object>(), It.IsAny<CommandType>()
+        )).ReturnsAsync(fakeUserDatabaseRow);
 
-        var expectedPermissions = new List<string> {"CRD.C", "CRD.R", "CRD.U", "CRD.D"};
+        var expectedPermissions = new List<string> { "CRD.C", "CRD.R", "CRD.U", "CRD.D" };
 
-        // Act
-        var result = await _authService.LoginAsync(request);
+        var result = await _handler.Handle(command, default);
 
-        // Assert
         Assert.True(result.Success);
         Assert.NotNull(result.Data);
 
@@ -116,12 +96,10 @@ public class AuthServiceTests
     [Fact]
     public async Task LoginAsync_InActiveAccount_ReturnsAccountInactive()
     {
-        // Arrange
         string plainPassword = "nirvana";
-
         string validPassword = PasswordHelper.HashPassword(plainPassword);
 
-        var request = new LoginRequest { UserName = "admin", Password = plainPassword };
+        var command = new LoginCommand { UserName = "admin", Password = plainPassword };
 
         var fakeUserDatabaseRow = new UserLoginRow
         {
@@ -136,18 +114,13 @@ public class AuthServiceTests
         };
 
         _mockRepo.Setup(r => r.QueryFirstOrDefaultAsync<UserLoginRow>(
-            It.IsAny<string>(),
-            It.IsAny<object>(),
-            It.IsAny<CommandType>()
+            It.IsAny<string>(), It.IsAny<object>(), It.IsAny<CommandType>()
         )).ReturnsAsync(fakeUserDatabaseRow);
 
-        // Act
-        var result = await _authService.LoginAsync(request);
+        var result = await _handler.Handle(command, default);
 
-        // Assert
         Assert.False(result.Success);
         Assert.Null(result.Data);
         Assert.Equal("Account is inActive", result.Message);
     }
-    #endregion
 }

@@ -86,3 +86,4 @@ public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         NotifyAuthenticationStateChanged(Task.FromResult(_state));
     }
 }
+

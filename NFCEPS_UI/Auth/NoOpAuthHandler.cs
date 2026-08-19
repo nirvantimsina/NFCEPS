@@ -23,3 +23,4 @@ public class NoOpAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions
         return Task.FromResult(AuthenticateResult.NoResult());
     }
 }
+

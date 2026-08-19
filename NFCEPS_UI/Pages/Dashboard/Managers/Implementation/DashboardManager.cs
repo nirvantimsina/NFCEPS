@@ -19,3 +19,4 @@ public class DashboardManager(IHttpClientFactory factory, AuthSessionManager ses
         return await HandleResponse<DashboardResponseModel>(response);
     }
 }
+

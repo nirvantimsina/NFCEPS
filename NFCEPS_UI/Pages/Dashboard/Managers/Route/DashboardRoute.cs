@@ -6,3 +6,4 @@ namespace NFCEPS_UI.Pages.Dashboard.Managers.Route
         public const string DashboardData = $"{BaseUrl}/DashboardData";
     }
 }
+

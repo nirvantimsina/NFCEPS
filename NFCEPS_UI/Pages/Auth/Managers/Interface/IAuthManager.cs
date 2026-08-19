@@ -10,3 +10,4 @@ public interface IAuthManager
     Task<ApiResponse<LoginResponse>> LoginAsync(LoginRequest request);
     Task<ApiResponse> SignUpAsync(SignUpRequest request);
 }
+

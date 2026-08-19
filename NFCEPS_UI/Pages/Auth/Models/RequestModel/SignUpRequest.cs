@@ -28,3 +28,4 @@ namespace NFCEPS_UI.Pages.Auth.Models.RequestModel
         public string? ConfirmPassword { get; set; }
     }
 }
+

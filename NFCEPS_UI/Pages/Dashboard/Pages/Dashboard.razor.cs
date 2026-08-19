@@ -36,3 +36,4 @@ public partial class Dashboard(IDashboardManager dashboardManager) : PermissionA
         }
     }
 }
+

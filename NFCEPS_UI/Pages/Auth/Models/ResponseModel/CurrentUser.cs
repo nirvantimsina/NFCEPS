@@ -23,3 +23,5 @@ public class CurrentUser()
         RoleId = 0;
     }
 }
+
+

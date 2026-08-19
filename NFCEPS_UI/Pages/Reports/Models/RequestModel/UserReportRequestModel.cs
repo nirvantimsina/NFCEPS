@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace NFCEPS_UI.Pages.Reports.Models.RequestModel
 {
@@ -7,3 +7,5 @@ namespace NFCEPS_UI.Pages.Reports.Models.RequestModel
         [Required] public int UserId { get; set; }
     }
 }
+
+

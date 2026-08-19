@@ -7,3 +7,5 @@ public class AuthRoute
     public const string SignUp = $"{BaseUrl}/SignUp";
     public const string MenuList = $"{BaseUrl}/MenuList";
 }
+
+
