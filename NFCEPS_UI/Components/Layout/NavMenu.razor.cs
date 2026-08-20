@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Components;
+using NFCEPS_UI.Auth;
 using NFCEPS_UI.Models;
 using NFCEPS_UI.Pages.Auth.Managers.Interface;
-using NFCEPS_UI.Auth;
 
 namespace NFCEPS_UI.Components.Layout
 {
@@ -75,9 +75,9 @@ namespace NFCEPS_UI.Components.Layout
             {
                 if (menuListModel == null) return null;
                 if (string.IsNullOrWhiteSpace(SearchTerm)) return menuListModel;
-                
+
                 var lowerSearch = SearchTerm.ToLower();
-                return menuListModel.Where(m => 
+                return menuListModel.Where(m =>
                     (m.MenuName != null && m.MenuName.ToLower().Contains(lowerSearch)) ||
                     menuListModel.Any(child => child.ParentId == m.MenuId && child.MenuName != null && child.MenuName.ToLower().Contains(lowerSearch)) ||
                     menuListModel.Any(parent => parent.MenuId == m.ParentId && parent.MenuName != null && parent.MenuName.ToLower().Contains(lowerSearch))
@@ -92,3 +92,5 @@ namespace NFCEPS_UI.Components.Layout
         }
     }
 }
+
+

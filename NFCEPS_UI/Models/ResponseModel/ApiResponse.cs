@@ -25,3 +25,5 @@ public class ApiResponse<T> : ApiResponse
     public static new ApiResponse<T> Fail(string message)
         => new() { Success = false, Message = message, Data = default };
 }
+
+

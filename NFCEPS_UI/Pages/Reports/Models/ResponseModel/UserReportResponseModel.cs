@@ -1,4 +1,4 @@
-﻿namespace NFCEPS_UI.Pages.Reports.Models.ResponseModel
+namespace NFCEPS_UI.Pages.Reports.Models.ResponseModel
 {
     public class UserReportResponseModel
     {
@@ -11,3 +11,5 @@
         public string Address { get; set; }
     }
 }
+
+

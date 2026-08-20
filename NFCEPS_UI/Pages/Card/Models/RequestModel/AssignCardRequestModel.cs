@@ -7,3 +7,5 @@ public class AssignCardRequestModel
     [Required]
     public int UserId { get; set; }
 }
+
+

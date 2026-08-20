@@ -28,7 +28,7 @@ public class PermissionService
 
     private void NotifyStateChanged()
         => OnChange?.Invoke();
-        
+
     public void SetPermissions(IEnumerable<string> permissions)
     {
         lock (_lock)
@@ -50,3 +50,4 @@ public class PermissionService
     }
 
 }
+

@@ -26,3 +26,5 @@ public class AuthManager(IHttpClientFactory factory, AuthSessionManager sessionM
         return await HandleResponse(response);
     }
 }
+
+

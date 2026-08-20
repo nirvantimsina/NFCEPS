@@ -16,7 +16,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NFCEPS_API\NFCEPS_API.csproj" />
+    <ProjectReference Include="..\NFCEPS.Presentation\NFCEPS.Presentation.csproj" />
+    <ProjectReference Include="..\NFCEPS.Application\NFCEPS.Application.csproj" />
+    <ProjectReference Include="..\NFCEPS.Infrastructure\NFCEPS.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

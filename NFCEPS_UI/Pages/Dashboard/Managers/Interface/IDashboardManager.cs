@@ -8,3 +8,4 @@ namespace NFCEPS_UI.Pages.Dashboard.Managers.Interface
         Task<ApiResponse<DashboardResponseModel>> DashboardDataAsync();
     }
 }
+

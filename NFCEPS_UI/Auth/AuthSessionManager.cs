@@ -1,7 +1,7 @@
-using System.IdentityModel.Tokens.Jwt;
 using Microsoft.JSInterop;
-using System.Security.Claims;
 using NFCEPS_UI.Models;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text.Json;
 
 namespace NFCEPS_UI.Auth;
@@ -133,3 +133,4 @@ public class AuthSessionManager(IJSRuntime js, TokenStore tokenStore)
         }
     }
 }
+

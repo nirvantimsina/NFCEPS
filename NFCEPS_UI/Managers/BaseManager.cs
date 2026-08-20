@@ -6,7 +6,7 @@ namespace NFCEPS_UI.Managers;
 
 public abstract class BaseManager(AuthSessionManager sessionManager)
 {
-        private readonly System.Text.Json.JsonSerializerOptions _jsonOptions = new()
+    private readonly System.Text.Json.JsonSerializerOptions _jsonOptions = new()
     {
         PropertyNameCaseInsensitive = true
     };
@@ -36,7 +36,7 @@ public abstract class BaseManager(AuthSessionManager sessionManager)
         }
     }
 
-        protected async Task<ApiResponse> HandleResponse(HttpResponseMessage response)
+    protected async Task<ApiResponse> HandleResponse(HttpResponseMessage response)
     {
         try
         {
@@ -55,3 +55,5 @@ public abstract class BaseManager(AuthSessionManager sessionManager)
         }
     }
 }
+
+

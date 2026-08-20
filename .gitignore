@@ -22,3 +22,5 @@ NFCEPS_UI/NFCEPS_UI.csproj.lscache
 
 # VS Code C# Dev Tools - Auto-generated runners
 .vscodecsdt/Runners/
+/.vs
+/NFCEPS.Presentation/.vs

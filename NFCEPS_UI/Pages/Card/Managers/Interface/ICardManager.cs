@@ -7,3 +7,5 @@ public interface ICardManager
 {
     Task<ApiResponse> AssignCardAsync(AssignCardRequestModel request);
 }
+
+

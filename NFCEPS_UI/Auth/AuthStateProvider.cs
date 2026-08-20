@@ -1,5 +1,5 @@
-using System.Security.Claims;
 using Microsoft.AspNetCore.Components.Authorization;
+using System.Security.Claims;
 
 namespace NFCEPS_UI.Auth;
 
@@ -35,18 +35,18 @@ public class AuthStateProvider(AuthSessionManager session) : AuthenticationState
         }
         return Convert.FromBase64String(base64);
     }
-public override async Task<AuthenticationState> GetAuthenticationStateAsync()
-{
-    if (_state.User.Identity?.IsAuthenticated != true)
+    public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
-        var token = await session.GetTokenAsync(); // now properly reads localStorage
-        if (!string.IsNullOrEmpty(token))
+        if (_state.User.Identity?.IsAuthenticated != true)
         {
-            SetUser(ParseClaimsFromJwt(token));
+            var token = await session.GetTokenAsync(); // now properly reads localStorage
+            if (!string.IsNullOrEmpty(token))
+            {
+                SetUser(ParseClaimsFromJwt(token));
+            }
         }
+        return _state;
     }
-    return _state;
-}
 
     public void SetUser(IEnumerable<Claim> claims)
     {
@@ -86,3 +86,4 @@ public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         NotifyAuthenticationStateChanged(Task.FromResult(_state));
     }
 }
+

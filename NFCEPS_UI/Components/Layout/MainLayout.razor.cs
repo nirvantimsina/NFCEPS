@@ -123,3 +123,4 @@ namespace NFCEPS_UI.Components.Layout
         public void Dispose() => _timer?.Dispose();
     }
 }
+

@@ -22,7 +22,7 @@ namespace NFCEPS_UI.Pages.Auth.Pages
         {
             var authState = await AuthStateTask;
 
-            if (authState.User.Identity is {IsAuthenticated: true })
+            if (authState.User.Identity is { IsAuthenticated: true })
             {
                 Navigation.NavigateTo("dashboard");
             }
@@ -36,11 +36,11 @@ namespace NFCEPS_UI.Pages.Auth.Pages
             {
                 var result = await AuthManager.SignUpAsync(request);
 
-                if ( result == null || !result.Success)
+                if (result == null || !result.Success)
                 {
                     error = result?.Message ?? "Signup Failed!";
-                    
-                    Snackbar.Add(error, Severity.Error); 
+
+                    Snackbar.Add(error, Severity.Error);
                     return;
                 }
 
@@ -59,10 +59,11 @@ namespace NFCEPS_UI.Pages.Auth.Pages
         }
         protected async Task HandleKeyUp(KeyboardEventArgs e)
         {
-            if(e.Key == "Enter")
+            if (e.Key == "Enter")
             {
                 await HandleSignUp();
             }
         }
     }
 }
+
