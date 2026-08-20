@@ -1,9 +1,9 @@
-using System.Data;
 using Moq;
-using NFCEPS.Application.Helpers;
-using NFCEPS.Application.Models.Auth.Response;
 using NFCEPS.Application.Features.Auth.Commands.Login;
+using NFCEPS.Application.Helpers;
 using NFCEPS.Application.Interfaces;
+using NFCEPS.Application.Models.Auth.Response;
+using System.Data;
 
 namespace NFCEPS_TEST.Auth.Services.Implementations;
 
@@ -57,7 +57,7 @@ public class AuthServiceTests
     {
         string plainPassword = "archlinux";
         string validPassword = PasswordHelper.HashPassword(plainPassword);
-        
+
         var command = new LoginCommand { UserName = "linux", Password = plainPassword };
 
         var fakeUserDatabaseRow = new UserLoginRow
@@ -92,7 +92,7 @@ public class AuthServiceTests
         Assert.Equal(expectedPermissions, loginResponse.Permissions);
         Assert.NotNull(loginResponse.Token);
     }
-    
+
     [Fact]
     public async Task LoginAsync_InActiveAccount_ReturnsAccountInactive()
     {

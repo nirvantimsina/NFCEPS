@@ -1,13 +1,12 @@
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.IdentityModel.Tokens;
 
 namespace NFCEPS.Application.Helpers;
 
 public class JWTHelper(JWTSettings settings)
 {
-    // Auth/JwtHelper.cs
     public string GenerateToken(int userId, string userName, int roleId, IEnumerable<string> permissions, IEnumerable<string> menuList)
     {
         if (string.IsNullOrEmpty(settings.SecretKey))
@@ -17,11 +16,11 @@ public class JWTHelper(JWTSettings settings)
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var claims = new List<Claim>
-    {
-        new(ClaimTypes.NameIdentifier, userId.ToString()),
-        new(ClaimTypes.Name, userName),
-        new("roleId", roleId.ToString())
-    };
+        {
+            new(ClaimTypes.NameIdentifier, userId.ToString()),
+            new(ClaimTypes.Name, userName),
+            new("roleId", roleId.ToString())
+        };
 
         // Add each permission as its own claim
         foreach (var permission in permissions)

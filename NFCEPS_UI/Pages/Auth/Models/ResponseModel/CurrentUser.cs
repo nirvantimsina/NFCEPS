@@ -1,5 +1,3 @@
-using NFCEPS_UI.Models.ResponseModel;
-
 namespace NFCEPS_UI.Pages.Auth.Models.ResponseModel;
 
 public class CurrentUser()

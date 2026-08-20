@@ -1,16 +1,16 @@
 using Microsoft.AspNetCore.Components.Authorization;
+using MudBlazor;
 using MudBlazor.Services;
 using NFCEPS_UI.Auth;
 using NFCEPS_UI.Components;
-using NFCEPS_UI.Services;
-using MudBlazor;
 using NFCEPS_UI.Pages.Auth.Managers.Implementation;
 using NFCEPS_UI.Pages.Auth.Managers.Interface;
 using NFCEPS_UI.Pages.Auth.Models.ResponseModel;
 using NFCEPS_UI.Pages.Card.Managers.Implementation;
 using NFCEPS_UI.Pages.Card.Managers.Interface;
-using NFCEPS_UI.Pages.Dashboard.Managers.Interface;
 using NFCEPS_UI.Pages.Dashboard.Managers.Implementation;
+using NFCEPS_UI.Pages.Dashboard.Managers.Interface;
+using NFCEPS_UI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -70,7 +70,7 @@ builder.Services.AddMudServices(config =>
     config.SnackbarConfiguration.ShowCloseIcon = true;
 
     // 2. OPTIONAL: Automatically pauses the countdown timer bar if the user hovers their mouse cursor over the toast
-    config.SnackbarConfiguration.RequireInteraction = false; 
+    config.SnackbarConfiguration.RequireInteraction = false;
 
     config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.TopRight;
     config.SnackbarConfiguration.PreventDuplicates = true;

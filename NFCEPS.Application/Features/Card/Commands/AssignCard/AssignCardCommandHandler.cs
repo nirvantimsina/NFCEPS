@@ -1,9 +1,9 @@
-using System.Data;
 using MediatR;
 using NFCEPS.Application.Interfaces;
+using NFCEPS.Application.Models.Card.Response;
 using NFCEPS.Domain.Models;
 using Npgsql;
-using NFCEPS.Application.Models.Card.Response;
+using System.Data;
 
 namespace NFCEPS.Application.Features.Card.Commands.AssignCard
 {

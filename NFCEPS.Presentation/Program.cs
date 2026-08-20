@@ -1,14 +1,12 @@
-using Microsoft.OpenApi.Models;
-using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi;
+using Microsoft.OpenApi.Models;
 using NFCEPS.Application.Helpers;
-using NFCEPS.Presentation.Middleware;
-using NFCEPS.Infrastructure.Repositories;
 using NFCEPS.Application.Interfaces;
+using NFCEPS.Infrastructure.Repositories;
+using NFCEPS.Presentation.Middleware;
 using Scalar.AspNetCore;
-using System.Reflection;
+using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 

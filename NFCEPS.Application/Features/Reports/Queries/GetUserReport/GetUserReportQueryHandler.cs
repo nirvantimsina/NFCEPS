@@ -1,8 +1,8 @@
-using System.Data;
 using MediatR;
 using NFCEPS.Application.Interfaces;
-using NFCEPS.Domain.Models;
 using NFCEPS.Application.Models.Reports.ResponseModel;
+using NFCEPS.Domain.Models;
+using System.Data;
 
 namespace NFCEPS.Application.Features.Reports.Queries.GetUserReport
 {

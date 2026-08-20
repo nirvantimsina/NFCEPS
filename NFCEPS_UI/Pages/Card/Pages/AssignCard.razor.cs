@@ -1,9 +1,9 @@
-using MudBlazor;
-using Microsoft.AspNetCore.Components.Web;
-using NFCEPS_UI.Pages.Card.Managers.Interface;
-using NFCEPS_UI.Components.Pages;
-using NFCEPS_UI.Pages.Card.Models.RequestModel;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
+using MudBlazor;
+using NFCEPS_UI.Components.Pages;
+using NFCEPS_UI.Pages.Card.Managers.Interface;
+using NFCEPS_UI.Pages.Card.Models.RequestModel;
 
 namespace NFCEPS_UI.Pages.Card.Pages
 {

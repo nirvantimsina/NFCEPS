@@ -1,11 +1,10 @@
-using System.Data;
-using System.Data.Common;
 using MediatR;
-using NFCEPS.Application.Interfaces;
-using NFCEPS.Domain.Models;
-using NFCEPS.Application.Helpers;
-using NFCEPS.Application.Models.Auth.Response;
 using NFCEPS.Application.Features.Auth.Queries.GetMenuList;
+using NFCEPS.Application.Helpers;
+using NFCEPS.Application.Interfaces;
+using NFCEPS.Application.Models.Auth.Response;
+using NFCEPS.Domain.Models;
+using System.Data;
 
 namespace NFCEPS.Application.Features.Auth.Commands.Login
 {

@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.DependencyInjection;
 using NFCEPS.Application.Helpers;
 
 namespace NFCEPS.Presentation.Helpers;

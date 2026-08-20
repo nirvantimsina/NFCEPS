@@ -1,11 +1,11 @@
+using NFCEPS.Domain.Models;
 using System.Net;
 using System.Text.Json;
-using NFCEPS.Domain.Models;
 
 namespace NFCEPS.Presentation.Middleware
 
 {
-    public class ExceptionMiddleware (RequestDelegate next, ILogger<ExceptionMiddleware> logger)
+    public class ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger)
     {
         public async Task InvokeAsync(HttpContext context)
         {

@@ -1,7 +1,7 @@
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NFCEPS.Domain.Models;
+using System.Security.Claims;
 
 namespace NFCEPS.Presentation.Controllers
 {

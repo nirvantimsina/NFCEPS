@@ -1,11 +1,10 @@
-using Microsoft.AspNetCore.Mvc;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using NFCEPS.Presentation.Controllers;
+using Microsoft.AspNetCore.Mvc;
 using NFCEPS.Application.Features.Auth.Commands.Login;
 using NFCEPS.Application.Features.Auth.Commands.SignUp;
 using NFCEPS.Application.Features.Auth.Queries.GetMenuList;
 using NFCEPS.Domain.Models;
-using MediatR;
 
 namespace NFCEPS.Presentation.Controllers
 {

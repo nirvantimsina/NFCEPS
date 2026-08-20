@@ -1,8 +1,8 @@
-using NFCEPS_UI.Models.ResponseModel;
 using NFCEPS_UI.Auth;
+using NFCEPS_UI.Managers;
+using NFCEPS_UI.Models.ResponseModel;
 using NFCEPS_UI.Pages.Dashboard.Managers.Interface;
 using NFCEPS_UI.Pages.Dashboard.Managers.Route;
-using NFCEPS_UI.Managers;
 using NFCEPS_UI.Pages.Dashboard.Models.ResponseModel;
 
 namespace NFCEPS_UI.Pages.Dashboard.Managers.Implementation;

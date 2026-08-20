@@ -1,7 +1,6 @@
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using NFCEPS.Application.Features.Reports.Queries.GetUserReport;
-using NFCEPS.Presentation.Controllers;
-using MediatR;
 
 namespace NFCEPS.Presentation.Controllers
 {

@@ -1,5 +1,5 @@
-using System.Data;
 using Npgsql;
+using System.Data;
 
 namespace NFCEPS.Infrastructure.Repositories;
 

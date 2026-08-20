@@ -1,6 +1,6 @@
-using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
+using System.Text.Encodings.Web;
 
 namespace NFCEPS_UI.Auth;
 

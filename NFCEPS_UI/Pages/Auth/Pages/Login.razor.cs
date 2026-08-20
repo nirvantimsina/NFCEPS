@@ -1,13 +1,13 @@
-using Microsoft.AspNetCore.Components;
-using NFCEPS_UI.Auth;
-using NFCEPS_UI.Services;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Web;
 using MudBlazor;
+using NFCEPS_UI.Auth;
 using NFCEPS_UI.Pages.Auth.Managers.Interface;
 using NFCEPS_UI.Pages.Auth.Models.RequestModel;
 using NFCEPS_UI.Pages.Auth.Models.ResponseModel;
+using NFCEPS_UI.Services;
 
 namespace NFCEPS_UI.Pages.Auth.Pages
 {

@@ -1,9 +1,9 @@
-using System.Data;
 using Moq;
-using NFCEPS.Application.Models.Card.Response;
 using NFCEPS.Application.Features.Card.Commands.AssignCard;
 using NFCEPS.Application.Interfaces;
+using NFCEPS.Application.Models.Card.Response;
 using Npgsql;
+using System.Data;
 
 namespace NFCEPS_TEST.Card.Services.Implementations;
 
