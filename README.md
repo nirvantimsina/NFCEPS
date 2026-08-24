@@ -36,7 +36,9 @@ NFCEPS/
 - PostgreSQL (migrated from MSSQL)
 - 19 tables across 8 schemas
 - All business logic in stored procedures and functions
+- Views are implemented for scalable data retrival
 - Dapper for data access
+- CQRS implementation in database level
 
 
 ---
@@ -67,7 +69,7 @@ NFCEPS/
 - Machine assignment
 - Session management
 
-### User (Mobile App — planned)
+### User (Mobile App — maybe?)
 - View card balance
 - View transaction history
 - View recharge history
@@ -105,7 +107,7 @@ PIM.C  PIM.R  PIM.U  PIM.D   — Permission Management
 SES.C  SES.R  SES.U          — Session
 ```
 
-Permissions are loaded into a singleton `Dictionary<int, HashSet<string>>` cache at startup — no database hit per request. Cache reloads when admin updates role permissions.
+Permissions are loaded into a singleton `Dictionary<int, HashSet<string>>` cache at startup — no database hit per request.
 
 ---
 
@@ -113,13 +115,13 @@ Permissions are loaded into a singleton `Dictionary<int, HashSet<string>>` cache
 
 | Layer | Technology |
 |---|---|
-| API | ASP.NET Core 10 |
-| UI | Blazor Server 10 + MudBlazor |
-| Database | Microsoft SQL Server |
+| API | ASP.NET Core 9 |
+| UI | Blazor Server 9 + MudBlazor |
+| Database | PostgreSQL |
 | ORM | Dapper |
 | Auth | JWT Bearer + BCrypt |
 | Mapping | AutoMapper |
-| API Docs | Swashbuckle (Swagger) |
+| API Docs | Scalar |
 | Firmware | Arduino / PlatformIO (ESP32) |
 | NFC Library | Adafruit PN532 |
 | Offline Storage | LittleFS (ESP32 internal flash) |
@@ -145,6 +147,7 @@ database/usefulscripts
 ├── create_table.sql    — creates all schemas and tables
 └── foreign_keys.sql      — add after testing is complete
 (more folders such as 'Stored Procedure' and 'Functions' will be added as the project grows)
+(soon implementing DbUp for this)
 ```
 
 ```bash
@@ -174,7 +177,7 @@ Run:
 dotnet run
 ```
 
-Swagger available at `https://localhost:7279/swagger`
+Scalar available at `https://localhost:7279/scalar`
 
 ### 3 — UI Setup
 
@@ -296,6 +299,7 @@ Depot (online)
 ## Roadmap
 
 - [x] Database schema design
+- [x] Architectural Decisions
 - [x] API foundation — auth, repository, middleware
 - [x] JWT + BCrypt authentication
 - [x] Role-based permission system with cache
