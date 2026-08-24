@@ -16,10 +16,14 @@ Admin settles collected fares → entity owners paid via branch
 
 ## Architecture
 
-```
+```text
 NFCEPS/
-├── NFCEPS_API/        ASP.NET Core 9 Web API
-└── NFCEPS_UI/         Blazor Server 10 + MudBlazor
+├── NFCEPS.Domain/          Core entities, enums, and base response models
+├── NFCEPS.Application/     CQRS (MediatR), Handlers, DTOs, and Interfaces
+├── NFCEPS.Infrastructure/  Dapper implementation (GenericRepository)
+├── NFCEPS.Presentation/    ASP.NET Core 9 Web API Controllers
+├── NFCEPS.UI/              Blazor Web App 9 + MudBlazor (Vertical Slice Architecture)
+└── NFCEPS.TEST/            xUnit Tests (Mirroring solution structure)
 ```
 
 **Hardware**
@@ -33,6 +37,7 @@ NFCEPS/
 - 19 tables across 8 schemas
 - All business logic in stored procedures and functions
 - Dapper for data access
+
 
 ---
 
@@ -152,7 +157,7 @@ sqlcmd -S localhost -i database/002_seed_data.sql
 ### 2 — API Setup
 
 ```bash
-cd NFCEPS_API
+cd NFCEPS.Presentation
 ```
 
 Set your user secrets:
@@ -174,7 +179,7 @@ Swagger available at `https://localhost:7279/swagger`
 ### 3 — UI Setup
 
 ```bash
-cd NFCEPS_UI
+cd NFCEPS.UI
 dotnet run
 ```
 
@@ -190,27 +195,17 @@ Password: admin123
 
 ---
 
-## API Structure
+## Backend Structure (Clean Architecture & CQRS)
 
-```
-NFCEPS_API/
-├── Controllers/         — thin HTTP handlers only
-├── Services/            — business logic
-│   ├── Interfaces/
-│   └── Implementations/
-├── Repository/          — Dapper + stored procedure calls
-│   ├── IGenericRepository.cs
-│   └── GenericRepository.cs
-├── Models/
-│   ├── RequestModel/         — incoming request models
-│   ├── ResponseModel/        — outgoing response models
-│   └── Params/               — stored procedure parameters
-├── Auth/
-│   ├── JwtHelper.cs
-│   ├── PasswordHelper.cs
-│   └── JwtSettings.cs
-└── Middleware/
-    └── ExceptionMiddleware.cs
+```text
+NFCEPS.Application/
+├── Features/            — CQRS Commands and Queries
+│   ├── Auth/
+│   │   ├── Commands/
+│   │   └── Queries/
+│   └── Reports/
+├── Interfaces/          — IGenericRepository
+└── Models/              — DTOs for Request/Response
 ```
 
 ### Generic Repository Methods
@@ -234,24 +229,22 @@ Task<T?> ExecuteScalarAsync<T>(string sp, object? params)
 
 ---
 
-## UI Structure
+## UI Structure (Vertical Slice Architecture)
 
-```
-NFCEPS_UI/
-├── Components/
-│   ├── Layout/          — MainLayout, AuthLayout, NavMenu
-│   └── Pages/           — Auth, Dashboard, Users, Cards,
-│                           Entities, Owners, Machines,
-│                           Branch, Transactions, Routes
-├── Services/            — HTTP managers calling API endpoints
-├── Models/
-│   ├── Request/
-│   └── Response/
-├── Auth/
-│   ├── AuthStateProvider.cs
-│   └── AuthorizationMessageHandler.cs
-└── Endpoints/
-    └── ApiEndpoints.cs  — all API URL strings in one place
+The Blazor UI is structured using Vertical Slices, organizing code by feature rather than by type:
+
+```text
+NFCEPS.UI/
+├── Features/
+│   ├── Auth/             — Login.razor, AuthManager.cs, LoginRequest.cs
+│   ├── Dashboard/        — Dashboard.razor, DashboardManager.cs
+│   ├── Reports/          — UserReport.razor, ReportManager.cs
+│   └── Card/             — AssignCard.razor, CardManager.cs
+├── Shared/
+│   ├── Layouts/          — MainLayout.razor, NavMenu.razor
+│   ├── Security/         — PermissionService.cs, AuthStateProvider.cs
+│   └── Infrastructure/   — BaseManager.cs, ApiResponse.cs
+└── wwwroot/              — CSS, JS, Bootstrap
 ```
 
 ---
