@@ -1,19 +1,19 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor;
 using MudBlazor.Services;
-using NFCEPS.UI.Auth;
+using NFCEPS.UI.Features.Auth;
 using NFCEPS.UI.Components;
-using NFCEPS.UI.Pages.Auth.Managers.Implementation;
-using NFCEPS.UI.Pages.Auth.Managers.Interface;
-using NFCEPS.UI.Pages.Auth.Models.ResponseModel;
-using NFCEPS.UI.Pages.Card.Managers.Implementation;
-using NFCEPS.UI.Pages.Card.Managers.Interface;
-using NFCEPS.UI.Pages.Dashboard.Managers.Implementation;
-using NFCEPS.UI.Pages.Dashboard.Managers.Interface;
-using NFCEPS.UI.Pages.Reports.Managers.Implementation;
-using NFCEPS.UI.Pages.Reports.Managers.Interface;
-using NFCEPS.UI.Pages.Reports.Pages;
-using NFCEPS.UI.Services;
+using NFCEPS.UI.Features.Auth.Managers.Implementation;
+using NFCEPS.UI.Features.Auth.Managers.Interface;
+using NFCEPS.UI.Features.Auth.Models.ResponseModel;
+using NFCEPS.UI.Features.Card.Managers.Implementation;
+using NFCEPS.UI.Features.Card.Managers.Interface;
+using NFCEPS.UI.Features.Dashboard.Managers.Implementation;
+using NFCEPS.UI.Features.Dashboard.Managers.Interface;
+using NFCEPS.UI.Features.Reports.Managers.Implementation;
+using NFCEPS.UI.Features.Reports.Managers.Interface;
+using NFCEPS.UI.Features.Reports.Pages;
+using NFCEPS.UI.Shared.Security;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -116,4 +116,5 @@ app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
 app.Run();
+
 
