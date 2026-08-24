@@ -7,8 +7,8 @@ namespace NFCEPS.Presentation.Controllers
     [ApiController]
     public class UserReportController(IMediator mediator) : ApiBaseController
     {
-        [HttpGet("UserReport")]
-        public async Task<IActionResult> GetUserReportData([FromQuery] GetUserReportQuery query)
+        [HttpPost("UserReportData")]
+        public async Task<IActionResult> GetUserReportData([FromBody] GetUserReportQuery query)
         {
             var result = await mediator.Send(query);
             return HandleResponse(result);

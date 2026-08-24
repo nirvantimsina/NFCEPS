@@ -1,0 +1,66 @@
+@using NFCEPS.UI.Shared.Infrastructure
+@using Microsoft.AspNetCore.Components.Routing
+
+<div class="sidebar">
+    <div class="sidebar-header">
+        <span class="material-icons-sharp sidebar-toggle" @onclick="TogglePin">menu</span>
+    </div>
+    <div class="sidebar-search">
+        <span class="material-icons-outlined search-icon">search</span>
+        <input type="text" class="menu-search-input" placeholder="Search menu..." @bind="SearchTerm" @bind:event="oninput" />
+    </div>
+
+    <!-- Scrollable Menu Items -->
+    <div class="sidebar-menu-scroll">
+        @if (FilteredMenuList != null)
+        {
+            @foreach (var parentMenu in FilteredMenuList.Where(s => s.ParentId == 0).OrderBy(u => u.MenuOrder).ToList())
+        {
+            var children = FilteredMenuList.Where(c => c.ParentId == parentMenu.MenuId).OrderBy(u => u.MenuOrder).ToList();
+            bool hasChildren = children.Any();
+            
+            // Auto-expand if searching, otherwise rely on click state
+            bool isExpanded = expandedMenuId == parentMenu.MenuId || !string.IsNullOrWhiteSpace(SearchTerm);
+            <div class="newSideMenu parentMenu @(activeMenu == parentMenu.MenuName && !hasChildren ? "activeClassMenu" : "")" 
+                 @onclick="@(() => { if (hasChildren) ToggleChildMenu(parentMenu); else Redirect(parentMenu); })">
+                <div class="menu-item-content">
+                    <span class="material-icons-outlined">@parentMenu.Icon</span>
+                    <span>@parentMenu.MenuName</span>
+                </div>
+                @if (hasChildren)
+                {
+                    <span class="material-icons-outlined dropdown-icon @(isExpanded ? "expanded" : "")">
+                        expand_more
+                    </span>
+                }
+            </div>
+            @if (hasChildren && isExpanded)
+            {
+                <div class="child-menu-container">
+                    @foreach (var child in children)
+                    {
+                        <div class="newSideMenu childMenu @(activeMenu == child.MenuName ? "activeClassMenu" : "")" 
+                             @onclick="() => Redirect(child)">
+                            <div class="menu-item-content">
+                                <span class="material-icons-outlined">@child.Icon</span>
+                                <span>@child.MenuName</span>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            }
+        }
+    </div>
+
+    <!-- Pinned Logout Footer -->
+    <div class="sidebar-footer">
+        <div class="newSideMenu logout-menu" @onclick="HandleLogout">
+            <div class="menu-item-content">
+                <span class="material-icons-outlined">logout</span>
+                <span>Logout</span>
+            </div>
+        </div>
+    </div>
+</div>
+
