@@ -1,4 +1,0 @@
-CREATE SCHEMA [User]
-    AUTHORIZATION [dbo];
-GO
-

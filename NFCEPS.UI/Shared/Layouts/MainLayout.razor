@@ -1,0 +1,39 @@
+@inherits LayoutComponentBase
+@using NFCEPS.UI.Shared.Layouts
+
+<MudThemeProvider Theme="_theme" IsDarkMode="true" />
+<MudDialogProvider FullWidth="true" MaxWidth="MaxWidth.Small" />
+<MudSnackbarProvider />
+<MudPopoverProvider />
+
+<div class="app-wrapper @(_drawerOpen ? "sidebar-pinned" : "sidebar-collapsed")">
+    
+    <!-- Sidebar Container -->
+    <aside class="sidebar-container">
+        <NavMenu IsPinned="_drawerOpen" OnTogglePin="ToggleDrawer" />
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <header class="topbar d-flex align-center w-100 px-4" style="height: 64px; border-bottom: 1px solid var(--mud-palette-divider);">
+            <!-- Topbar content from previous layout -->
+            <div class="topbar-breadcrumb ml-2">
+                @* Current page title *@
+            </div>
+            <MudSpacer />
+            <div class="topbar-right mr-4 d-flex align-center">
+                <span class="topbar-clock">@_clock</span>
+                <MudDivider Vertical="true" FlexItem="true" Class="mx-2" />
+                <MudIcon Icon="@Icons.Material.Filled.Circle" Style="font-size:.6rem; color: #22c55e;" />
+                <span class="topbar-live ml-1">LIVE</span>
+            </div>
+        </header>
+        
+        <article class="content px-4 py-4" style="flex-grow: 1; overflow-y: auto;">
+            @Body
+        </article>
+    </main>
+</div>
+
+
+

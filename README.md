@@ -16,10 +16,14 @@ Admin settles collected fares → entity owners paid via branch
 
 ## Architecture
 
-```
+```text
 NFCEPS/
-├── NFCEPS_API/        ASP.NET Core 9 Web API
-└── NFCEPS_UI/         Blazor Server 10 + MudBlazor
+├── NFCEPS.Domain/          Core entities, enums, and base response models
+├── NFCEPS.Application/     CQRS (MediatR), Handlers, DTOs, and Interfaces
+├── NFCEPS.Infrastructure/  Dapper implementation (GenericRepository)
+├── NFCEPS.Presentation/    ASP.NET Core 9 Web API Controllers
+├── NFCEPS.UI/              Blazor Web App 9 + MudBlazor (Vertical Slice Architecture)
+└── NFCEPS.TEST/            xUnit Tests (Mirroring solution structure)
 ```
 
 **Hardware**
@@ -32,7 +36,10 @@ NFCEPS/
 - PostgreSQL (migrated from MSSQL)
 - 19 tables across 8 schemas
 - All business logic in stored procedures and functions
+- Views are implemented for scalable data retrival
 - Dapper for data access
+- CQRS implementation in database level
+
 
 ---
 
@@ -62,7 +69,7 @@ NFCEPS/
 - Machine assignment
 - Session management
 
-### User (Mobile App — planned)
+### User (Mobile App — maybe?)
 - View card balance
 - View transaction history
 - View recharge history
@@ -100,7 +107,7 @@ PIM.C  PIM.R  PIM.U  PIM.D   — Permission Management
 SES.C  SES.R  SES.U          — Session
 ```
 
-Permissions are loaded into a singleton `Dictionary<int, HashSet<string>>` cache at startup — no database hit per request. Cache reloads when admin updates role permissions.
+Permissions are loaded into a singleton `Dictionary<int, HashSet<string>>` cache at startup — no database hit per request.
 
 ---
 
@@ -108,13 +115,13 @@ Permissions are loaded into a singleton `Dictionary<int, HashSet<string>>` cache
 
 | Layer | Technology |
 |---|---|
-| API | ASP.NET Core 10 |
-| UI | Blazor Server 10 + MudBlazor |
-| Database | Microsoft SQL Server |
+| API | ASP.NET Core 9 |
+| UI | Blazor Server 9 + MudBlazor |
+| Database | PostgreSQL |
 | ORM | Dapper |
 | Auth | JWT Bearer + BCrypt |
 | Mapping | AutoMapper |
-| API Docs | Swashbuckle (Swagger) |
+| API Docs | Scalar |
 | Firmware | Arduino / PlatformIO (ESP32) |
 | NFC Library | Adafruit PN532 |
 | Offline Storage | LittleFS (ESP32 internal flash) |
@@ -140,6 +147,7 @@ database/usefulscripts
 ├── create_table.sql    — creates all schemas and tables
 └── foreign_keys.sql      — add after testing is complete
 (more folders such as 'Stored Procedure' and 'Functions' will be added as the project grows)
+(soon implementing DbUp for this)
 ```
 
 ```bash
@@ -152,7 +160,7 @@ sqlcmd -S localhost -i database/002_seed_data.sql
 ### 2 — API Setup
 
 ```bash
-cd NFCEPS_API
+cd NFCEPS.Presentation
 ```
 
 Set your user secrets:
@@ -169,12 +177,12 @@ Run:
 dotnet run
 ```
 
-Swagger available at `https://localhost:7279/swagger`
+Scalar available at `https://localhost:7279/scalar`
 
 ### 3 — UI Setup
 
 ```bash
-cd NFCEPS_UI
+cd NFCEPS.UI
 dotnet run
 ```
 
@@ -190,27 +198,17 @@ Password: admin123
 
 ---
 
-## API Structure
+## Backend Structure (Clean Architecture & CQRS)
 
-```
-NFCEPS_API/
-├── Controllers/         — thin HTTP handlers only
-├── Services/            — business logic
-│   ├── Interfaces/
-│   └── Implementations/
-├── Repository/          — Dapper + stored procedure calls
-│   ├── IGenericRepository.cs
-│   └── GenericRepository.cs
-├── Models/
-│   ├── RequestModel/         — incoming request models
-│   ├── ResponseModel/        — outgoing response models
-│   └── Params/               — stored procedure parameters
-├── Auth/
-│   ├── JwtHelper.cs
-│   ├── PasswordHelper.cs
-│   └── JwtSettings.cs
-└── Middleware/
-    └── ExceptionMiddleware.cs
+```text
+NFCEPS.Application/
+├── Features/            — CQRS Commands and Queries
+│   ├── Auth/
+│   │   ├── Commands/
+│   │   └── Queries/
+│   └── Reports/
+├── Interfaces/          — IGenericRepository
+└── Models/              — DTOs for Request/Response
 ```
 
 ### Generic Repository Methods
@@ -234,24 +232,22 @@ Task<T?> ExecuteScalarAsync<T>(string sp, object? params)
 
 ---
 
-## UI Structure
+## UI Structure (Vertical Slice Architecture)
 
-```
-NFCEPS_UI/
-├── Components/
-│   ├── Layout/          — MainLayout, AuthLayout, NavMenu
-│   └── Pages/           — Auth, Dashboard, Users, Cards,
-│                           Entities, Owners, Machines,
-│                           Branch, Transactions, Routes
-├── Services/            — HTTP managers calling API endpoints
-├── Models/
-│   ├── Request/
-│   └── Response/
-├── Auth/
-│   ├── AuthStateProvider.cs
-│   └── AuthorizationMessageHandler.cs
-└── Endpoints/
-    └── ApiEndpoints.cs  — all API URL strings in one place
+The Blazor UI is structured using Vertical Slices, organizing code by feature rather than by type:
+
+```text
+NFCEPS.UI/
+├── Features/
+│   ├── Auth/             — Login.razor, AuthManager.cs, LoginRequest.cs
+│   ├── Dashboard/        — Dashboard.razor, DashboardManager.cs
+│   ├── Reports/          — UserReport.razor, ReportManager.cs
+│   └── Card/             — AssignCard.razor, CardManager.cs
+├── Shared/
+│   ├── Layouts/          — MainLayout.razor, NavMenu.razor
+│   ├── Security/         — PermissionService.cs, AuthStateProvider.cs
+│   └── Infrastructure/   — BaseManager.cs, ApiResponse.cs
+└── wwwroot/              — CSS, JS, Bootstrap
 ```
 
 ---
@@ -303,6 +299,7 @@ Depot (online)
 ## Roadmap
 
 - [x] Database schema design
+- [x] Architectural Decisions
 - [x] API foundation — auth, repository, middleware
 - [x] JWT + BCrypt authentication
 - [x] Role-based permission system with cache

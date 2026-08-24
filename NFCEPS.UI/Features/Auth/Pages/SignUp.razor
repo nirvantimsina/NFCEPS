@@ -1,0 +1,78 @@
+@using NFCEPS.UI.Shared.Security
+@page "/signup"
+@layout EmptyLayout
+
+<PageTitle>NFCEPS -Sign Up</PageTitle>
+<MudContainer MaxWidth="MaxWidth.Small" Class="mt-10">
+    <EditForm Model="@request" OnValidSubmit="HandleSignUp">
+        <DataAnnotationsValidator />
+        <MudPaper Elevation="3" Class="pa-6">
+
+            @if (!string.IsNullOrWhiteSpace(error))
+            {
+                <MudAlert Severity="Severity.Error" Class="mb-4">@error</MudAlert>
+            }
+
+            <MudText Typo="Typo.h5" Class="mb-4">Sign Up</MudText>
+
+            <MudTextField @bind-Value="request.UserName" For="@(() => request.UserName)" Label="Username"
+                          Variant="Variant.Text" Required class="mt-2" />
+
+            <MudTextField @bind-Value="request.Name" For="@(() => request.Name)" Label="Name" Variant="Variant.Text"
+                          Required Class="mt-2" />
+
+            <MudTextField @bind-Value="request.Phone" For="@(() => request.Phone)" Label="Phone Number"
+                          Variant="Variant.Text" Required Class="mt-2" />
+
+            <MudTextField @bind-Value="request.Address" For="@(() => request.Address)" Label="Address"
+                          Variant="Variant.Text" Required Class="mt-2" />
+
+            <MudTextField @bind-Value="request.Password" For="@(() => request.Password)" Label="Password"
+                          InputType="@passwordInputKind" Variant="Variant.Text" Required="true" Class="mt-4"
+                          Adornment="Adornment.End" AdornmentIcon="@passwordIcon" OnAdornmentClick="TogglePasswordVisibility"
+                          AdornmentAriaLabel="Show Password" />
+
+            <MudTextField @bind-Value="request.ConfirmPassword" For="@(() => request.ConfirmPassword)"
+                          Label="Confirm Password" InputType="@passwordInputKind2" Variant="Variant.Text" Required="true"
+                          Class="mt-4" Adornment="Adornment.End" AdornmentIcon="@passwordIcon2"
+                          OnAdornmentClick="TogglePasswordVisibility2" AdornmentAriaLabel="Show Password" />
+
+
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true"
+                       Disabled="IsLoading" Class="mt-6">
+
+                @if (IsLoading)
+                {
+                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                    <MudText class="ms-2">Processing...</MudText>
+                }
+                else
+                {
+                    <MudText>Create Account</MudText>
+                }
+            </MudButton>
+
+            <MudText Align="Align.Center" Class="mt-4" Typo="Typo.body2">
+                Already have an account?
+                <MudLink href="/login" Color="Color.Primary" Underline="Underline.Hover">Log In</MudLink>
+            </MudText>
+        </MudPaper>
+    </EditForm>
+</MudContainer>
+
+@code {
+    private bool isPasswordVisible;
+    private InputType passwordInputKind => isPasswordVisible ? InputType.Text : InputType.Password;
+    private string passwordIcon => isPasswordVisible ? Icons.Material.Filled.Visibility :
+Icons.Material.Filled.VisibilityOff;
+
+    private void TogglePasswordVisibility() => isPasswordVisible = !isPasswordVisible;
+
+
+    private bool isPasswordVisible2;
+    private InputType passwordInputKind2 => isPasswordVisible2 ? InputType.Text : InputType.Password;
+    private string passwordIcon2 => isPasswordVisible2 ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff;
+    private void TogglePasswordVisibility2() => isPasswordVisible2 = !isPasswordVisible2;
+}
+
+
