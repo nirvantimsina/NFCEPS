@@ -17,13 +17,22 @@ namespace NFCEPS.Application.Features.Reports.Queries.GetUserReport
 
         public async Task<ApiResponse> Handle(GetUserReportQuery request, CancellationToken cancellationToken)
         {
-            var paramobj = new { p_flag = "A", p_userid = request.UserId };
-            var result = await _repo.QueryFirstOrDefaultAsync<UserReportResponseModel>(
-                "SELECT * FROM user.fn_UserReport(@p_flag, @p_userid);",
-                paramobj,
-                commandType: CommandType.Text);
+            try
+            {
 
-            return result != null ? ApiResponse.Ok(result) : ApiResponse.Fail("Data not found");
+                var paramobj = new { p_flag = "A", p_userid = request.UserId };
+                var result = await _repo.QueryAsync<UserReportResponseModel>(
+                    "SELECT * FROM \"user\".fn_userreport(@p_flag, @p_userid);",
+                    paramobj,
+                    commandType: CommandType.Text);
+
+                return result != null ? ApiResponse.Ok(result) : ApiResponse.Fail("Data not found");
+
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse.Fail($"An unexpected error occurred: {ex.Message}");
+            }
         }
     }
 }
