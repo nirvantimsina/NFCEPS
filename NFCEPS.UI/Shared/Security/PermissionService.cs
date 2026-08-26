@@ -7,6 +7,8 @@ public class PermissionService
     private readonly object _lock = new();
     private HashSet<string> _permissions = [];
 
+    public bool IsLoaded { get; private set; } = false;
+
     public event Action? OnChange;
 
     public async Task LoadFromTokenAsync(AuthSessionManager session)
@@ -34,6 +36,7 @@ public class PermissionService
         lock (_lock)
         {
             _permissions = new HashSet<string>(permissions);
+            IsLoaded = true;
         }
 
         NotifyStateChanged();
@@ -44,6 +47,7 @@ public class PermissionService
         lock (_lock)
         {
             _permissions.Clear();
+            IsLoaded = false;
         }
 
         NotifyStateChanged();

@@ -11,6 +11,10 @@ public abstract class PermissionAwareBase : ComponentBase, IDisposable
     protected override void OnInitialized()
     {
         PermissionService.OnChange += OnPermissionsLoaded;
+        if (PermissionService.IsLoaded)
+        {
+            OnPermissionsLoaded();
+        }
     }
 
     private void OnPermissionsLoaded()

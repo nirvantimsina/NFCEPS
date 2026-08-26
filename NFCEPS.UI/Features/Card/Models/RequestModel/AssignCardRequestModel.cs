@@ -6,7 +6,7 @@ namespace NFCEPS.UI.Features.Card.Models.RequestModel;
 public class AssignCardRequestModel
 {
     [Required]
-    public int UserId { get; set; }
+    public int? UserId { get; set; }
 }
 
 
