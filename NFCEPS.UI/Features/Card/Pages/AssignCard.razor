@@ -20,7 +20,7 @@
 
 	<MudPaper Elevation="3" Class="pa-6">
 		<MudTextField @bind-Value="request.UserId" For="@(() => request.UserId)" Label="User Id" Variant="Variant.Text" Required Class="mt-2" />
-		<MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" Disabled="IsLoading" class="mt-6">
+		<MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Disabled="IsLoading" class="mt-6">
 			@if (IsLoading)
 			{
 				<MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
@@ -28,13 +28,13 @@
 			}
 			else
 			{
-				<MudText>Assign Card</MudText>
+				<MudText>Assign</MudText>
 			}
 		</MudButton>
-		<MudText Align="(Align.Center)" Class="mt-4" Typo="Typo.body2">
-			Verify if the user already has a card assigned.
-		</MudText>
 	</MudPaper>
 </EditForm>
+<MudText Align="(Align.Center)" Class="mt-4" Typo="Typo.body2">
+	Verify if the user already has a card assigned.
+</MudText>
 
 

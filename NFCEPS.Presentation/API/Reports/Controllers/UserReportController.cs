@@ -4,7 +4,6 @@ using NFCEPS.Application.Features.Reports.Queries.GetUserReport;
 
 namespace NFCEPS.Presentation.Controllers
 {
-    [ApiController]
     public class UserReportController(IMediator mediator) : ApiBaseController
     {
         [HttpPost("UserReportData")]
