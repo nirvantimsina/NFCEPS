@@ -1,4 +1,5 @@
 using NFCEPS.Domain.Models;
+using System.Data.Common;
 using System.Net;
 using System.Text.Json;
 
@@ -31,13 +32,16 @@ namespace NFCEPS.Presentation.Middleware
                 ArgumentException => ((int)HttpStatusCode.BadRequest, ex.Message),
                 
                 // Catch specific database errors globally!
-                System.Data.Common.DbException dbEx when dbEx.SqlState == "23505" => 
+                DbException dbEx when dbEx.SqlState == "23505" => 
                     ((int)HttpStatusCode.Conflict, "This record already exists!"),
-                System.Data.Common.DbException dbEx when dbEx.SqlState == "23502" => 
+                DbException dbEx when dbEx.SqlState == "23502" => 
                     ((int)HttpStatusCode.BadRequest, "A required field is missing!"),
-                System.Data.Common.DbException dbEx when dbEx.SqlState == "23503" => 
+                DbException dbEx when dbEx.SqlState == "23503" => 
                     ((int)HttpStatusCode.BadRequest, "This record is associated with other data and cannot be modified!"),
                 
+                FluentValidation.ValidationException valEx => 
+                    ((int)HttpStatusCode.BadRequest, string.Join(", ", valEx.Errors.Select(e => e.ErrorMessage))),
+
                 // Fallback for everything else
                 _ => ((int)HttpStatusCode.InternalServerError, "An unexpected error occured!")
             };

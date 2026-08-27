@@ -5,7 +5,7 @@ namespace NFCEPS.Domain.Models;
 public class ApiResponse
 {
     [JsonPropertyName("status")]
-    public int Status { get; set; }
+    public string? Status { get; set; }
 
     [JsonPropertyName("msg")]
     public string? Message { get; set; }
@@ -14,19 +14,19 @@ public class ApiResponse
     public object? Data { get; set; }
 
     [JsonIgnore]
-    public bool Success => Status == 0;
+    public bool Success => Status == "0";
 
-    public static ApiResponse Ok(object? data = null, string message = "Success", int status = 0)
+    public static ApiResponse Ok(object? data = null, string message = "Success", string status = "0")
         => new() { Status = status, Message = message, Data = data };
 
-    public static ApiResponse Fail(string message, int status = 1)
+    public static ApiResponse Fail(string message, string status = "1")
         => new() { Status = status, Message = message };
 
     public static ApiResponse FromDbResult<T>(T? result) where T : StatusResponse
     {
-        if (result == null) return Fail("No response received from the database!", -1);
+        if (result == null) return Fail("No response received from the database!", "-1");
 
-        string defaultMsg = result.Status == 0 ? "Success" : "Failed";
+        string defaultMsg = result.Status == "0" ? "Success" : "Failed";
         
         string resolvedMessage = ErrorCodes.GetMessage(result.Status) 
                                  ?? result.MSG 
