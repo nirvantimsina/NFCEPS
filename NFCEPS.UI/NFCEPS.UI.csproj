@@ -8,16 +8,27 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="MudBlazor" Version="9.4.0" />
-      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.18.0" />
+      <Compile Remove="Components\Layout\**" />
+      <Compile Remove="Models\**" />
+      <Compile Remove="Pages\**" />
+      <Compile Remove="Services\**" />
+      <Content Remove="Components\Layout\**" />
+      <Content Remove="Models\**" />
+      <Content Remove="Pages\**" />
+      <Content Remove="Services\**" />
+      <EmbeddedResource Remove="Components\Layout\**" />
+      <EmbeddedResource Remove="Models\**" />
+      <EmbeddedResource Remove="Pages\**" />
+      <EmbeddedResource Remove="Services\**" />
+      <None Remove="Components\Layout\**" />
+      <None Remove="Models\**" />
+      <None Remove="Pages\**" />
+      <None Remove="Services\**" />
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Components\Layout\" />
-      <Folder Include="Models\RequestModel\" />
-      <Folder Include="Pages\Dashboard\Models\RequestModel\" />
-      <Folder Include="Models\ResponseModel\" />
-      <Folder Include="Services/" />
+      <PackageReference Include="MudBlazor" Version="9.4.0" />
+      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.18.0" />
     </ItemGroup>
 
 </Project>

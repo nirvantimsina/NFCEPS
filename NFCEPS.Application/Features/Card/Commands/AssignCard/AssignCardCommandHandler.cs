@@ -1,8 +1,6 @@
 using MediatR;
 using NFCEPS.Application.Interfaces;
-using NFCEPS.Application.Models.Card.Response;
 using NFCEPS.Domain.Models;
-using Npgsql;
 using System.Data;
 
 namespace NFCEPS.Application.Features.Card.Commands.AssignCard
@@ -22,21 +20,12 @@ namespace NFCEPS.Application.Features.Card.Commands.AssignCard
             {
                 var Params = new
                 {
-                    p_flag = "A",
                     p_userid = request.UserId
                 };
 
-                var cardid = await _repo.QueryFirstOrDefaultAsync<AssignCardResponseModel>("SELECT card.fn_assign_card(@p_flag, @p_userid)", Params, CommandType.Text);
-                return ApiResponse.Ok();
-            }
-            catch (NpgsqlException ex)
-            {
-                return ex.SqlState switch
-                {
-                    "P0001" => ApiResponse.Fail("Card has already been assigned to this user!"),
-                    "P0002" => ApiResponse.Fail("Card assign failed, the user doesnot exist!"),
-                    _ => ApiResponse.Fail($"Database error: {ex.Message}")
-                };
+                var result = await _repo.QueryFirstOrDefaultAsync<AssignCardResponseModel>("CALL card.assign_card_by_userid(@p_userid)", Params, CommandType.Text);
+
+                return ApiResponse.FromDbResult(result);
             }
             catch (Exception ex)
             {

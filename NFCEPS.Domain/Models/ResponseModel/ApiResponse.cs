@@ -12,6 +12,14 @@ public class ApiResponse
 
     public static ApiResponse Fail(string message)
         => new() { Success = false, Message = message };
-}
 
+    public static ApiResponse FromDbResult<T>(T? result) where T : StatusResponse
+    {
+        if (result == null) return Fail("No response received from the database!");
+
+        return result.Status == 0 
+            ? Ok(result, result.MSG ?? "Success") 
+            : Fail(result.MSG ?? "Failed");
+    }
+}
 

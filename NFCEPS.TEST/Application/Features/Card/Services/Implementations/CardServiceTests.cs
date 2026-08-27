@@ -1,7 +1,6 @@
 using Moq;
 using NFCEPS.Application.Features.Card.Commands.AssignCard;
 using NFCEPS.Application.Interfaces;
-using NFCEPS.Application.Models.Card.Response;
 using Npgsql;
 using System.Data;
 
