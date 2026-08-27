@@ -25,12 +25,12 @@ public class CardServiceTests
     [Fact]
     public async Task AssignCardAsync_ReassignCard_CardAlreadyAssigned()
     {
-        var command = new AssignCardCommand { Flag = "A", UserId = 11 };
-        var exception = CreatePostgresException("P0001", "Card has already been assigned to this user!");
+        var command = new AssignCardCommand { UserId = 11 };
+        var expectedResponse = new AssignCardResponseModel { Status = 1, MSG = "Card has already been assigned to this user!" };
 
         _mockRepo.Setup(r => r.QueryFirstOrDefaultAsync<AssignCardResponseModel>(
             It.IsAny<string>(), It.IsAny<object>(), It.IsAny<CommandType>()
-        )).ThrowsAsync(exception);
+        )).ReturnsAsync(expectedResponse);
 
         var result = await _handler.Handle(command, default);
 
@@ -41,12 +41,12 @@ public class CardServiceTests
     [Fact]
     public async Task AssignCardAsync_UserDoesNotExists_ResultUserDoesNotExists()
     {
-        var command = new AssignCardCommand { Flag = "A", UserId = 0 };
-        var exception = CreatePostgresException("P0002", "Card assign failed, the user doesnot exist!");
+        var command = new AssignCardCommand { UserId = 0 };
+        var expectedResponse = new AssignCardResponseModel { Status = 1, MSG = "Card assign failed, the user doesnot exist!" };
 
         _mockRepo.Setup(r => r.QueryFirstOrDefaultAsync<AssignCardResponseModel>(
             It.IsAny<string>(), It.IsAny<object>(), It.IsAny<CommandType>()
-        )).ThrowsAsync(exception);
+        )).ReturnsAsync(expectedResponse);
 
         var result = await _handler.Handle(command, default);
 

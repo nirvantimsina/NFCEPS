@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NFCEPS.TEST", "NFCEPS.TEST\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NFCEPS.UI", "NFCEPS.UI\NFCEPS.UI.csproj", "{6F9972A3-0215-44E4-B07F-9F0F72174E86}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NFCEPS.Shared", "NFCEPS.Shared\NFCEPS.Shared.csproj", "{EC2BE195-D952-4104-B9DB-8A1A13FBE19C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{6F9972A3-0215-44E4-B07F-9F0F72174E86}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F9972A3-0215-44E4-B07F-9F0F72174E86}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F9972A3-0215-44E4-B07F-9F0F72174E86}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC2BE195-D952-4104-B9DB-8A1A13FBE19C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC2BE195-D952-4104-B9DB-8A1A13FBE19C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC2BE195-D952-4104-B9DB-8A1A13FBE19C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC2BE195-D952-4104-B9DB-8A1A13FBE19C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
