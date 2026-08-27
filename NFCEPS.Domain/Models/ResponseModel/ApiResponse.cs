@@ -26,10 +26,16 @@ public class ApiResponse
     {
         if (result == null) return Fail("No response received from the database!", -1);
 
+        string defaultMsg = result.Status == 0 ? "Success" : "Failed";
+        
+        string resolvedMessage = ErrorCodes.GetMessage(result.Status) 
+                                 ?? result.MSG 
+                                 ?? defaultMsg;
+
         return new ApiResponse
         {
             Status = result.Status,
-            Message = result.MSG ?? (result.Status == 0 ? "Success" : "Failed"),
+            Message = resolvedMessage,
             Data = result
         };
     }
