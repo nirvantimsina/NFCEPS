@@ -24,17 +24,27 @@ namespace NFCEPS.Presentation.Middleware
         {
             context.Response.ContentType = "application/json";
 
-            context.Response.StatusCode = ex switch
+            var (statusCode, message) = ex switch
             {
-                UnauthorizedAccessException => (int)HttpStatusCode.Unauthorized,
-                KeyNotFoundException => (int)HttpStatusCode.NotFound,
-                ArgumentException => (int)HttpStatusCode.BadRequest,
-                _ => (int)HttpStatusCode.InternalServerError
+                UnauthorizedAccessException => ((int)HttpStatusCode.Unauthorized, ex.Message),
+                KeyNotFoundException => ((int)HttpStatusCode.NotFound, ex.Message),
+                ArgumentException => ((int)HttpStatusCode.BadRequest, ex.Message),
+                
+                // Catch specific database errors globally!
+                System.Data.Common.DbException dbEx when dbEx.SqlState == "23505" => 
+                    ((int)HttpStatusCode.Conflict, "This record already exists!"),
+                System.Data.Common.DbException dbEx when dbEx.SqlState == "23502" => 
+                    ((int)HttpStatusCode.BadRequest, "A required field is missing!"),
+                System.Data.Common.DbException dbEx when dbEx.SqlState == "23503" => 
+                    ((int)HttpStatusCode.BadRequest, "This record is associated with other data and cannot be modified!"),
+                
+                // Fallback for everything else
+                _ => ((int)HttpStatusCode.InternalServerError, "An unexpected error occured!")
             };
 
-            var response = ApiResponse.Fail(
-                context.Response.StatusCode == 500 ? "An unexpected error occured!" : ex.Message
-            );
+            context.Response.StatusCode = statusCode;
+
+            var response = ApiResponse.Fail(message);
 
             var json = JsonSerializer.Serialize(response, new JsonSerializerOptions
             {

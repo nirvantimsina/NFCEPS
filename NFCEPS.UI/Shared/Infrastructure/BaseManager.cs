@@ -28,11 +28,11 @@ public abstract class BaseManager(AuthSessionManager sessionManager)
                 PropertyNameCaseInsensitive = true
             };
             return await response.Content.ReadFromJsonAsync<ApiResponse<T>>(options)
-                ?? new ApiResponse<T> { Success = false, Message = "Empty response from server" };
+                ?? new ApiResponse<T> { Status = 1, Message = "Empty response from server" };
         }
         catch
         {
-            return new ApiResponse<T> { Success = false, Message = "Server Communication Error" };
+            return new ApiResponse<T> { Status = 1, Message = "Server Communication Error" };
         }
     }
 
@@ -43,15 +43,15 @@ public abstract class BaseManager(AuthSessionManager sessionManager)
             if (!response.IsSuccessStatusCode)
             {
                 var errorResult = await response.Content.ReadFromJsonAsync<ApiResponse>(_jsonOptions);
-                return errorResult ?? new ApiResponse { Success = false, Message = $"Server error ({response.StatusCode})" };
+                return errorResult ?? new ApiResponse { Status = 1, Message = $"Server error ({response.StatusCode})" };
             }
 
             return await response.Content.ReadFromJsonAsync<ApiResponse>(_jsonOptions)
-                ?? new ApiResponse { Success = true, Message = "Operation completed successfully" };
+                ?? new ApiResponse { Status = 0, Message = "Operation completed successfully" };
         }
         catch
         {
-            return new ApiResponse { Success = false, Message = "Server Communication Error" };
+            return new ApiResponse { Status = 1, Message = "Server Communication Error" };
         }
     }
 }
