@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using NFCEPS.Shared.Models;
 
 namespace NFCEPS.Application.Features.Auth.Commands.SignUp
 {
@@ -7,17 +8,17 @@ namespace NFCEPS.Application.Features.Auth.Commands.SignUp
         public SignUpCommandValidator()
         {
             RuleFor(x => x.UserName)
-                .Matches("^[a-zA-Z0-9]+$").WithMessage("Username cannot contain spaces or special characters!");
+                .Matches("^[a-zA-Z0-9]+$").WithErrorCode(ErrorCodes.InvalidUsernameFormat);
 
             RuleFor(x => x.Password)
-                .MinimumLength(8).WithMessage("Password must be of minimum 8 characters!");
+                .MinimumLength(8).WithErrorCode(ErrorCodes.InvalidPasswordFormat);
             
             RuleFor(x => x.Name)
-                .NotEmpty().WithMessage("Name cannot be empty!");
+                .NotEmpty().WithErrorCode(ErrorCodes.MissingRequiredField);
 
             RuleFor(x => x.Phone)
-                .Length(10).WithMessage("Phone number can only be of exactly 10 numbers!")
-                .Matches("^[0-9]+$").WithMessage("Phone number can only contain numbers!");
+                .Length(10).WithErrorCode(ErrorCodes.InvalidPhoneNoFormat)
+                .Matches("^[0-9]+$").WithErrorCode(ErrorCodes.OnlyInteger);
         }
     }
 }

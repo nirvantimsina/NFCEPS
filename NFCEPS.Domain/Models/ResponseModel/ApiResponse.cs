@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using NFCEPS.Shared.Models;
 
 namespace NFCEPS.Domain.Models;
 

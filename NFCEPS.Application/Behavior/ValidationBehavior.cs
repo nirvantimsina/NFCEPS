@@ -1,11 +1,10 @@
 ﻿using FluentValidation;
 using MediatR;
-using Microsoft.IdentityModel.Tokens;
 
 namespace NFCEPS.Application.Behavior
 {
     public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-        where TRequest : IRequest
+        where TRequest : IRequest<TResponse>
     {
         private readonly IEnumerable<IValidator<TRequest>> _validators;
 
@@ -27,14 +26,31 @@ namespace NFCEPS.Application.Behavior
             var failures = validationResults
                 .SelectMany(r => r.Errors)
                 .Where(f => f != null)
+                .Select(f => new ValidationErrorDetails
+                {
+                    OccuredIn = f.PropertyName.Split('.').Last(),
+                    ErrorCode = f.ErrorCode
+                })
                 .ToList();
 
             if (failures.Count != 0)
             {
-                throw new ValidationException(failures);
+                throw new CustomValidationException(failures);
             }
 
             return await next();
         }
     }
+}
+
+public record ValidationErrorDetails
+{
+    public string? OccuredIn { get; set; }
+    public string? ErrorCode { get; set; }
+}
+
+public class CustomValidationException : Exception
+{
+    public List<ValidationErrorDetails> Errors { get; }
+    public CustomValidationException(List<ValidationErrorDetails> errors) => Errors = errors;
 }
