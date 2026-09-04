@@ -16,7 +16,11 @@ namespace NFCEPS.Presentation.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginCommand command)
         {
-            logger.LogInformation("Login attempt for user: {UserName}", command.UserName);
+            var sanitizedUserName = command.UserName ?
+                .Replace("\r", string.Empty)
+	            .Replace("\n", string.Empty);
+	        
+            logger.LogInformation("Login attempt for user: {UserName}", sanitizedUserName);
             var result = await mediator.Send(command);
             return HandleResponse(result);
         }
