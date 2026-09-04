@@ -4,6 +4,7 @@ using NFCEPS.Application.Helpers;
 using NFCEPS.Application.Interfaces;
 using NFCEPS.Application.Models.Auth.Response;
 using NFCEPS.Domain.Models;
+using NFCEPS.Shared.Wrappers;
 using System.Data;
 
 namespace NFCEPS.Application.Features.Auth.Commands.Login

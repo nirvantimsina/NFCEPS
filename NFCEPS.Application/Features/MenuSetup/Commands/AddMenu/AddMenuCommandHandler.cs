@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using NFCEPS.Application.Interfaces;
 using NFCEPS.Domain.Models;
+using NFCEPS.Shared.Wrappers;
 using System.Data;
 
 namespace NFCEPS.Application.Features.MenuSetup.Commands.AddMenu

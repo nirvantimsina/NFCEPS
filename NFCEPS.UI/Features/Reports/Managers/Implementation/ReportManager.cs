@@ -1,11 +1,11 @@
 using NFCEPS.UI.Shared.Security;
 using NFCEPS.UI.Features.Auth;
 using NFCEPS.UI.Shared.Infrastructure;
-using NFCEPS.UI.Shared.Infrastructure;
 using NFCEPS.UI.Features.Reports.Managers.Interface;
 using NFCEPS.UI.Features.Reports.Managers.Route;
 using NFCEPS.UI.Features.Reports.Models.RequestModel;
 using NFCEPS.UI.Features.Reports.Models.ResponseModel;
+using NFCEPS.Shared.Wrappers;
 
 namespace NFCEPS.UI.Features.Reports.Managers.Implementation
 {

@@ -1,4 +1,4 @@
-namespace NFCEPS.Shared.Models
+namespace NFCEPS.Shared.Wrappers
 {
     public static class ErrorCodes
     {
@@ -34,6 +34,7 @@ namespace NFCEPS.Shared.Models
         public const string? InvalidPhoneNoFormat = "4004";
         public const string? OnlyInteger = "4005";
         public const string? InvalidUsernameFormat = "4006";
+        public const string? InvalidUriFormat = "4007";
         #endregion
 
         #region Hardware Errors 5000s
@@ -73,6 +74,7 @@ namespace NFCEPS.Shared.Models
                 InvalidPhoneNoFormat => "Phone number can only be of exactly 10 numbers!",
                 OnlyInteger => "Field can only contain numbers!",
                 InvalidUsernameFormat => "Username cannot contain spaces or special characters!",
+                InvalidUriFormat => "Invalid URL format, only '/', '-', '?', '=', '.' are allowed!",
                 #endregion
 
                 _ => null // Return null for unknown codes so we can fallback to the DB message

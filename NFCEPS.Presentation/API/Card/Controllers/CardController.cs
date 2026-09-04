@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using NFCEPS.Application.Features.Card.Commands.AssignCard;
 using NFCEPS.Domain.Models;
+using NFCEPS.Shared.Wrappers;
 
 namespace NFCEPS.Presentation.Controllers
 {

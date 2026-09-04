@@ -1,6 +1,6 @@
 using ErrorOr;
 using FluentValidation;
-using NFCEPS.Shared.Models;
+using NFCEPS.Shared.Wrappers;
 
 namespace NFCEPS.Application.Features.Auth.Commands.Login;
 

@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using NFCEPS.Shared.Models;
+using NFCEPS.Shared.Wrappers;
 
 namespace NFCEPS.Application.Features.Auth.Commands.SignUp
 {
@@ -15,6 +15,10 @@ namespace NFCEPS.Application.Features.Auth.Commands.SignUp
             
             RuleFor(x => x.Name)
                 .NotEmpty().WithErrorCode(ErrorCodes.MissingRequiredField);
+
+            RuleFor(x => x.Address)
+                .NotEmpty().WithErrorCode(ErrorCodes.MissingRequiredField)
+                .Matches("^[a-zA-Z0-9]+$").WithErrorCode(ErrorCodes.InvalidFormat);
 
             RuleFor(x => x.Phone)
                 .Length(10).WithErrorCode(ErrorCodes.InvalidPhoneNoFormat)

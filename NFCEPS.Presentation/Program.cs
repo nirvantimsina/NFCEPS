@@ -153,10 +153,3 @@ app.Run();
 // this is for creating password
 // var hash = BCrypt.Net.BCrypt.HashPassword("admin123");
 // Console.WriteLine(hash);
-
-
-
-
-
-
-

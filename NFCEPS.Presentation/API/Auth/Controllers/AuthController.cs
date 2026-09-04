@@ -5,6 +5,7 @@ using NFCEPS.Application.Features.Auth.Commands.Login;
 using NFCEPS.Application.Features.Auth.Commands.SignUp;
 using NFCEPS.Application.Features.Auth.Queries.GetMenuList;
 using NFCEPS.Domain.Models;
+using NFCEPS.Shared.Wrappers;
 
 namespace NFCEPS.Presentation.Controllers
 {

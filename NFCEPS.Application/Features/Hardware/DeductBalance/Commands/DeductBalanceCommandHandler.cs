@@ -1,6 +1,7 @@
 using MediatR;
 using NFCEPS.Application.Interfaces;
 using NFCEPS.Domain.Models;
+using NFCEPS.Shared.Wrappers;
 using System.Data;
 
 namespace NFCEPS.Application.Features.Hardware.DeductBalance.Commands

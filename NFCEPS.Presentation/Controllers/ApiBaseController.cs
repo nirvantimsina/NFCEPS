@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NFCEPS.Domain.Models;
+using NFCEPS.Shared.Wrappers;
 using System.Security.Claims;
 
 namespace NFCEPS.Presentation.Controllers

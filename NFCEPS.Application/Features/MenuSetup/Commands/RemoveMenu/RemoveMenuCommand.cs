@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using NFCEPS.Domain.Models;
+using NFCEPS.Shared.Wrappers;
 
 namespace NFCEPS.Application.Features.MenuSetup.Commands.RemoveMenu
 {

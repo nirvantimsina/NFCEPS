@@ -1,5 +1,5 @@
 using MediatR;
-using NFCEPS.Domain.Models;
+using NFCEPS.Shared.Wrappers;
 
 namespace NFCEPS.Application.Features.Dashboard.Queries.GetDashboard
 {
@@ -8,5 +8,3 @@ namespace NFCEPS.Application.Features.Dashboard.Queries.GetDashboard
         public int UserId { get; set; }
     }
 }
-
-

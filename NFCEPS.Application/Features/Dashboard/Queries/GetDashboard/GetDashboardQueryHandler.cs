@@ -1,7 +1,7 @@
 using MediatR;
 using NFCEPS.Application.Interfaces;
 using NFCEPS.Application.Models.Dashboard.ResponseModel;
-using NFCEPS.Domain.Models;
+using NFCEPS.Shared.Wrappers;
 using System.Data;
 
 namespace NFCEPS.Application.Features.Dashboard.Queries.GetDashboard
@@ -17,9 +17,9 @@ namespace NFCEPS.Application.Features.Dashboard.Queries.GetDashboard
 
         public async Task<ApiResponse> Handle(GetDashboardQuery request, CancellationToken cancellationToken)
         {
-            var paramsObj = new { p_flag = "A", p_userid = request.UserId };
+            var paramsObj = new { p_userid = request.UserId };
             var result = await _repo.QueryFirstOrDefaultAsync<DashboardResponseModel>(
-                "SELECT * FROM public.fn_dashboard(@p_flag, @p_userid);",
+                "SELECT * FROM public.fn_dashboard(@p_userid);",
                 paramsObj,
                 commandType: CommandType.Text);
 
