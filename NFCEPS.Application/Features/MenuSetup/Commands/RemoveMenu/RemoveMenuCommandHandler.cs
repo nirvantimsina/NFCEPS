@@ -1,13 +1,13 @@
 using MediatR;
 using NFCEPS.Application.Interfaces;
 using NFCEPS.Domain.Models;
-using NFCEPS.Shared.Wrappers;
-using NFCEPS.Domain.Models;
 using System.Data;
+using NFCEPS.Application.Common.Extensions;
+using ErrorOr;
 
 namespace NFCEPS.Application.Features.MenuSetup.Commands.RemoveMenu
 {
-    public class RemoveMenuCommandHandler : IRequestHandler<RemoveMenuCommand, ApiResponse>
+    public class RemoveMenuCommandHandler : IRequestHandler<RemoveMenuCommand, ErrorOr<StatusResponse>>
     {
         private readonly IGenericRepository _repo;
 
@@ -16,7 +16,7 @@ namespace NFCEPS.Application.Features.MenuSetup.Commands.RemoveMenu
             _repo = repo;
         }
 
-        public async Task<ApiResponse> Handle(RemoveMenuCommand request, CancellationToken cancellationToken)
+        public async Task<ErrorOr<StatusResponse>> Handle(RemoveMenuCommand request, CancellationToken cancellationToken)
         {
             var Params = new 
             {
@@ -26,21 +26,7 @@ namespace NFCEPS.Application.Features.MenuSetup.Commands.RemoveMenu
 
             var result = await _repo.QueryFirstOrDefaultAsync<StatusResponse>("SELECT * FROM sp_menusetup(@p_flag, @p_menuid)", Params, CommandType.Text);
 
-            if (result == null)
-            {
-                return ApiResponse.Fail("No response received from the database!", "-1");
-            }
-
-            string resolvedMessage = ErrorCodes.GetMessage(result.Status) 
-                                     ?? result.MSG 
-                                     ?? (result.Status == "0" ? "Success" : "Failed");
-
-            return new ApiResponse
-            {
-                Status = result.Status,
-                Message = resolvedMessage,
-                Data = result
-            };
+            return result.ToDbResult();
         }
     }
 }

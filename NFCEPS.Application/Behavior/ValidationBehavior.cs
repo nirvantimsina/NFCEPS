@@ -1,10 +1,12 @@
 ﻿using FluentValidation;
 using MediatR;
+using ErrorOr; // This contains the IResult interface
 
 namespace NFCEPS.Application.Behavior
 {
     public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : IRequest<TResponse>
+        where TResponse : IErrorOr
     {
         private readonly IEnumerable<IValidator<TRequest>> _validators;
 
@@ -26,31 +28,18 @@ namespace NFCEPS.Application.Behavior
             var failures = validationResults
                 .SelectMany(r => r.Errors)
                 .Where(f => f != null)
-                .Select(f => new ValidationErrorDetails
-                {
-                    OccuredIn = f.PropertyName.Split('.').Last(),
-                    ErrorCode = f.ErrorCode
-                })
+                .Select(f => Error.Validation(
+                    code: f.ErrorCode ?? "4001", 
+                    description: f.ErrorMessage  
+                ))
                 .ToList();
 
             if (failures.Count != 0)
             {
-                throw new CustomValidationException(failures);
+                return (dynamic)failures; 
             }
 
             return await next();
         }
     }
-}
-
-public record ValidationErrorDetails
-{
-    public string? OccuredIn { get; set; }
-    public string? ErrorCode { get; set; }
-}
-
-public class CustomValidationException : Exception
-{
-    public List<ValidationErrorDetails> Errors { get; }
-    public CustomValidationException(List<ValidationErrorDetails> errors) => Errors = errors;
 }

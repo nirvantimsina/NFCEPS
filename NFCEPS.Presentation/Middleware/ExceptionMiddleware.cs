@@ -1,5 +1,3 @@
-using NFCEPS.Application.Behavior;
-using NFCEPS.Domain.Models;
 using NFCEPS.Shared.Wrappers;
 using System.Data.Common;
 using System.Net;
@@ -17,7 +15,7 @@ namespace NFCEPS.Presentation.Middleware
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Unhandeled Exception - {Message}", ex.Message);
+                logger.LogError(ex, "Unhandled Exception - {Message}", ex.Message);
                 await HandleExceptionAsync(context, ex);
             }
         }
@@ -26,30 +24,25 @@ namespace NFCEPS.Presentation.Middleware
         {
             context.Response.ContentType = "application/json";
 
-            var (statusCode, message) = ex switch
+            (int statusCode, string errorCode, string message) = ex switch
             {
-                CustomValidationException valEx => (
-                    (int)HttpStatusCode.BadRequest,
-                    string.Join(" | ", valEx.Errors.Select(e =>
-                        $"{e.OccuredIn}: {ErrorCodes.GetMessage(e.ErrorCode ?? "1")}"))
-                ),
-
-                UnauthorizedAccessException => ((int)HttpStatusCode.Unauthorized, ex.Message),
-                KeyNotFoundException => ((int)HttpStatusCode.NotFound, ex.Message),
-                ArgumentException => ((int)HttpStatusCode.BadRequest, ex.Message),
+                UnauthorizedAccessException => ((int)HttpStatusCode.Unauthorized, ErrorCodes.Unauthorized!, ex.Message),
+                KeyNotFoundException => ((int)HttpStatusCode.NotFound, ErrorCodes.RecordNotFound!, ex.Message),
+                ArgumentException => ((int)HttpStatusCode.BadRequest, ErrorCodes.GeneralError!, ex.Message),
 
                 DbException dbEx when dbEx.SqlState == "23505" =>
-                    ((int)HttpStatusCode.Conflict, "This record already exists!"),
+                    ((int)HttpStatusCode.Conflict, ErrorCodes.UserAlreadyExists!, "This record already exists!"),
                 DbException dbEx when dbEx.SqlState == "23502" =>
-                    ((int)HttpStatusCode.BadRequest, "A required field is missing!"),
+                    ((int)HttpStatusCode.BadRequest, ErrorCodes.MissingRequiredField!, "A required field is missing!"),
                 DbException dbEx when dbEx.SqlState == "23503" =>
-                    ((int)HttpStatusCode.BadRequest, "This record is associated with other data and cannot be modified!"),
+                    ((int)HttpStatusCode.BadRequest, ErrorCodes.GeneralError!, "This record is associated with other data and cannot be modified!"),
 
-                _ => ((int)HttpStatusCode.InternalServerError, "An unexpected error occured!")
+                _ => ((int)HttpStatusCode.InternalServerError, ErrorCodes.GeneralError!, "An unexpected error occurred!")
             };
 
             context.Response.StatusCode = statusCode;
-            var response = ApiResponse.Fail(message);
+
+            var response = ApiResponse.Fail(message, errorCode);
 
             var json = JsonSerializer.Serialize(response, new JsonSerializerOptions
             {
