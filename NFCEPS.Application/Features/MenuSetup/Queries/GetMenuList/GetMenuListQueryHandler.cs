@@ -19,10 +19,9 @@ namespace NFCEPS.Application.Features.MenuSetup.Queries.GetMenuList
 
         public async Task<ErrorOr<List<MenuListResponseModel>>> Handle(GetMenuListQuery request, CancellationToken cancellationToken)
         {
-            var paramsObj = new { p_roleid = request.RoleId };
             var result = await _repo.QueryAsync<MenuListResponseModel>(
                 "select * from permission.get_assigned_menulist(@p_roleid);",
-                paramsObj,
+                new { p_roleid = request.RoleId },
                 commandType: CommandType.Text);
 
             return result.ToDbResultList();

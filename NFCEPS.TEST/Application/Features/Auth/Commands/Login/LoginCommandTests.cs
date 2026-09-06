@@ -8,16 +8,16 @@ using NFCEPS.Application.Models.Auth.Response;
 using NFCEPS.Shared.Wrappers;
 using System.Data;
 
-namespace NFCEPS_TEST.Auth.Services.Implementations;
+namespace NFCEPS.TEST.Application.Features.Auth.Commands;
 
-public class AuthServiceTests
+public class LoginCommandTests
 {
     private readonly Mock<IGenericRepository> _mockRepo;
     private readonly Mock<MediatR.IMediator> _mockMediator;
     private readonly JWTHelper _jwtHelper;
     private readonly LoginCommandHandler _handler;
 
-    public AuthServiceTests()
+    public LoginCommandTests()
     {
         _mockRepo = new Mock<IGenericRepository>();
         _mockMediator = new Mock<MediatR.IMediator>();
@@ -39,12 +39,12 @@ public class AuthServiceTests
     {
         // arrange
         var command = new LoginCommand { UserName = "testuser", Password = null };
-        
+
         // act
         var result = await _handler.Handle(command, default);
-        
+
         // assert
-        Assert.True(result.IsError); 
+        Assert.True(result.IsError);
         Assert.Equal(ErrorType.Validation, result.FirstError.Type);
         Assert.Equal(ErrorCodes.MissingRequiredField, result.FirstError.Code);
         Assert.Equal("Password cannot be empty!", result.FirstError.Description);
@@ -62,7 +62,7 @@ public class AuthServiceTests
 
         // act
         var result = await _handler.Handle(command, default);
-        
+
         // assert
         Assert.True(result.IsError);
         Assert.Equal(ErrorType.Validation, result.FirstError.Type);
@@ -97,7 +97,7 @@ public class AuthServiceTests
 
         var fakeMenus = new List<MenuListResponseModel>();
         _mockMediator.Setup(m => m.Send(It.IsAny<GetMenuListQuery>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(ErrorOrFactory.From(fakeMenus)); 
+            .ReturnsAsync(ErrorOrFactory.From(fakeMenus));
 
         var expectedPermissions = new List<string> { "CRD.C", "CRD.R", "CRD.U", "CRD.D" };
 
@@ -106,7 +106,7 @@ public class AuthServiceTests
 
         // assert
         Assert.False(result.IsError);
-        
+
         var loginResponse = result.Value;
 
         Assert.Equal("linux", loginResponse.UserName);

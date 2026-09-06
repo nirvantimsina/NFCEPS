@@ -3,7 +3,6 @@ using NFCEPS.Application.Features.Hardware.DeductBalance.Commands;
 using NFCEPS.Application.Interfaces;
 using NFCEPS.Domain.Models;
 using System.Data;
-using Xunit;
 
 namespace NFCEPS.TEST.Application.Features.Hardware.DeductBalance.Commands
 {
