@@ -17,11 +17,6 @@ public class CardServiceTests
         _handler = new AssignCardCommandHandler(_mockRepo.Object);
     }
 
-    private PostgresException CreatePostgresException(string sqlState, string message)
-    {
-        return new PostgresException(message, "ERROR", "ERROR", sqlState);
-    }
-
     [Fact]
     public async Task AssignCardAsync_ReassignCard_CardAlreadyAssigned()
     {

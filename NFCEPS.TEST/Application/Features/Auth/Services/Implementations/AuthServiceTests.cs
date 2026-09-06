@@ -1,4 +1,4 @@
-using ErrorOr; // 💡 Added for ErrorOr structural mapping checks
+using ErrorOr;
 using Moq;
 using NFCEPS.Application.Features.Auth.Commands.Login;
 using NFCEPS.Application.Features.MenuSetup.Queries.GetMenuList;
@@ -13,7 +13,7 @@ namespace NFCEPS_TEST.Auth.Services.Implementations;
 public class AuthServiceTests
 {
     private readonly Mock<IGenericRepository> _mockRepo;
-    private readonly Mock<MediatR.IMediator> _mockMediator; // 💡 Kept local to configure per-test outcomes
+    private readonly Mock<MediatR.IMediator> _mockMediator;
     private readonly JWTHelper _jwtHelper;
     private readonly LoginCommandHandler _handler;
 
@@ -44,7 +44,6 @@ public class AuthServiceTests
         var result = await _handler.Handle(command, default);
         
         // assert
-        // 💡 Use .IsError instead of .Success
         Assert.True(result.IsError); 
         Assert.Equal(ErrorType.Validation, result.FirstError.Type);
         Assert.Equal(ErrorCodes.MissingRequiredField, result.FirstError.Code);
@@ -96,7 +95,6 @@ public class AuthServiceTests
             It.IsAny<string>(), It.IsAny<object>(), It.IsAny<CommandType>()
         )).ReturnsAsync(fakeUserDatabaseRow);
 
-        // 💡 Setup Mediator to mock a successful Menu List fetch response so it doesn't crash
         var fakeMenus = new List<MenuListResponseModel>();
         _mockMediator.Setup(m => m.Send(It.IsAny<GetMenuListQuery>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(ErrorOrFactory.From(fakeMenus)); 
@@ -107,9 +105,8 @@ public class AuthServiceTests
         var result = await _handler.Handle(command, default);
 
         // assert
-        Assert.False(result.IsError); // Expecting success
+        Assert.False(result.IsError);
         
-        // 💡 Extract the value payload inside ErrorOr<T> via .Value
         var loginResponse = result.Value;
 
         Assert.Equal("linux", loginResponse.UserName);
