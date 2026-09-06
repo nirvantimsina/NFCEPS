@@ -1,9 +1,8 @@
 using MediatR;
 using NFCEPS.Application.Interfaces;
 using NFCEPS.Application.Models.Auth.Response;
-using NFCEPS.Domain.Models;
+using NFCEPS.Shared.Wrappers;
 using System.Data;
-using System.Data.Common;
 
 namespace NFCEPS.Application.Features.Auth.Queries.GetMenuList
 {

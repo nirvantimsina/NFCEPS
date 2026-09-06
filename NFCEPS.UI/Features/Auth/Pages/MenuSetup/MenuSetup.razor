@@ -1,0 +1,36 @@
+@using NFCEPS.UI.Shared.Security
+@page "/menusetup"
+@inherits PermissionAwareBase
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+<PageTitle> MenuSetup - NFCEPS</PageTitle>
+
+<div class="dash-topbar">
+    <div>
+        <h1 class="dash-title">Menu Setup</h1>
+    </div>
+</div>
+
+<MudButton id="btnAddMenu" ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" Disabled="IsLoading" Class="mt-6">
+    			@if (IsLoading)
+			{
+				<MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+				<MudText class="ms-2">Processing...</MudText>
+			}
+			else
+			{
+				<MudText>Add Menu</MudText>
+			}
+</MudButton>
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">Add Menu</MudText>
+    </TitleContent>
+
+    <DialogContent>
+        <EditForm Model="@request" OnValidSubmit="HandleAssignMenu">
+            
+        </EditForm>
+    </DialogContent>
+</MudDialog>

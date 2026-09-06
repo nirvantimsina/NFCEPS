@@ -1,11 +1,13 @@
+using ErrorOr;
 using MediatR;
+using NFCEPS.Application.Common.Extensions;
 using NFCEPS.Application.Interfaces;
 using NFCEPS.Domain.Models;
 using System.Data;
 
 namespace NFCEPS.Application.Features.Hardware.DeductBalance.Commands
 {
-    public class DeductBalanceCommandHandler : IRequestHandler<DeductBalanceCommand, ApiResponse>
+    public class DeductBalanceCommandHandler : IRequestHandler<DeductBalanceCommand, ErrorOr<StatusResponse>>
     {
         private readonly IGenericRepository _repo;
 
@@ -14,7 +16,7 @@ namespace NFCEPS.Application.Features.Hardware.DeductBalance.Commands
             _repo = repo;
         }
 
-        public async Task<ApiResponse> Handle(DeductBalanceCommand request, CancellationToken cancellationToken)
+        public async Task<ErrorOr<StatusResponse>> Handle(DeductBalanceCommand request, CancellationToken cancellationToken)
         {
             var Params = new
             {
@@ -24,9 +26,10 @@ namespace NFCEPS.Application.Features.Hardware.DeductBalance.Commands
                 p_to = request.To,
                 p_entityid = request.EntityId
             };
-            // todo
-            await _repo.ExecuteAsync("select card.fn_deduct(@p_cardid, @p_punch, @p_from, @p_to, @p_entityid)", Params, CommandType.Text);
-            return ApiResponse.Ok();
+            
+            var result = await _repo.QueryFirstOrDefaultAsync<StatusResponse>("select card.fn_deduct(@p_cardid, @p_punch, @p_from, @p_to, @p_entityid)", Params, CommandType.Text);
+            
+            return result.ToDbResult();
         }
     }
 }

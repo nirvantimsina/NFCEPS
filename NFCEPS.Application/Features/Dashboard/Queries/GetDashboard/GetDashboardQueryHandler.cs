@@ -1,12 +1,13 @@
+using ErrorOr;
 using MediatR;
 using NFCEPS.Application.Interfaces;
 using NFCEPS.Application.Models.Dashboard.ResponseModel;
-using NFCEPS.Domain.Models;
+using NFCEPS.Application.Common.Extensions;
 using System.Data;
 
 namespace NFCEPS.Application.Features.Dashboard.Queries.GetDashboard
 {
-    public class GetDashboardQueryHandler : IRequestHandler<GetDashboardQuery, ApiResponse>
+    public class GetDashboardQueryHandler : IRequestHandler<GetDashboardQuery, ErrorOr<DashboardResponseModel>>
     {
         private readonly IGenericRepository _repo;
 
@@ -15,15 +16,14 @@ namespace NFCEPS.Application.Features.Dashboard.Queries.GetDashboard
             _repo = repo;
         }
 
-        public async Task<ApiResponse> Handle(GetDashboardQuery request, CancellationToken cancellationToken)
+        public async Task<ErrorOr<DashboardResponseModel>> Handle(GetDashboardQuery request, CancellationToken cancellationToken)
         {
-            var paramsObj = new { p_flag = "A", p_userid = request.UserId };
             var result = await _repo.QueryFirstOrDefaultAsync<DashboardResponseModel>(
-                "SELECT * FROM public.fn_dashboard(@p_flag, @p_userid);",
-                paramsObj,
+                "SELECT * FROM public.fn_dashboard(@p_userid);",
+                new { p_userid = request.UserId },
                 commandType: CommandType.Text);
 
-            return result != null ? ApiResponse.Ok(result) : ApiResponse.Fail("Dashboard data not found");
+            return result.ToDbResult();
         }
     }
 }

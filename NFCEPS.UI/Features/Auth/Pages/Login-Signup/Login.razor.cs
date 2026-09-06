@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using MudBlazor;
-using NFCEPS.UI.Features.Auth;
 using NFCEPS.UI.Features.Auth.Managers.Interface;
 using NFCEPS.UI.Features.Auth.Models.RequestModel;
 using NFCEPS.UI.Features.Auth.Models.ResponseModel;

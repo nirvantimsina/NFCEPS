@@ -1,12 +1,17 @@
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using NFCEPS.Application.Behavior;
 using NFCEPS.Application.Helpers;
 using NFCEPS.Application.Interfaces;
 using NFCEPS.Infrastructure.Repositories;
 using NFCEPS.Presentation.Middleware;
 using Scalar.AspNetCore;
+using System.Reflection;
 using System.Text;
+using FluentValidation;
+
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -22,6 +27,12 @@ builder.Services.AddSingleton<PermissionService>();
 builder.Services.AddScoped<IGenericRepository, GenericRepository>();
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(IGenericRepository).Assembly));
+
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(PerformanceBehavior<,>));
+
+builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
 //connection string
 var connectionString = builder.Configuration
@@ -142,10 +153,3 @@ app.Run();
 // this is for creating password
 // var hash = BCrypt.Net.BCrypt.HashPassword("admin123");
 // Console.WriteLine(hash);
-
-
-
-
-
-
-

@@ -1,61 +1,58 @@
+using ErrorOr; // 💡 Switch from ApiResponse to ErrorOr
 using MediatR;
-using NFCEPS.Application.Features.Auth.Queries.GetMenuList;
+using NFCEPS.Application.Features.MenuSetup.Queries.GetMenuList; // 💡 Updated to match your correct folder namespace
 using NFCEPS.Application.Helpers;
 using NFCEPS.Application.Interfaces;
 using NFCEPS.Application.Models.Auth.Response;
 using NFCEPS.Domain.Models;
+using NFCEPS.Shared.Wrappers;
 using System.Data;
 
 namespace NFCEPS.Application.Features.Auth.Commands.Login
 {
-    public class LoginCommandHandler : IRequestHandler<LoginCommand, ApiResponse>
+    // 💡 Changed return type parameter from ApiResponse to ErrorOr<LoginResponse>
+    public class LoginCommandHandler(IGenericRepository repo, JWTHelper jwt, IMediator mediator) 
+        : IRequestHandler<LoginCommand, ErrorOr<LoginResponse>>
     {
-        private readonly IGenericRepository _repo;
-        private readonly JWTHelper _jwt;
-        private readonly IMediator _mediator;
-
-        public LoginCommandHandler(IGenericRepository repo, JWTHelper jwt, IMediator mediator)
+        public async Task<ErrorOr<LoginResponse>> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
-            _repo = repo;
-            _jwt = jwt;
-            _mediator = mediator;
-        }
-
-        public async Task<ApiResponse> Handle(LoginCommand request, CancellationToken cancellationToken)
-        {
-            if (request.Password is null)
-                return ApiResponse.Fail("Password cannot be empty!");
+            if (string.IsNullOrWhiteSpace(request.Password))
+                return Error.Validation(ErrorCodes.MissingRequiredField!, "Password cannot be empty!");
 
             var loginParams = new { p_flag = "B", p_username = request.UserName };
 
-            var user = await _repo.QueryFirstOrDefaultAsync<UserLoginRow>(
+            var user = await repo.QueryFirstOrDefaultAsync<UserLoginRow>(
                 "SELECT * FROM permission.fn_auth(@p_flag, @p_username);",
                 loginParams,
                 commandType: CommandType.Text);
 
+            // 💡 Return type-safe Domain Errors mapped to your centralized ErrorCodes definitions
             if (user is null)
-                return ApiResponse.Fail("Invalid username or password");
+                return Error.Validation(ErrorCodes.InvalidCredentials!, "Invalid username or password");
 
             if (!user.IsActive)
-                return ApiResponse.Fail("Account is inActive");
+                return Error.Validation(ErrorCodes.AccountInactive!, "Account is inactive");
 
-            if (!PasswordHelper.VerifyPassword(request.Password, user.Password))
-                return ApiResponse.Fail("Invalid username or password");
+            if (!PasswordHelper.VerifyPassword(request.Password, user.Password!))
+                return Error.Validation(ErrorCodes.InvalidCredentials!, "Invalid username or password");
 
             if (user.UserName is null)
-                return ApiResponse.Fail("User identity profile is corrupt!");
+                return Error.Unexpected(ErrorCodes.GeneralError!, "User identity profile is corrupt!");
 
             var listPermissions = !string.IsNullOrWhiteSpace(user.CompressedPermissions) ?
-                user.CompressedPermissions.Split(',').Select(p => p.Trim()).ToList() : new List<string>();
+                user.CompressedPermissions.Split(',').Select(p => p.Trim()).ToList() : [];
 
-            var menuResponse = await _mediator.Send(new GetMenuListQuery { RoleId = user.RoleId }, cancellationToken);
-            var menuList = menuResponse.Success && menuResponse.Data is IEnumerable<MenuListResponseModel> menus
-                ? menus.ToList()
-                : new List<MenuListResponseModel>();
+            // 💡 FIX COMPILATION: Safely resolve your updated ErrorOr menu response flow
+            var menuResponse = await mediator.Send(new GetMenuListQuery { RoleId = user.RoleId }, cancellationToken);
+            
+            var menuList = !menuResponse.IsError 
+                ? menuResponse.Value 
+                : []; // Fallback to an empty list if no menus are assigned or an error occurs
 
-            var token = _jwt.GenerateToken(user.UserId, user.UserName, user.RoleId, listPermissions, Enumerable.Empty<string>());
+            var token = jwt.GenerateToken(user.UserId, user.UserName, user.RoleId, listPermissions, Enumerable.Empty<string>());
 
-            return ApiResponse.Ok(new LoginResponse
+            // 💡 Return raw data. The controller's .Match() method handles wrapping it into ApiResponse.Ok()
+            return new LoginResponse
             {
                 Token = token,
                 UserName = user.UserName ?? string.Empty,
@@ -64,9 +61,7 @@ namespace NFCEPS.Application.Features.Auth.Commands.Login
                 RoleId = user.RoleId,
                 Permissions = listPermissions,
                 MenuList = menuList
-            });
+            };
         }
     }
 }
-
-
