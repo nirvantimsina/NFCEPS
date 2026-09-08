@@ -1,4 +1,3 @@
-using NFCEPS.UI.Shared.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -10,11 +9,12 @@ using NFCEPS.UI.Features.Auth.Models.RequestModel;
 namespace NFCEPS.UI.Features.Auth.Pages
 {
     [AllowAnonymous]
-    public partial class SignUp(
-        NavigationManager Navigation,
-        IAuthManager AuthManager,
-        ISnackbar Snackbar) : ComponentBase
+    public partial class SignUp : ComponentBase
     {
+        [Inject] protected NavigationManager Navigation { get; set; } = null!;
+        [Inject] protected IAuthManager AuthManager { get; set; } = null!;
+        [Inject] protected ISnackbar Snackbar { get; set; } = null!;
+
         [CascadingParameter] protected Task<AuthenticationState> AuthStateTask { get; set; } = default!;
         protected SignUpRequest request = new();
         protected string? error;

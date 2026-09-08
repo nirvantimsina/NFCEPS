@@ -1,0 +1,21 @@
+@using NFCEPS.Shared.Models
+@inject CommonDataService DataService
+
+<MudSelect T="string" Label="Select Option" @bind-Value="_selectedValue" Variant="Variant.Outlined"
+           AnchorOrigin="Origin.BottomCenter">
+  @foreach (var item in _dropdownItems)
+  {
+    <MudSelectItem Value="@item.Value">@item.Text</MudSelectItem>
+  }
+</MudSelect>
+
+@code {
+  private string _selectedValue = string.Empty;
+  private List<DropdownListModel> _dropdownItems = new();
+
+  protected override async Task OnInitializedAsync()
+  {
+    // Fetch data automatically on page load (e.g., retrieving a list of document types or flags)
+    _dropdownItems = await DataService.GetDropdownOptionsAsync("DOCUMENT_TYPES");
+  }
+}

@@ -1,3 +1,4 @@
+@using NFCEPS.UI.Features.Reports.Models.ResponseModel
 @using NFCEPS.UI.Shared.Security
 @page "/UserReport"
 @inherits PermissionAwareBase
@@ -7,51 +8,51 @@
 
 <div class="dash-topbar">
 
-    <div>
+  <div>
 
-        <h1 class="dash-title">User Report</h1>
+    <h1 class="dash-title">User Report</h1>
 
-    </div>
+  </div>
 
 </div>
 
 <EditForm Model="@request" OnValidSubmit="LoadDataAsync">
 
-    <MudPaper Elevation="3" Class="pa-3">
-        <MudTextField @bind-Value="request.UserId" For="@(() => request.UserId)" Label="User ID" Variant="Variant.Text" Required Class="mt-2"></MudTextField>
-        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Disabled="IsLoading" Class="mt-6">
-            @if(IsLoading)
-            {
-                <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-                <MudText Class="ms-2">Processing...</MudText>
-            }
-            else
-            {
-                <MudText>View</MudText>
-            }
-        </MudButton>
-    </MudPaper>
+  <MudPaper Elevation="3" Class="pa-3">
+    <MudTextField @bind-Value="request.UserId" For="@(() => request.UserId)" Label="User ID" Variant="Variant.Text"
+      Required Class="mt-2"></MudTextField>
+    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Disabled="IsLoading"
+      Class="mt-6">
+      @if(IsLoading)
+      {
+      <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+      <MudText Class="ms-2">Processing...</MudText>
+      }
+      else
+      {
+      <MudText>View</MudText>
+      }
+    </MudButton>
+  </MudPaper>
 </EditForm>
 
 <MudContainer>
-    <MudPaper Elevation="4" Class="mt-2">
-        <MudDataGrid Items="@response">
-            <Columns>
-                <PropertyColumn Property="x => x.UserId" Title="User ID"></PropertyColumn>
-                <PropertyColumn Property="x => x.Name" Title="Name"></PropertyColumn>
-                <PropertyColumn Property="x => x.UserName" Title="User Name"></PropertyColumn>
-                <PropertyColumn Property="x => x.CardId" Title="Card ID"></PropertyColumn>
-                <PropertyColumn Property="x => x.RoleId" Title="Role ID"></PropertyColumn>
-                <PropertyColumn Property="x => x.PhoneNumber" Title="Phone Number"></PropertyColumn>
-                <PropertyColumn Property="x => x.Address" Title="Address"></PropertyColumn>
-            </Columns>
+  <MudPaper Elevation="4" Class="mt-2">
+    <MudDataGrid T="UserReportResponseModel" Items="@response">
+      <Columns>
+        <PropertyColumn Property="x => x.UserId" Title="User ID"></PropertyColumn>
+        <PropertyColumn Property="x => x.Name" Title="Name"></PropertyColumn>
+        <PropertyColumn Property="x => x.UserName" Title="User Name"></PropertyColumn>
+        <PropertyColumn Property="x => x.CardId" Title="Card ID"></PropertyColumn>
+        <PropertyColumn Property="x => x.RoleId" Title="Role ID"></PropertyColumn>
+        <PropertyColumn Property="x => x.PhoneNumber" Title="Phone Number"></PropertyColumn>
+        <PropertyColumn Property="x => x.Address" Title="Address"></PropertyColumn>
+      </Columns>
 
-            <PagerContent>
-                <MudTablePager T="UserReportResponseModel" />
-            </PagerContent>
+      <PagerContent>
+        <MudTablePager T="UserReportResponseModel" />
+      </PagerContent>
 
-        </MudDataGrid>
-    </MudPaper>
+    </MudDataGrid>
+  </MudPaper>
 </MudContainer>
-
-

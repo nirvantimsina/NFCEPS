@@ -1,8 +1,8 @@
+using System.Data;
 using MediatR;
 using NFCEPS.Application.Interfaces;
 using NFCEPS.Application.Models.Auth.Response;
 using NFCEPS.Shared.Wrappers;
-using System.Data;
 
 namespace NFCEPS.Application.Features.Auth.Queries.GetMenuList
 {
@@ -15,17 +15,21 @@ namespace NFCEPS.Application.Features.Auth.Queries.GetMenuList
             _repo = repo;
         }
 
-        public async Task<ApiResponse> Handle(GetMenuListQuery request, CancellationToken cancellationToken)
+        public async Task<ApiResponse> Handle(
+            GetMenuListQuery request,
+            CancellationToken cancellationToken
+        )
         {
-            var MenuListParams = new { p_flag = "A", p_role = request.RoleId };
+            var MenuListParams = new { p_role = request.RoleId };
             var result = await _repo.QueryAsync<MenuListResponseModel>(
-                "SELECT * FROM permission.fn_MenuList(@p_flag, @p_role);",
+                "SELECT * FROM permission.get_menulist_by_role(@p_role);",
                 MenuListParams,
-                commandType: CommandType.Text);
+                commandType: CommandType.Text
+            );
 
-            return result != null ? ApiResponse.Ok(result) : ApiResponse.Fail("No roles assigned to the user!");
+            return result != null
+                ? ApiResponse.Ok(result)
+                : ApiResponse.Fail("No roles assigned to the user!");
         }
     }
 }
-
-

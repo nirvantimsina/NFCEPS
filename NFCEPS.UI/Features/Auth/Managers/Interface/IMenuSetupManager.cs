@@ -5,6 +5,6 @@ namespace NFCEPS.UI.Features.Auth.Managers.Interface
 {
     public interface IMenuSetupManager
     {
-        Task<ApiResponse<MenuListModel>> GetAllMenuListAsync();
+        Task<ApiResponse<List<MenuListModel>>> GetAllMenuListAsync();
     }
 }

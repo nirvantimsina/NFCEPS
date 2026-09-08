@@ -6,32 +6,37 @@ using NFCEPS.UI.Shared.Security;
 
 namespace NFCEPS.UI.Features.Auth.Pages.MenuSetup
 {
-    public partial class MenuSetup(IMenuSetupManager manager, ISnackbar snackbar) : PermissionAwareBase
+    public partial class MenuSetup(IMenuSetupManager menuSetupManager, ISnackbar snackbar) : PermissionAwareBase
     {
+        protected List<MenuListModel>? response = new();
         [Inject]
         protected NavigationManager nav { get; set; } = default!;
         protected MenuListModel request = new();
         protected string? error;
         protected bool IsLoading = false;
 
-        protected async Task GetAllMenuList()
+        protected override async Task OnInitializedAsync()
         {
-            error = null;
+            await LoadDataAsync();
+        }
+
+        protected async Task LoadDataAsync()
+        {
             IsLoading = true;
 
-            var result = await manager.GetAllMenuListAsync();
+            var result = await menuSetupManager.GetAllMenuListAsync();
 
-            if (result?.Success != true)
+            if (result?.Success == false)
             {
-                error = result?.Message ?? "Getting Menu List Faild";
-
-                snackbar.Add(error, Severity.Error);
+                snackbar.Add(result?.Message ?? "Failed to load data", Severity.Error);
                 return;
             }
-            else
+            else if (result?.Success == true && result.Data is not null)
             {
-                snackbar.Add(result.Message, Severity.Error);
+                response = result.Data;
             }
+            
+            IsLoading = false;
         }
     }
 }

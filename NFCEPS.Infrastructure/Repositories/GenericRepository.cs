@@ -1,15 +1,21 @@
+using System.Data;
 using Dapper;
 using Microsoft.Extensions.Logging;
 using NFCEPS.Application.Interfaces;
-using System.Data;
+using NFCEPS.Application.Models.Common.Response;
 
 namespace NFCEPS.Infrastructure.Repositories;
 
-public class GenericRepository(DbConnectionFactory factory, ILogger<GenericRepository> logger) : IGenericRepository
+public class GenericRepository(DbConnectionFactory factory, ILogger<GenericRepository> logger)
+    : IGenericRepository
 {
     // Multiple rows, single or multiple tables
-    public async Task<T?> GetFromMultipleQueriesAsync<T>(string sql,
-        Func<SqlMapper.GridReader, Task<T>> map, object? parameters = null, CommandType commandType = CommandType.StoredProcedure)
+    public async Task<T?> GetFromMultipleQueriesAsync<T>(
+        string sql,
+        Func<SqlMapper.GridReader, Task<T>> map,
+        object? parameters = null,
+        CommandType commandType = CommandType.StoredProcedure
+    )
     {
         try
         {
@@ -17,7 +23,8 @@ public class GenericRepository(DbConnectionFactory factory, ILogger<GenericRepos
             using var multi = await db.QueryMultipleAsync(
                 sql,
                 parameters,
-                commandType: commandType);
+                commandType: commandType
+            );
 
             return await map(multi);
         }
@@ -29,15 +36,16 @@ public class GenericRepository(DbConnectionFactory factory, ILogger<GenericRepos
     }
 
     // Multiple rows, single table
-    public async Task<IEnumerable<T>> QueryAsync<T>(string sql, object? parameters = null, CommandType commandType = CommandType.StoredProcedure)
+    public async Task<IEnumerable<T>> QueryAsync<T>(
+        string sql,
+        object? parameters = null,
+        CommandType commandType = CommandType.StoredProcedure
+    )
     {
         try
         {
             using IDbConnection db = factory.CreateConnection();
-            return await db.QueryAsync<T>(
-                sql,
-                parameters,
-                commandType: commandType);
+            return await db.QueryAsync<T>(sql, parameters, commandType: commandType);
         }
         catch (Exception ex)
         {
@@ -47,15 +55,16 @@ public class GenericRepository(DbConnectionFactory factory, ILogger<GenericRepos
     }
 
     // Single row, null if not found
-    public async Task<T?> QueryFirstOrDefaultAsync<T>(string sql, object? parameters = null, CommandType commandType = CommandType.StoredProcedure)
+    public async Task<T?> QueryFirstOrDefaultAsync<T>(
+        string sql,
+        object? parameters = null,
+        CommandType commandType = CommandType.StoredProcedure
+    )
     {
         try
         {
             using IDbConnection db = factory.CreateConnection();
-            return await db.QueryFirstOrDefaultAsync<T>(
-                sql,
-                parameters,
-                commandType: commandType);
+            return await db.QueryFirstOrDefaultAsync<T>(sql, parameters, commandType: commandType);
         }
         catch (Exception ex)
         {
@@ -65,15 +74,16 @@ public class GenericRepository(DbConnectionFactory factory, ILogger<GenericRepos
     }
 
     // No return, for executions like insert, update and delete
-    public async Task ExecuteAsync(string sql, object? parameters = null, CommandType commandType = CommandType.StoredProcedure)
+    public async Task ExecuteAsync(
+        string sql,
+        object? parameters = null,
+        CommandType commandType = CommandType.StoredProcedure
+    )
     {
         try
         {
             using IDbConnection db = factory.CreateConnection();
-            await db.ExecuteAsync(
-                sql,
-                parameters,
-                commandType: commandType);
+            await db.ExecuteAsync(sql, parameters, commandType: commandType);
         }
         catch (Exception ex)
         {
@@ -83,15 +93,16 @@ public class GenericRepository(DbConnectionFactory factory, ILogger<GenericRepos
     }
 
     // Single scalar value
-    public async Task<T?> ExecuteScalarAsync<T>(string sql, object? parameters = null, CommandType commandType = CommandType.StoredProcedure)
+    public async Task<T?> ExecuteScalarAsync<T>(
+        string sql,
+        object? parameters = null,
+        CommandType commandType = CommandType.StoredProcedure
+    )
     {
         try
         {
             using IDbConnection db = factory.CreateConnection();
-            return await db.ExecuteScalarAsync<T>(
-                sql,
-                parameters,
-                commandType: commandType);
+            return await db.ExecuteScalarAsync<T>(sql, parameters, commandType: commandType);
         }
         catch (Exception ex)
         {

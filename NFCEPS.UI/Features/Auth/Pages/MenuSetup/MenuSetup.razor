@@ -1,6 +1,7 @@
 @using NFCEPS.UI.Shared.Security
 @page "/menusetup"
 @inherits PermissionAwareBase
+@using NFCEPS.UI.Shared.Infrastructure
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 <PageTitle> MenuSetup - NFCEPS</PageTitle>
@@ -11,7 +12,23 @@
     </div>
 </div>
 
-<MudButton id="btnAddMenu" ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" Disabled="IsLoading" Class="mt-6">
+<MudContainer>
+    <MudPaper Elevation="4" Class="mt-2">
+        <MudDataGrid T="MenuListModel" Items="@response">
+            <Columns>
+                <PropertyColumn Property="x => x.MenuId" Title="Menu ID" />
+                <PropertyColumn Property="x => x.MenuName" Title="Menu Name" />
+                <PropertyColumn Property="x => x.ParentId" Title="Parent Id" />
+                <PropertyColumn Property="x => x.Icon" Title="Icon" />
+                <PropertyColumn Property="x => x.Path" Title="Path URI" />
+                <PropertyColumn Property="x => x.MenuOrder" Title="Menu Order" />
+                <PropertyColumn Property="x => x.ChildId" Title="Child ID (Obselete)" />
+            </Columns>
+        </MudDataGrid>
+    </MudPaper>
+</MudContainer>
+
+@* <MudButton id="btnAddMenu" ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" Disabled="IsLoading" Class="mt-6">
     			@if (IsLoading)
 			{
 				<MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
@@ -21,16 +38,16 @@
 			{
 				<MudText>Add Menu</MudText>
 			}
-</MudButton>
+</MudButton> *@
 
-<MudDialog>
+@* <MudDialog>
     <TitleContent>
         <MudText Typo="Typo.h6">Add Menu</MudText>
     </TitleContent>
 
     <DialogContent>
-        <EditForm Model="@request" OnValidSubmit="HandleAssignMenu">
+        <EditForm Model="@request" OnValidSubmit="HandleAddMenu">
             
         </EditForm>
     </DialogContent>
-</MudDialog>
+</MudDialog> *@
