@@ -1,5 +1,4 @@
 using System.Data;
-using System.Linq;
 using ErrorOr;
 using MediatR;
 using NFCEPS.Application.Common.Extensions;
