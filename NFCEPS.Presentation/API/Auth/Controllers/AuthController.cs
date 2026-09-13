@@ -4,18 +4,23 @@ using Microsoft.AspNetCore.Mvc;
 using NFCEPS.Application.Features.Auth.Commands.Login;
 using NFCEPS.Application.Features.Auth.Commands.SignUp;
 using NFCEPS.Application.Features.Auth.Queries.GetMenuList;
-using NFCEPS.Domain.Models;
+using NFCEPS.Shared.Wrappers;
 
 namespace NFCEPS.Presentation.Controllers
 {
     [ApiController]
-    public class AuthController(IMediator mediator, ILogger<AuthController> logger) : ApiBaseController
+    public class AuthController(IMediator mediator, ILogger<AuthController> logger)
+        : ApiBaseController
     {
         [HttpPost("Login")]
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginCommand command)
         {
-            logger.LogInformation("Login attempt for user: {UserName}", command.UserName);
+            var sanitizedUserName = command
+                .UserName?.Replace("\r", string.Empty)
+                .Replace("\n", string.Empty);
+
+            logger.LogInformation("Login attempt for user: {UserName}", sanitizedUserName);
             var result = await mediator.Send(command);
             return HandleResponse(result);
         }
@@ -35,9 +40,8 @@ namespace NFCEPS.Presentation.Controllers
             if (CurrentRoleId == 0)
                 return Unauthorized(ApiResponse.Fail("Invalid or missing Role ID in token."));
 
-            var result = await mediator.Send(new GetMenuListQuery { RoleId = CurrentRoleId });
+            var result = await mediator.Send(new GetMenuListByRoleQuery { RoleId = CurrentRoleId });
             return HandleResponse(result);
         }
     }
 }
-

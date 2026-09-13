@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor;
 using MudBlazor.Services;
-using NFCEPS.UI.Features.Auth;
 using NFCEPS.UI.Components;
+using NFCEPS.UI.Components.Dropdown.Managers.Implementation;
+using NFCEPS.UI.Components.Dropdown.Managers.Interface;
+using NFCEPS.UI.Features.Auth;
 using NFCEPS.UI.Features.Auth.Managers.Implementation;
 using NFCEPS.UI.Features.Auth.Managers.Interface;
 using NFCEPS.UI.Features.Auth.Models.ResponseModel;
@@ -12,7 +14,6 @@ using NFCEPS.UI.Features.Dashboard.Managers.Implementation;
 using NFCEPS.UI.Features.Dashboard.Managers.Interface;
 using NFCEPS.UI.Features.Reports.Managers.Implementation;
 using NFCEPS.UI.Features.Reports.Managers.Interface;
-using NFCEPS.UI.Features.Reports.Pages;
 using NFCEPS.UI.Shared.Security;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,20 +21,25 @@ var builder = WebApplication.CreateBuilder(args);
 //
 // ===================== AUTH CORE =====================
 //
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = "NoOp";
-    options.DefaultChallengeScheme = "NoOp";
-})
-.AddScheme<Microsoft.AspNetCore.Authentication.AuthenticationSchemeOptions, NoOpAuthHandler>(
-    "NoOp", _ => { });
+builder
+    .Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = "NoOp";
+        options.DefaultChallengeScheme = "NoOp";
+    })
+    .AddScheme<Microsoft.AspNetCore.Authentication.AuthenticationSchemeOptions, NoOpAuthHandler>(
+        "NoOp",
+        _ => { }
+    );
+
 // builder.Services.AddAuthorization();
 
 builder.Services.AddScoped<AuthStateProvider>();
 builder.Services.AddScoped<AuthSessionManager>();
 
 builder.Services.AddScoped<AuthenticationStateProvider>(sp =>
-    sp.GetRequiredService<AuthStateProvider>());
+    sp.GetRequiredService<AuthStateProvider>()
+);
 
 builder.Services.AddCascadingAuthenticationState();
 
@@ -41,10 +47,13 @@ builder.Services.AddCascadingAuthenticationState();
 // ===================== HTTP + JWT HANDLER =====================
 //
 
-builder.Services.AddHttpClient("API", client =>
-{
-    client.BaseAddress = new Uri("http://localhost:5043/");
-});
+builder.Services.AddHttpClient(
+    "API",
+    client =>
+    {
+        client.BaseAddress = new Uri("http://localhost:5043/");
+    }
+);
 
 builder.Services.AddScoped<TokenStore>();
 
@@ -58,6 +67,9 @@ builder.Services.AddScoped<PermissionService>();
 builder.Services.AddScoped<IDashboardManager, DashboardManager>();
 builder.Services.AddScoped<ICardManager, CardManager>();
 builder.Services.AddScoped<IUserReportManager, UserReportManager>();
+builder.Services.AddScoped<CommonDataService>();
+builder.Services.AddScoped<IMenuSetupManager, MenuSetupManager>();
+builder.Services.AddScoped<IFlagDropdownManager, FlagDropdownManager>();
 
 //
 // ===================== UI SERVICES =====================
@@ -84,7 +96,8 @@ builder.Services.AddMudServices(config =>
 // ===================== RAZOR / BLAZOR =====================
 //
 
-builder.Services.AddRazorComponents()
+builder
+    .Services.AddRazorComponents()
     .AddInteractiveServerComponents(options =>
     {
         options.DetailedErrors = true;
@@ -112,9 +125,6 @@ app.UseAuthorization();
 
 app.MapStaticAssets();
 
-app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
+app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
 
 app.Run();
-
-

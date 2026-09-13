@@ -1,6 +1,8 @@
+using NFCEPS.Domain.Models;
+
 namespace NFCEPS.Application.Models.Auth.Response
 {
-    public class MenuListResponseModel
+    public class MenuListResponseModel : StatusResponse
     {
         public int MenuId { get; set; }
         public string? MenuName { get; set; }

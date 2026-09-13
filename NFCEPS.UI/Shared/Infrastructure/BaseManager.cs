@@ -1,5 +1,5 @@
+using NFCEPS.Shared.Wrappers;
 using NFCEPS.UI.Features.Auth;
-using NFCEPS.UI.Shared.Infrastructure;
 using System.Net.Http.Headers;
 
 namespace NFCEPS.UI.Shared.Infrastructure;
@@ -23,16 +23,24 @@ public abstract class BaseManager(AuthSessionManager sessionManager)
     {
         try
         {
-            var options = new System.Text.Json.JsonSerializerOptions
+            if (!response.IsSuccessStatusCode)
             {
-                PropertyNameCaseInsensitive = true
-            };
-            return await response.Content.ReadFromJsonAsync<ApiResponse<T>>(options)
-                ?? new ApiResponse<T> { Status = 1, Message = "Empty response from server" };
+                var errorResult = await response.Content.ReadFromJsonAsync<ApiResponse>(_jsonOptions);
+                
+                return new ApiResponse<T> 
+                { 
+                    Status = errorResult?.Status ?? "1", 
+                    Message = errorResult?.Message ?? $"Server error ({response.StatusCode})" 
+                };
+            }
+
+            return await response.Content.ReadFromJsonAsync<ApiResponse<T>>(_jsonOptions)
+                ?? new ApiResponse<T> { Status = "1", Message = "Empty response from server" };
         }
-        catch
+        catch (Exception ex)
         {
-            return new ApiResponse<T> { Status = 1, Message = "Server Communication Error" };
+            System.Diagnostics.Debug.WriteLine($"JSON Deserialization failed: {ex.Message}");
+            return new ApiResponse<T> { Status = "1", Message = "Server Communication Error" };
         }
     }
 
@@ -43,18 +51,15 @@ public abstract class BaseManager(AuthSessionManager sessionManager)
             if (!response.IsSuccessStatusCode)
             {
                 var errorResult = await response.Content.ReadFromJsonAsync<ApiResponse>(_jsonOptions);
-                return errorResult ?? new ApiResponse { Status = 1, Message = $"Server error ({response.StatusCode})" };
+                return errorResult ?? new ApiResponse { Status = "1", Message = $"Server error ({response.StatusCode})" };
             }
 
             return await response.Content.ReadFromJsonAsync<ApiResponse>(_jsonOptions)
-                ?? new ApiResponse { Status = 0, Message = "Operation completed successfully" };
+                ?? new ApiResponse { Status = "0", Message = "Operation completed successfully" };
         }
         catch
         {
-            return new ApiResponse { Status = 1, Message = "Server Communication Error" };
+            return new ApiResponse { Status = "1", Message = "Server Communication Error" };
         }
     }
 }
-
-
-
