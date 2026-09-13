@@ -2,7 +2,6 @@
 @page "/{*path}" 
 @using Microsoft.AspNetCore.Components.Authorization
 @inject NavigationManager Nav
-
 <AuthorizeView>
     <Authorized>
         @if (string.IsNullOrEmpty(path))
@@ -24,6 +23,27 @@
         }
     </Authorized>
     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <NotAuthorized>
         @if (string.IsNullOrEmpty(path))
         {

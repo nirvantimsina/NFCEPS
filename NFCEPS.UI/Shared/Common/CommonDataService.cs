@@ -10,7 +10,7 @@ public class CommonDataService
     public async Task<List<DropdownListModel>> GetDropdownOptionsAsync(string flag)
     {
         var response = await _http.GetFromJsonAsync<ApiResponse<List<DropdownListModel>>>(
-            $"api/common/dropdowns?flag={flag}"
+            $"/api/Dropdown/flag={flag}"
         );
 
         if (response is { Success: true, Data: not null })

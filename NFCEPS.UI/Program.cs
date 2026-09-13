@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor;
 using MudBlazor.Services;
 using NFCEPS.UI.Components;
+using NFCEPS.UI.Components.Dropdown.Managers.Implementation;
+using NFCEPS.UI.Components.Dropdown.Managers.Interface;
 using NFCEPS.UI.Features.Auth;
 using NFCEPS.UI.Features.Auth.Managers.Implementation;
 using NFCEPS.UI.Features.Auth.Managers.Interface;
@@ -66,6 +68,8 @@ builder.Services.AddScoped<IDashboardManager, DashboardManager>();
 builder.Services.AddScoped<ICardManager, CardManager>();
 builder.Services.AddScoped<IUserReportManager, UserReportManager>();
 builder.Services.AddScoped<CommonDataService>();
+builder.Services.AddScoped<IMenuSetupManager, MenuSetupManager>();
+builder.Services.AddScoped<IFlagDropdownManager, FlagDropdownManager>();
 
 //
 // ===================== UI SERVICES =====================

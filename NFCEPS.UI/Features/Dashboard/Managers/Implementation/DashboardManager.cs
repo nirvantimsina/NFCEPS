@@ -1,4 +1,3 @@
-using NFCEPS.UI.Shared.Security;
 using NFCEPS.UI.Features.Auth;
 using NFCEPS.UI.Shared.Infrastructure;
 using NFCEPS.UI.Features.Dashboard.Managers.Interface;
@@ -20,7 +19,4 @@ public class DashboardManager(IHttpClientFactory factory, AuthSessionManager ses
         return await HandleResponse<DashboardResponseModel>(response);
     }
 }
-
-
-
 

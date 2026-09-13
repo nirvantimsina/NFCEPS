@@ -1,0 +1,31 @@
+@typeparam TValue
+@inherits PermissionAwareBase
+
+<MudSelect T="string" 
+           Label="@Label" 
+           Value="@(Value?.ToString() ?? string.Empty)" 
+           ValueChanged="OnValueChanged" 
+           Variant="Variant.Outlined" 
+           AnchorOrigin="Origin.BottomLeft"
+           TransformOrigin="Origin.TopLeft"
+           RelativeWidth="DropdownWidth.Relative"
+           PopoverClass="mud-dropdown-flush-fix"
+           Disabled="IsLoading">
+    
+    @if (ShowDefaultOption)
+    {
+        <MudSelectItem T="string" Value="@(string.Empty)">@DefaultOptionText</MudSelectItem>
+    }
+
+    @foreach (var item in items)
+    {
+        <MudSelectItem T="string" Value="@item.Value">@item.Text</MudSelectItem>
+    }
+</MudSelect>
+
+<style>
+    .mud-popover.mud-dropdown-flush-fix {
+        margin-top: 4px !important;  /* Forces list cleanly inline underneath the border boundary line */
+        box-shadow: var(--mud-elevation-4) !important;
+    }
+</style>

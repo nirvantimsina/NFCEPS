@@ -6,7 +6,7 @@ using NFCEPS.Shared.Wrappers;
 
 namespace NFCEPS.Application.Features.Auth.Queries.GetMenuList
 {
-    public class GetMenuListQueryHandler : IRequestHandler<GetMenuListQuery, ApiResponse>
+    public class GetMenuListQueryHandler : IRequestHandler<GetMenuListByRoleQuery, ApiResponse>
     {
         private readonly IGenericRepository _repo;
 
@@ -16,7 +16,7 @@ namespace NFCEPS.Application.Features.Auth.Queries.GetMenuList
         }
 
         public async Task<ApiResponse> Handle(
-            GetMenuListQuery request,
+            GetMenuListByRoleQuery request,
             CancellationToken cancellationToken
         )
         {

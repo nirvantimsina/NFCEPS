@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using NFCEPS.Shared.Wrappers;
 using NFCEPS.UI.Features.Auth.Managers.Interface;
 using NFCEPS.UI.Features.Auth.Managers.Route;

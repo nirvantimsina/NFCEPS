@@ -2,15 +2,14 @@ using System.Data;
 using ErrorOr;
 using MediatR;
 using NFCEPS.Application.Common.Extensions;
-using NFCEPS.Application.Features.Common.Queries.GetDropdownItems;
 using NFCEPS.Application.Interfaces;
 using NFCEPS.Application.Models.Common.Response; // Holds DbDropdownRow
 using NFCEPS.Shared.Models;
 
-namespace NFCEPS.Application.Features.Common.GetDropdownItems;
+namespace NFCEPS.Application.Features.Common.Queries.GetDropdownItems;
 
 public class GetDropdownItemQueryHandler
-    : IRequestHandler<GetDropdownItemsQuery, ErrorOr<List<DropdownListModel>>>
+    : IRequestHandler<GetDropdownItemQuery, ErrorOr<List<DropdownListModel>>>
 {
     private readonly IGenericRepository _repo;
 
@@ -20,18 +19,25 @@ public class GetDropdownItemQueryHandler
     }
 
     public async Task<ErrorOr<List<DropdownListModel>>> Handle(
-        GetDropdownItemsQuery request,
+        GetDropdownItemQuery request,
         CancellationToken token
     )
     {
         var dbParams = new { p_flag = request.Flag };
 
         var dbResult = await _repo.QueryAsync<DbDropdownRow>(
-            "select * from get_all_dropdown(@p_flag)",
+            "select * from get_dropdown_data(@p_flag)",
             dbParams,
             commandType: CommandType.Text
         );
 
+        Console.WriteLine($"DB raw count retrieved: {dbResult?.Count() ?? 0}");
+        if (dbResult?.Any() == true)
+        {
+            Console.WriteLine(
+                $"First Item Text: {dbResult.First().Text}, Value: {dbResult.First().Value}"
+            );
+        }
         ErrorOr<List<DbDropdownRow>> validationResult = dbResult.ToDbResultList();
 
         if (validationResult.IsError)
