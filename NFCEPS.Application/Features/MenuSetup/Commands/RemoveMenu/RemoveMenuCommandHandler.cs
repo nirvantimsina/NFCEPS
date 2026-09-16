@@ -2,10 +2,12 @@ using MediatR;
 using NFCEPS.Application.Interfaces;
 using NFCEPS.Domain.Models;
 using System.Data;
+using NFCEPS.Application.Common.Extensions;
+using ErrorOr;
 
 namespace NFCEPS.Application.Features.MenuSetup.Commands.RemoveMenu
 {
-    public class RemoveMenuCommandHandler : IRequestHandler<RemoveMenuCommand, ApiResponse>
+    public class RemoveMenuCommandHandler : IRequestHandler<RemoveMenuCommand, ErrorOr<StatusResponse>>
     {
         private readonly IGenericRepository _repo;
 
@@ -14,7 +16,7 @@ namespace NFCEPS.Application.Features.MenuSetup.Commands.RemoveMenu
             _repo = repo;
         }
 
-        public async Task<ApiResponse> Handle(RemoveMenuCommand request, CancellationToken cancellationToken)
+        public async Task<ErrorOr<StatusResponse>> Handle(RemoveMenuCommand request, CancellationToken cancellationToken)
         {
             var Params = new 
             {
@@ -24,7 +26,7 @@ namespace NFCEPS.Application.Features.MenuSetup.Commands.RemoveMenu
 
             var result = await _repo.QueryFirstOrDefaultAsync<StatusResponse>("SELECT * FROM sp_menusetup(@p_flag, @p_menuid)", Params, CommandType.Text);
 
-            return ApiResponse.FromDbResult(result);
+            return result.ToDbResult();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Moq;
 using NFCEPS.Application.Features.Hardware.DeductBalance.Commands;
 using NFCEPS.Application.Interfaces;
+using NFCEPS.Domain.Models;
 using System.Data;
 
 namespace NFCEPS.TEST.Application.Features.Hardware.DeductBalance.Commands
@@ -20,21 +21,29 @@ namespace NFCEPS.TEST.Application.Features.Hardware.DeductBalance.Commands
         public async Task Handle_DeductBalance_BalanceDeducted()
         {
             // arrange
-            var commmand = new DeductBalanceCommand { CardId = 1, EntityId = 1, From = 1, Punch = 1, To = 1 };
+            var command = new DeductBalanceCommand { CardId = 1, EntityId = 1, From = 1, Punch = 1, To = 1 };
 
-            _mockRepo.Setup(r => r.ExecuteAsync(It.IsAny<string>(), It.IsAny<object>(), It.IsAny<CommandType>()));
-
-            var handler = new DeductBalanceCommandHandler(_mockRepo.Object);
+            var expectedResponse = new StatusResponse 
+            { 
+                Status = "0",
+                MSG = "Balance deducted successfully" 
+            };
+            
+            _mockRepo.Setup(r => r.QueryFirstOrDefaultAsync<StatusResponse>(
+                It.Is<string>(s => s.Contains("card.fn_deduct")), 
+                It.IsAny<object>(), 
+                It.IsAny<CommandType>()))
+                .ReturnsAsync(expectedResponse); 
 
             // act
-            var result = await handler.Handle(commmand, CancellationToken.None);
+            var result = await _handler.Handle(command, CancellationToken.None);
             
             // assert
-            Assert.True(result.Success);
-            Assert.Equal("Balance deducted successfullt", result.Message);
+            Assert.False(result.IsError); 
+            Assert.Equal("Balance deducted successfully", result.Value.MSG);
 
-            _mockRepo.Verify(r => r.ExecuteAsync(
-                It.Is<string>(s => s == "sp_deductbalance" || s.Contains("deductbalance")), // Check procedure name
+            _mockRepo.Verify(r => r.QueryFirstOrDefaultAsync<StatusResponse>(
+                It.Is<string>(s => s.Contains("card.fn_deduct")), 
                 It.IsAny<object>(),
                 It.IsAny<CommandType>()),
                 Times.Once

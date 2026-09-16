@@ -12,5 +12,3 @@ public class PasswordHelper
         return BCrypt.Net.BCrypt.Verify(Password, storedHash);
     }
 }
-
-

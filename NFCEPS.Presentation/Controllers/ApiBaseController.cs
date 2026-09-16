@@ -1,7 +1,8 @@
+using System.Security.Claims;
+using ErrorOr;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NFCEPS.Domain.Models;
-using System.Security.Claims;
+using NFCEPS.Shared.Wrappers;
 
 namespace NFCEPS.Presentation.Controllers
 {
@@ -21,20 +22,49 @@ namespace NFCEPS.Presentation.Controllers
 
         protected string? CurrentUserName
         {
-            get
-            {
-                var claimValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                return claimValue ?? string.Empty;
-            }
+            get { return User.FindFirstValue(ClaimTypes.Name) ?? string.Empty; }
         }
+
         protected int CurrentRoleId
         {
             get
             {
-                var claimValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var claimValue = User.FindFirstValue(ClaimTypes.Role);
                 return int.TryParse(claimValue, out var roleid) ? roleid : 0;
             }
         }
+
+        /// <summary>
+        /// New Overload: Handles all modern handlers returning ErrorOr values
+        /// </summary>
+        protected IActionResult HandleResponse<T>(ErrorOr<T> result)
+        {
+            return result.Match<IActionResult>(
+                data => Ok(ApiResponse.Ok(data)),
+                errors =>
+                {
+                    var error = errors.First();
+
+                    // 1. Resolve localized message using your glossary setup
+                    string finalMessage = ErrorCodes.GetMessage(error.Code) ?? error.Description;
+
+                    // 2. Map ErrorOr categories to industry-standard HTTP Status codes
+                    return error.Type switch
+                    {
+                        ErrorType.NotFound => NotFound(ApiResponse.Fail(finalMessage, error.Code)),
+                        ErrorType.Conflict => Conflict(ApiResponse.Fail(finalMessage, error.Code)),
+                        ErrorType.Unauthorized => Unauthorized(
+                            ApiResponse.Fail(finalMessage, error.Code)
+                        ),
+                        _ => BadRequest(ApiResponse.Fail(finalMessage, error.Code)),
+                    };
+                }
+            );
+        }
+
+        /// <summary>
+        /// Legacy Overload: Kept intact for any older endpoints still returning raw ApiResponse
+        /// </summary>
         protected IActionResult HandleResponse(ApiResponse result)
         {
             if (result == null)
@@ -46,7 +76,3 @@ namespace NFCEPS.Presentation.Controllers
         }
     }
 }
-
-
-
-

@@ -1,6 +1,9 @@
+using ErrorOr;
+using MediatR;
+
 namespace NFCEPS.Application.Models.Auth.Response;
 
-public class LoginResponse
+public class LoginResponse : IRequest<ErrorOr<LoginResponse>>
 {
     public string? Token { get; set; }
     public string? UserName { get; set; }

@@ -4,11 +4,14 @@ using MudBlazor;
 using NFCEPS.UI.Features.Auth;
 using NFCEPS.UI.Shared.Security;
 
-
 namespace NFCEPS.UI.Shared.Layouts
 {
-    public partial class MainLayout(PermissionService PermissionService, NavigationManager Navigation,
-    AuthenticationStateProvider AuthProvider, AuthSessionManager AuthSessionManager) : IDisposable
+    public partial class MainLayout(
+        PermissionService PermissionService,
+        NavigationManager Navigation,
+        AuthenticationStateProvider AuthProvider,
+        AuthSessionManager AuthSessionManager
+    ) : LayoutComponentBase, IDisposable
     {
         private bool _drawerOpen = true;
         private string _userName = string.Empty;
@@ -61,13 +64,14 @@ namespace NFCEPS.UI.Shared.Layouts
                 {
                     FontFamily = ["'DM Mono'", "monospace"],
                     FontWeight = "600",
-                }
-            }
+                },
+            },
         };
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            if (!firstRender) return;
+            if (!firstRender)
+                return;
 
             var token = await AuthSessionManager.GetTokenAsync();
 
@@ -80,7 +84,7 @@ namespace NFCEPS.UI.Shared.Layouts
             await LoadUserAsync();
             await PermissionService.LoadFromTokenAsync(AuthSessionManager);
             StartClock();
-            StateHasChanged();
+            await InvokeAsync(StateHasChanged);
         }
 
         // Remove OnInitializedAsync entirely
@@ -98,11 +102,19 @@ namespace NFCEPS.UI.Shared.Layouts
         private void StartClock()
         {
             _clock = DateTime.Now.ToString("HH:mm:ss");
-            _timer = new System.Threading.Timer(_ =>
-            {
-                _clock = DateTime.Now.ToString("HH:mm:ss");
-                InvokeAsync(StateHasChanged);
-            }, null, 1000, 1000);
+            _timer = new Timer(
+                _ =>
+                {
+                    InvokeAsync(() =>
+                    {
+                        _clock = DateTime.Now.ToString("HH:mm:ss");
+                        InvokeAsync(StateHasChanged);
+                    });
+                },
+                null,
+                1000,
+                1000
+            );
         }
 
         private void ToggleDrawer() => _drawerOpen = !_drawerOpen;
@@ -116,13 +128,12 @@ namespace NFCEPS.UI.Shared.Layouts
         private static string BuildInitials(string name)
         {
             var parts = name.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
-            return parts.Length >= 2
-                ? $"{parts[0][0]}{parts[^1][0]}".ToUpper()
-                : name.Length > 0 ? name[0].ToString().ToUpper() : "?";
+
+            return parts.Length >= 2 ? $"{parts[0][0]}{parts[^1][0]}".ToUpper()
+                : name.Length > 0 ? name[0].ToString().ToUpper()
+                : "?";
         }
 
         public void Dispose() => _timer?.Dispose();
     }
 }
-
-
